@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Lana 100 Million Game Design System - Beautiful red/gold theme inspired by the logo */
+
+@layer base {
+  :root {
+    /* Core background colors */
+    --background: 42 15% 95%;  /* Warm beige like the logo background */
+    --foreground: 0 0% 10%;
+
+    /* Card and UI elements */
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+
+    /* Primary brand colors - rich red from logo */
+    --primary: 0 70% 50%;  /* Rich red from the logo */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 0 60% 60%;  /* Lighter red for effects */
+
+    /* Secondary colors - gold accents */
+    --secondary: 45 90% 60%;  /* Golden yellow */
+    --secondary-foreground: 0 0% 10%;
+
+    /* Game specific colors */
+    --game-bg: 0 0% 100%;  /* White canvas background */
+    --game-ground: 0 40% 90%;  /* Light pink ground */
+    --game-obstacle: 0 70% 50%;  /* Red obstacles */
+    --game-player: 0 0% 10%;  /* Black player face */
+
+    /* UI states */
+    --muted: 42 15% 90%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 45 90% 60%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+    --ring: 0 70% 50%;
+
+    /* Design tokens */
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-gold: linear-gradient(135deg, hsl(var(--secondary)), hsl(45 100% 70%));
+    --gradient-background: linear-gradient(180deg, hsl(var(--background)), hsl(42 20% 92%));
+
+    /* Shadows */
+    --shadow-game: 0 20px 50px -10px hsl(var(--primary) / 0.3);
+    --shadow-card: 0 10px 30px -5px hsl(0 0% 0% / 0.1);
+    --shadow-button: 3px 4px 0 hsl(var(--primary));
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode with rich reds and golds */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 0 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 0 60% 65%;
+
+    --secondary: 45 85% 55%;
+    --secondary-foreground: 0 0% 10%;
+
+    --game-bg: 0 0% 15%;
+    --game-ground: 0 30% 20%;
+    --game-obstacle: 0 70% 55%;
+    --game-player: 0 0% 95%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 45 85% 55%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 70% 55%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-gold: linear-gradient(135deg, hsl(var(--secondary)), hsl(45 90% 65%));
+    --gradient-background: linear-gradient(180deg, hsl(var(--background)), hsl(0 0% 12%));
+
+    --shadow-game: 0 20px 50px -10px hsl(var(--primary) / 0.4);
+    --shadow-card: 0 10px 30px -5px hsl(0 0% 0% / 0.3);
+    --shadow-button: 3px 4px 0 hsl(var(--primary));
+    
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 0 70% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 0 70% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-background to-background/90 text-foreground font-sans;
+    background-image: var(--gradient-background);
+    min-height: 100vh;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary rounded-full;
+  }
+
+  /* Game canvas styling */
+  .game-canvas {
+    box-shadow: var(--shadow-game);
+    border: 3px solid hsl(var(--primary));
+    background: hsl(var(--game-bg));
+  }
+
+  /* Button press animation */
+  .btn-press:active {
+    transform: translateY(2px);
+    box-shadow: 1px 2px 0 hsl(var(--primary));
+  }
+
+  /* Particle effects for celebrations */
+  @keyframes confetti-fall {
+    0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .confetti {
+    animation: confetti-fall 3s linear infinite;
+  }
+
+  /* Glow effects */
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px hsl(var(--secondary) / 0.3);
+  }
+}
