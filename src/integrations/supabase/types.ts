@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          created_at: string
+          electrum_server: string | null
+          electrum_server_port: number | null
+          id: string
+          lana_private_key: string | null
+          lana_wallet_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          electrum_server?: string | null
+          electrum_server_port?: number | null
+          id?: string
+          lana_private_key?: string | null
+          lana_wallet_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          electrum_server?: string | null
+          electrum_server_port?: number | null
+          id?: string
+          lana_private_key?: string | null
+          lana_wallet_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       nostr_relays: {
         Row: {
           created_at: string
