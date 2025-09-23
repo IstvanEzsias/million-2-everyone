@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      nostr_relays: {
+        Row: {
+          created_at: string
+          id: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      players: {
+        Row: {
+          created_at: string
+          id: string
+          nostrhex: string | null
+          received_lana: boolean
+          transactionid: string | null
+          updated_at: string
+          walletid: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nostrhex?: string | null
+          received_lana?: boolean
+          transactionid?: string | null
+          updated_at?: string
+          walletid?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nostrhex?: string | null
+          received_lana?: boolean
+          transactionid?: string | null
+          updated_at?: string
+          walletid?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
