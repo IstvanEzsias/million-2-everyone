@@ -214,7 +214,7 @@ const NostrProfile = () => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="name">Name *</Label>
+                    <Label htmlFor="name">Full Name *</Label>
                     <Input
                       id="name"
                       value={formData.name}
@@ -256,9 +256,6 @@ const NostrProfile = () => {
                         <SelectItem value="USD">USD</SelectItem>
                         <SelectItem value="EUR">EUR</SelectItem>
                         <SelectItem value="GBP">GBP</SelectItem>
-                        <SelectItem value="JPY">JPY</SelectItem>
-                        <SelectItem value="CAD">CAD</SelectItem>
-                        <SelectItem value="AUD">AUD</SelectItem>
                       </SelectContent>
                     </Select>
                     {errors.currency && <p className="text-sm text-destructive mt-1">{errors.currency}</p>}
@@ -273,6 +270,9 @@ const NostrProfile = () => {
                       placeholder="Exchange rate value"
                       className={errors.lanoshi2lash ? "border-destructive" : ""}
                     />
+                    <p className="text-sm text-muted-foreground mt-1">
+                      1 Lana equals 100,000,000 Lanoshi. A Lash is like giving someone a token of appreciation. We recommend setting 1 Lash = 100 Lanoshi at the beginning.
+                    </p>
                     {errors.lanoshi2lash && <p className="text-sm text-destructive mt-1">{errors.lanoshi2lash}</p>}
                   </div>
 
@@ -406,6 +406,9 @@ const NostrProfile = () => {
                 {/* Banking Information */}
                 <div className="space-y-4">
                   <h4 className="text-md font-medium text-primary">Banking Information</h4>
+                  <p className="text-sm text-muted-foreground">
+                    If you decide to sell some of your Lanas or Lanoshis, please provide your payment details so others know where to send the money.
+                  </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="bankName">Bank Name</Label>
