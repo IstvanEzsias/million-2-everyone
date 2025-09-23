@@ -151,11 +151,12 @@ const NostrProfile = () => {
       const { data, error } = await supabase.functions.invoke('create-nostr-profile', {
         body: {
           profileData: formData,
-          walletData: {
-            walletId: walletData.walletId,
-            nostrHex: walletData.nostrHex,
-            email: walletData.email
-          }
+        walletData: {
+          walletId: walletData.walletId,
+          nostrHex: walletData.nostrHex,
+          nostrPrivateKey: walletData.nostrPrivateKey,
+          email: walletData.email
+        }
         }
       });
 

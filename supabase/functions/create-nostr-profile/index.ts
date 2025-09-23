@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
+import { schnorr } from "https://esm.sh/@noble/secp256k1@2.1.0"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -83,17 +84,20 @@ async function createEvent(
 }
 
 async function signEvent(eventHash: string, privateKey: string): Promise<string> {
-  // Simplified signing - in production use proper secp256k1
-  const key = await crypto.subtle.importKey(
-    'raw',
-    hexToBytes(privateKey.slice(0, 64)),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
-  )
-  
-  const signature = await crypto.subtle.sign('HMAC', key, hexToBytes(eventHash))
-  return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2, '0')).join('')
+  // Use proper schnorr signatures for NOSTR
+  try {
+    const eventHashBytes = hexToBytes(eventHash)
+    const privateKeyBytes = hexToBytes(privateKey)
+    const signature = await schnorr.sign(eventHashBytes, privateKeyBytes)
+    return bytesToHex(signature)
+  } catch (error) {
+    console.error('Signing error:', error)
+    throw new Error(`Failed to sign event: ${error.message}`)
+  }
+}
+
+function bytesToHex(bytes: Uint8Array): string {
+  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
 async function broadcastToRelay(relay: string, event: NostrEvent): Promise<RelayResult> {
@@ -176,7 +180,7 @@ serve(async (req) => {
   try {
     const { profileData, walletData } = await req.json() as {
       profileData: ProfileData
-      walletData: { walletId: string, nostrHex: string, email: string }
+      walletData: { walletId: string, nostrHex: string, nostrPrivateKey: string, email: string }
     }
 
     console.log('Creating NOSTR profile for:', profileData.name)
@@ -211,15 +215,15 @@ serve(async (req) => {
       lanoshi2lash: profileData.lanoshi2lash
     })
 
-    // Get public key from hex (first 64 chars are private key, derive public key)
-    const publicKey = walletData.nostrHex.slice(64) // Simplified - in production derive properly
+    // Use the public key directly (nostrHex is the public key)
+    const publicKey = walletData.nostrHex
 
     const event = await createEvent(
       publicKey,
       0, // kind 0 for metadata
       [],
       content,
-      walletData.nostrHex.slice(0, 64)
+      walletData.nostrPrivateKey
     )
 
     console.log('Created NOSTR event:', event.id)
