@@ -1,1 +1,4 @@
 project_id = "wrhcgufugnyquufydvwl"
+
+[functions.create-nostr-profile]
+verify_jwt = false

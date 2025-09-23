@@ -8,7 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { getWalletSessionData, clearWalletSessionData, type WalletSessionData } from "@/utils/sessionStorage";
+import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/ImageUpload";
+import { ProfileCreationReport } from "@/components/ProfileCreationReport";
 
 interface NostrProfileData {
   // Required fields
@@ -62,6 +64,9 @@ const NostrProfile = () => {
   });
 
   const [errors, setErrors] = useState<Partial<NostrProfileData>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [creationResult, setCreationResult] = useState<any>(null);
 
   useEffect(() => {
     const sessionData = getWalletSessionData();
@@ -134,54 +139,45 @@ const NostrProfile = () => {
       return;
     }
 
+    setIsSubmitting(true);
+    
     try {
-      // Create the KIND 0 event content
-      const profileContent = {
-        name: formData.name,
-        display_name: formData.display_name,
-        about: formData.about,
-        location: formData.location,
-        currency: formData.currency,
-        lanoshi2lash: formData.lanoshi2lash,
-        lanaWalletID: formData.lanaWalletID,
-        whoAreYou: formData.whoAreYou,
-        orgasmic_profile: formData.orgasmic_profile,
-        ...(formData.picture && { picture: formData.picture }),
-        ...(formData.website && { website: formData.website }),
-        ...(formData.nip05 && { nip05: formData.nip05 }),
-        ...(formData.payment_link && { payment_link: formData.payment_link }),
-        ...(formData.bankName && { bankName: formData.bankName }),
-        ...(formData.bankAddress && { bankAddress: formData.bankAddress }),
-        ...(formData.bankSWIFT && { bankSWIFT: formData.bankSWIFT }),
-        ...(formData.bankAccount && { bankAccount: formData.bankAccount })
-      };
+      // Get wallet data from session storage
+      if (!walletData) {
+        throw new Error("No wallet data found. Please create a wallet first.");
+      }
 
-      const tags = [
-        ["t", ...formData.tags_t.split(",").map(tag => tag.trim()).filter(Boolean)],
-        ["o", ...formData.tags_o.split(",").map(tag => tag.trim()).filter(Boolean)]
-      ];
-
-      console.log("Profile content:", profileContent);
-      console.log("Tags:", tags);
-      console.log("Wallet data:", walletData);
-
-      // TODO: Implement NOSTR event creation and broadcasting
-      toast({
-        title: "Profile Created!",
-        description: "Your NOSTR profile has been created successfully",
+      // Call the edge function to create NOSTR profile
+      const { data, error } = await supabase.functions.invoke('create-nostr-profile', {
+        body: {
+          profileData: formData,
+          walletData: {
+            walletId: walletData.walletId,
+            nostrHex: walletData.nostrHex,
+            email: walletData.email
+          }
+        }
       });
 
-      // Clear session data after successful submission
-      clearWalletSessionData();
-      navigate("/");
+      if (error) {
+        throw error;
+      }
+
+      // Show the report dialog with results
+      setCreationResult(data);
+      setShowReport(true);
       
-    } catch (error) {
-      console.error("Error creating NOSTR profile:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create NOSTR profile. Please try again.",
-        variant: "destructive",
+    } catch (error: any) {
+      console.error('Profile creation error:', error);
+      
+      // Show error in report dialog
+      setCreationResult({
+        success: false,
+        error: error.message || "Failed to create NOSTR profile. Please try again."
       });
+      setShowReport(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -462,13 +458,19 @@ const NostrProfile = () => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit">
-                  Create NOSTR Profile
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Creating Profile..." : "Create NOSTR Profile"}
                 </Button>
               </div>
             </form>
           </CardContent>
         </Card>
+
+        <ProfileCreationReport
+          open={showReport}
+          onOpenChange={setShowReport}
+          result={creationResult}
+        />
       </div>
     </div>
   );
