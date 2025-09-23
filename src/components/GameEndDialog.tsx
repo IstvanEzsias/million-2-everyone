@@ -1,10 +1,12 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { generateWallet, type WalletData } from "@/utils/walletGenerator";
 import { toast } from "@/hooks/use-toast";
 import { Copy, RefreshCw, Mail, Key, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { setWalletSessionData } from "@/utils/sessionStorage";
 import hundredMillionLogo from "@/assets/100-million-logo.png";
 
 interface GameEndDialogProps {
@@ -13,6 +15,7 @@ interface GameEndDialogProps {
 }
 
 const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
+  const navigate = useNavigate();
   const [walletData, setWalletData] = useState<WalletData | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [librariesLoaded, setLibrariesLoaded] = useState(false);
@@ -108,11 +111,34 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
   };
 
   const handleEmailAndNostr = () => {
-    toast({
-      title: "Backend Required",
-      description: "Please connect to Supabase to enable email functionality and NOSTR profile creation.",
-      variant: "destructive",
+    if (!walletData) {
+      toast({
+        title: "Error",
+        description: "No wallet data available. Please generate a wallet first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!email.trim()) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Store wallet data in session storage
+    setWalletSessionData({
+      nostrPrivateKey: walletData.privateKeyHex,
+      lanaPrivateKey: walletData.privateKeyWIF,
+      walletId: walletData.lanaAddress,
+      nostrHex: walletData.nostrHexId,
     });
+
+    // Navigate to NOSTR profile page
+    navigate("/nostr-profile");
   };
 
   const handleReset = () => {
