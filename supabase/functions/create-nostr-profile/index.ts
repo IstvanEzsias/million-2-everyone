@@ -24,6 +24,15 @@ interface RelayResult {
   responseTime?: number
 }
 
+interface WalletRegistrationResult {
+  success: boolean
+  wallet_id: string
+  status: string
+  message: string
+  data?: any
+  error?: string
+}
+
 interface ProfileData {
   name: string
   about: string
@@ -68,6 +77,58 @@ function createEvent(
   const signedEvent = finalizeEvent(unsignedEvent, hexToBytes(privateKey))
   
   return signedEvent
+}
+
+// Function to register wallet with Lana Registry
+async function registerWalletWithLanaRegistry(
+  walletId: string, 
+  nostrHex: string
+): Promise<WalletRegistrationResult> {
+  const apiKey = Deno.env.get('LANA_REGISTRY_API_KEY')
+  
+  if (!apiKey) {
+    throw new Error('LANA_REGISTRY_API_KEY not configured')
+  }
+
+  try {
+    console.log(`Registering wallet ${walletId} with NOSTR ID ${nostrHex}`)
+    
+    const response = await fetch('https://pnhrbebgneacgcatuxdq.supabase.co/functions/v1/external-api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        method: 'check_wallet',
+        api_key: apiKey,
+        data: {
+          wallet_id: walletId,
+          nostr_id_hex: nostrHex
+        }
+      })
+    })
+
+    const result = await response.json()
+    console.log('Lana Registry response:', result)
+    
+    return {
+      success: result.success || false,
+      wallet_id: walletId,
+      status: result.status || 'unknown',
+      message: result.message || 'Unknown response from registry',
+      data: result.data,
+      error: result.error
+    }
+  } catch (error) {
+    console.error('Lana Registry API error:', error)
+    return {
+      success: false,
+      wallet_id: walletId,
+      status: 'error',
+      message: `Registry API error: ${error.message}`,
+      error: error.message
+    }
+  }
 }
 
 async function broadcastToRelay(relay: string, event: NostrEvent): Promise<RelayResult> {
@@ -227,6 +288,13 @@ serve(async (req) => {
 
     console.log('Player record created:', playerData.id)
 
+    // Register wallet with Lana Registry
+    console.log('Registering wallet with Lana Registry...')
+    const walletRegistration = await registerWalletWithLanaRegistry(
+      walletData.walletId,
+      walletData.nostrHex
+    )
+
     // Prepare response
     const successfulRelays = relayResults.filter(r => r.success).length
     const totalRelays = relayResults.length
@@ -241,6 +309,7 @@ serve(async (req) => {
         failed: totalRelays - successfulRelays,
         details: relayResults
       },
+      walletRegistration,
       message: `NOSTR profile created successfully! Event broadcasted to ${successfulRelays}/${totalRelays} relays.`
     }
 

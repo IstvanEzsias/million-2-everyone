@@ -12,6 +12,15 @@ interface RelayResult {
   responseTime?: number;
 }
 
+interface WalletRegistrationResult {
+  success: boolean;
+  wallet_id: string;
+  status: string;
+  message: string;
+  data?: any;
+  error?: string;
+}
+
 interface ProfileCreationResult {
   success: boolean;
   eventId?: string;
@@ -22,6 +31,7 @@ interface ProfileCreationResult {
     failed: number;
     details: RelayResult[];
   };
+  walletRegistration?: WalletRegistrationResult;
   message?: string;
   error?: string;
 }
@@ -173,14 +183,51 @@ export const ProfileCreationReport = ({ open, onOpenChange, result }: ProfileCre
                 </div>
               )}
 
+              {/* Wallet Registration */}
+              {result.walletRegistration && (
+                <div className="p-4 rounded-lg border">
+                  <h3 className="font-semibold mb-2 flex items-center gap-2">
+                    <Wallet className="h-4 w-4" />
+                    Wallet Registration
+                  </h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center gap-2">
+                      {result.walletRegistration.success && result.walletRegistration.status === 'ok' ? (
+                        <>
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <span className="text-green-600">
+                            Wallet registered successfully with Lana Registry
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="h-4 w-4 text-red-500" />
+                          <span className="text-red-600">
+                            {result.walletRegistration.message || 'Registration failed'}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <div>
+                      <span className="font-medium">Wallet ID:</span>
+                      <code className="ml-2 text-xs bg-muted px-1 py-0.5 rounded">
+                        {result.walletRegistration.wallet_id}
+                      </code>
+                    </div>
+                    <div>
+                      <span className="font-medium">Status:</span>
+                      <Badge variant={result.walletRegistration.status === 'ok' ? 'default' : 'destructive'} className="ml-2">
+                        {result.walletRegistration.status}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Next Steps */}
               <div className="p-4 rounded-lg border bg-blue-50 dark:bg-blue-950">
                 <h3 className="font-semibold mb-2">Next Steps</h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Wallet className="h-4 w-4" />
-                    <span>Wallet registration API (Coming soon)</span>
-                  </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Mail className="h-4 w-4" />
                     <span>Email notification system (Coming soon)</span>
