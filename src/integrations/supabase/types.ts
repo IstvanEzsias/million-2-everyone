@@ -69,6 +69,7 @@ export type Database = {
           id: string
           nostrhex: string | null
           received_lana: boolean
+          send_email_after_payment: boolean
           transactionid: string | null
           updated_at: string
           walletid: string | null
@@ -79,6 +80,7 @@ export type Database = {
           id?: string
           nostrhex?: string | null
           received_lana?: boolean
+          send_email_after_payment?: boolean
           transactionid?: string | null
           updated_at?: string
           walletid?: string | null
@@ -89,6 +91,7 @@ export type Database = {
           id?: string
           nostrhex?: string | null
           received_lana?: boolean
+          send_email_after_payment?: boolean
           transactionid?: string | null
           updated_at?: string
           walletid?: string | null
