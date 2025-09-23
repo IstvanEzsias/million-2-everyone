@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
-import { schnorr } from "https://esm.sh/@noble/secp256k1@2.1.0"
+import { finalizeEvent, verifyEvent } from "https://esm.sh/nostr-tools@2.17.0"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -36,16 +36,7 @@ interface ProfileData {
   lanoshi2lash: string
 }
 
-// Simple NOSTR event creation and signing functions
-function sha256(data: string): Promise<string> {
-  const encoder = new TextEncoder()
-  const dataBuffer = encoder.encode(data)
-  return crypto.subtle.digest('SHA-256', dataBuffer).then(hashBuffer => {
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
-  })
-}
-
+// Helper function to convert hex string to bytes
 function hexToBytes(hex: string): Uint8Array {
   const bytes = new Uint8Array(hex.length / 2)
   for (let i = 0; i < hex.length; i += 2) {
@@ -54,50 +45,29 @@ function hexToBytes(hex: string): Uint8Array {
   return bytes
 }
 
-async function createEvent(
+// Create a NOSTR event using nostr-tools
+function createEvent(
   pubkey: string,
   kind: number,
   tags: string[][],
   content: string,
   privateKey: string
-): Promise<NostrEvent> {
+): NostrEvent {
   const created_at = Math.floor(Date.now() / 1000)
   
-  // Create event data for signing
-  const eventData = [0, pubkey, created_at, kind, tags, content]
-  const eventString = JSON.stringify(eventData)
-  const eventHash = await sha256(eventString)
-  
-  // Simple secp256k1 signature (simplified for demo)
-  // In production, you'd use a proper secp256k1 library
-  const signature = await signEvent(eventHash, privateKey)
-  
-  return {
-    id: eventHash,
-    pubkey,
-    created_at,
+  // Create unsigned event
+  const unsignedEvent = {
     kind,
+    created_at,
     tags,
     content,
-    sig: signature
+    pubkey
   }
-}
-
-async function signEvent(eventHash: string, privateKey: string): Promise<string> {
-  // Use proper schnorr signatures for NOSTR
-  try {
-    const eventHashBytes = hexToBytes(eventHash)
-    const privateKeyBytes = hexToBytes(privateKey)
-    const signature = await schnorr.sign(eventHashBytes, privateKeyBytes)
-    return bytesToHex(signature)
-  } catch (error) {
-    console.error('Signing error:', error)
-    throw new Error(`Failed to sign event: ${error.message}`)
-  }
-}
-
-function bytesToHex(bytes: Uint8Array): string {
-  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('')
+  
+  // Sign the event using nostr-tools
+  const signedEvent = finalizeEvent(unsignedEvent, hexToBytes(privateKey))
+  
+  return signedEvent
 }
 
 async function broadcastToRelay(relay: string, event: NostrEvent): Promise<RelayResult> {
@@ -218,7 +188,7 @@ serve(async (req) => {
     // Use the public key directly (nostrHex is the public key)
     const publicKey = walletData.nostrHex
 
-    const event = await createEvent(
+    const event = createEvent(
       publicKey,
       0, // kind 0 for metadata
       [],
