@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { getWalletSessionData, clearWalletSessionData, type WalletSessionData } from "@/utils/sessionStorage";
+import { ImageUpload } from "@/components/ImageUpload";
 
 interface NostrProfileData {
   // Required fields
@@ -77,7 +78,8 @@ const NostrProfile = () => {
     setWalletData(sessionData);
     setFormData(prev => ({
       ...prev,
-      lanaWalletID: sessionData.walletId
+      lanaWalletID: sessionData.walletId,
+      nip05: sessionData.email
     }));
   }, [navigate, toast]);
 
@@ -199,7 +201,7 @@ const NostrProfile = () => {
       <div className="container mx-auto px-4 max-w-4xl">
         <Card>
           <CardHeader>
-            <CardTitle>Create Your NOSTR Profile</CardTitle>
+            <CardTitle>Create Your Lana NOSTR Profile</CardTitle>
             <CardDescription>
               Complete your profile information to create a KIND 0 NOSTR event
             </CardDescription>
@@ -357,13 +359,10 @@ const NostrProfile = () => {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="picture">Profile Picture URL</Label>
-                    <Input
-                      id="picture"
+                    <ImageUpload
                       value={formData.picture}
-                      onChange={(e) => handleInputChange("picture", e.target.value)}
-                      placeholder="https://example.com/avatar.jpg"
-                      className={errors.picture ? "border-destructive" : ""}
+                      onChange={(url) => handleInputChange("picture", url)}
+                      label="Profile Picture"
                     />
                     {errors.picture && <p className="text-sm text-destructive mt-1">{errors.picture}</p>}
                   </div>

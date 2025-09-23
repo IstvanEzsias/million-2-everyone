@@ -4,6 +4,7 @@ export interface WalletSessionData {
   lanaPrivateKey: string;
   walletId: string;
   nostrHex: string;
+  email: string;
 }
 
 const WALLET_SESSION_KEY = 'wallet_session_data';

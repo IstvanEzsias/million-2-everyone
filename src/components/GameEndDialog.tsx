@@ -135,6 +135,7 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
       lanaPrivateKey: walletData.privateKeyWIF,
       walletId: walletData.lanaAddress,
       nostrHex: walletData.nostrHexId,
+      email: email,
     });
 
     // Navigate to NOSTR profile page
