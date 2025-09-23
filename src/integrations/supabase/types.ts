@@ -35,6 +35,7 @@ export type Database = {
       players: {
         Row: {
           created_at: string
+          email: string | null
           id: string
           nostrhex: string | null
           received_lana: boolean
@@ -44,6 +45,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          email?: string | null
           id?: string
           nostrhex?: string | null
           received_lana?: boolean
@@ -53,6 +55,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          email?: string | null
           id?: string
           nostrhex?: string | null
           received_lana?: boolean
