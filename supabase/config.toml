@@ -2,3 +2,6 @@ project_id = "wrhcgufugnyquufydvwl"
 
 [functions.create-nostr-profile]
 verify_jwt = false
+
+[functions.send-lana-to-players]
+verify_jwt = false
