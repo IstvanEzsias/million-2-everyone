@@ -706,12 +706,13 @@ serve(async (req) => {
     
     console.log('⚙️ Using Electrum server:', `${electrumServer}:${electrumPort}`);
     
-    // Get players who haven't received LANA yet
+    // Get players who haven't received LANA yet and played the game
     console.log('👥 Fetching players who need LANA...');
     const { data: players, error: playersError } = await supabase
       .from('players')
       .select('id, walletid')
       .eq('received_lana', false)
+      .eq('played_the_game', true)
       .not('walletid', 'is', null);
       
     if (playersError) {
@@ -720,16 +721,33 @@ serve(async (req) => {
     
     if (!players || players.length === 0) {
       console.log('✅ No players need LANA distribution at this time');
+      
+      // Get stats for logging
+      const { data: allPlayers } = await supabase
+        .from('players')
+        .select('id, received_lana, played_the_game, walletid')
+        .not('walletid', 'is', null);
+      
+      const stats = {
+        total: allPlayers?.length || 0,
+        alreadyReceived: allPlayers?.filter(p => p.received_lana).length || 0,
+        didNotPlayGame: allPlayers?.filter(p => !p.played_the_game).length || 0,
+        eligible: allPlayers?.filter(p => !p.received_lana && p.played_the_game).length || 0
+      };
+      
+      console.log(`📊 Player stats: ${stats.total} total, ${stats.alreadyReceived} already received, ${stats.didNotPlayGame} didn't play game, ${stats.eligible} eligible`);
+      
       return new Response(JSON.stringify({
         success: true,
         message: 'No players need LANA distribution',
-        processed: 0
+        processed: 0,
+        stats
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
     
-    console.log(`💰 Found ${players.length} players needing LANA distribution`);
+    console.log(`💰 Found ${players.length} eligible players needing LANA distribution (played game = true)`);
     
     // Validate wallet state
     const { balance, utxos } = await validateWalletState(settings.lana_wallet_id, electrumServer, electrumPort);
