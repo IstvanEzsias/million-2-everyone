@@ -68,6 +68,7 @@ export type Database = {
           email: string | null
           id: string
           nostrhex: string | null
+          played_the_game: boolean
           received_lana: boolean
           send_email_after_payment: boolean
           transactionid: string | null
@@ -79,6 +80,7 @@ export type Database = {
           email?: string | null
           id?: string
           nostrhex?: string | null
+          played_the_game?: boolean
           received_lana?: boolean
           send_email_after_payment?: boolean
           transactionid?: string | null
@@ -90,6 +92,7 @@ export type Database = {
           email?: string | null
           id?: string
           nostrhex?: string | null
+          played_the_game?: boolean
           received_lana?: boolean
           send_email_after_payment?: boolean
           transactionid?: string | null
