@@ -112,7 +112,7 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     // Notify parent component with new state
     onStateChange(newState);
 
-    if (newState.users >= userCap && !hasShownUserCapMessage) {
+    if (state.users < userCap && newState.users >= userCap) {
       setHasShownUserCapMessage(true);
       toast({
         title: t('notifications.globalCap'),
