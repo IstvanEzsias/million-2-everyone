@@ -83,8 +83,7 @@ const NostrProfile = () => {
     setWalletData(sessionData);
     setFormData(prev => ({
       ...prev,
-      lanaWalletID: sessionData.walletId,
-      nip05: sessionData.email
+      lanaWalletID: sessionData.walletId
     }));
   }, [navigate, toast]);
 
@@ -103,10 +102,6 @@ const NostrProfile = () => {
     if (!formData.tags_t.trim()) newErrors.tags_t = "Interest tags are required";
     if (!formData.tags_o.trim()) newErrors.tags_o = "Intimacy interest tags are required";
 
-    // Email validation if provided
-    if (formData.nip05 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.nip05)) {
-      newErrors.nip05 = "Please enter a valid email address";
-    }
 
     // URL validation if provided
     if (formData.website && !/^https?:\/\/.+/.test(formData.website)) {
@@ -288,15 +283,25 @@ const NostrProfile = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="lanaWalletID">Lana Wallet ID</Label>
+                    <Label htmlFor="lanaWalletID">LanaCoin Address</Label>
                     <Input
                       id="lanaWalletID"
                       value={formData.lanaWalletID}
                       disabled
                       className="bg-muted"
                     />
-                    <p className="text-sm text-muted-foreground mt-1">This field is automatically filled from your wallet</p>
                   </div>
+                </div>
+
+                {/* Hidden NOSTR identity fields - kept for session data */}
+                <input type="hidden" value={walletData?.nostrPrivateKey || ""} />
+                <input type="hidden" value={walletData?.nostrHex || ""} />
+
+                {/* Security Note */}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
+                  <p className="text-sm text-yellow-800">
+                    <strong>Note:</strong> Hey Man, just a reminder — your Private Key is never stored anywhere. If you lose it, you lose both your identity and your Lana forever.
+                  </p>
                 </div>
 
                 <div>
@@ -376,18 +381,6 @@ const NostrProfile = () => {
                     {errors.website && <p className="text-sm text-destructive mt-1">{errors.website}</p>}
                   </div>
 
-                  <div>
-                    <Label htmlFor="nip05">NIP-05 (Email)</Label>
-                    <Input
-                      id="nip05"
-                      type="email"
-                      value={formData.nip05}
-                      onChange={(e) => handleInputChange("nip05", e.target.value)}
-                      placeholder="user@domain.com"
-                      className={errors.nip05 ? "border-destructive" : ""}
-                    />
-                    {errors.nip05 && <p className="text-sm text-destructive mt-1">{errors.nip05}</p>}
-                  </div>
 
                   <div>
                     <Label htmlFor="payment_link">Payment Link</Label>
