@@ -11,6 +11,7 @@ import { getWalletSessionData, clearWalletSessionData, type WalletSessionData } 
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/ImageUpload";
 import { ProfileCreationReport } from "@/components/ProfileCreationReport";
+import PrivateKeyVerificationDialog from "@/components/PrivateKeyVerificationDialog";
 
 interface NostrProfileData {
   // Required fields
@@ -67,6 +68,7 @@ const NostrProfile = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [creationResult, setCreationResult] = useState<any>(null);
+  const [showVerificationDialog, setShowVerificationDialog] = useState(false);
 
   useEffect(() => {
     const sessionData = getWalletSessionData();
@@ -134,6 +136,12 @@ const NostrProfile = () => {
       return;
     }
 
+    // Show verification dialog instead of proceeding directly
+    setShowVerificationDialog(true);
+  };
+
+  const handleVerificationSuccess = async () => {
+    setShowVerificationDialog(false);
     setIsSubmitting(true);
     
     try {
@@ -464,6 +472,13 @@ const NostrProfile = () => {
           open={showReport}
           onOpenChange={setShowReport}
           result={creationResult}
+        />
+
+        <PrivateKeyVerificationDialog
+          open={showVerificationDialog}
+          onOpenChange={setShowVerificationDialog}
+          expectedPrivateKey={walletData?.lanaPrivateKey || ""}
+          onVerificationSuccess={handleVerificationSuccess}
         />
       </div>
     </div>
