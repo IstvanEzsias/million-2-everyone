@@ -76,8 +76,16 @@ const Index = () => {
               <p className="mb-4">
                 After you complete the game, you'll create your Lana Wallet and sign your profile via the decentralised Nostr protocol. From then on, you own your data—your private key stays with you and unlocks access to 20+ apps across Lana World.
               </p>
-              <div className="text-sm opacity-75">
+              <div className="text-sm opacity-75 mb-4">
                 Lana is owned by everyone who participates this eco system. Let's co-create the new reality
+              </div>
+              <div className="text-xs">
+                <a 
+                  href="/referral-docs" 
+                  className="text-primary hover:text-primary/80 underline"
+                >
+                  Referral System Documentation
+                </a>
               </div>
             </div>
           </footer>
