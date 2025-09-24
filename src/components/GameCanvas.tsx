@@ -298,7 +298,6 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       const collisionRadius = player.r * 0.7; // 70% of visual radius for more forgiving collisions
       if (dx * dx + dy * dy < collisionRadius * collisionRadius) {
         gameStateRef.current.gameRunning = false;
-        setShowEndDialog(true); // Show dialog for testing purposes
       }
     }
 
