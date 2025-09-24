@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { generateWallet, type WalletData } from "@/utils/walletGenerator";
 import { toast } from "@/hooks/use-toast";
-import { Copy, RefreshCw, Mail, Key, Loader2 } from "lucide-react";
+import { Copy, RefreshCw, Key, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { setWalletSessionData } from "@/utils/sessionStorage";
 import hundredMillionLogo from "@/assets/100-million-logo.png";
@@ -19,7 +19,6 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
   const [walletData, setWalletData] = useState<WalletData | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [librariesLoaded, setLibrariesLoaded] = useState(false);
-  const [email, setEmail] = useState("");
 
   // Check if libraries are loaded with timeout fallback
   useEffect(() => {
@@ -120,22 +119,13 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
       return;
     }
 
-    if (!email.trim()) {
-      toast({
-        title: "Email Required",
-        description: "Please enter your email address to continue.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Store wallet data in session storage
+    // Store wallet data in session storage (no email required now)
     setWalletSessionData({
       nostrPrivateKey: walletData.privateKeyHex,
       lanaPrivateKey: walletData.privateKeyWIF,
       walletId: walletData.lanaAddress,
       nostrHex: walletData.nostrHexId,
-      email: email,
+      email: "", // No email required anymore
     });
 
     // Navigate to NOSTR profile page
@@ -247,83 +237,17 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
             </p>
           </div>
 
-          {/* Nostr Keys */}
-          <div className="bg-muted/50 p-4 rounded-lg">
-            <h3 className="font-semibold text-primary mb-3">NOSTR Identity</h3>
-            
-            <div className="space-y-3">
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-medium text-destructive">Private Key (HEX)</label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => copyToClipboard(walletData.privateKeyHex, "NOSTR Private Key")}
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                </div>
-                <p className="text-xs font-mono break-all bg-background p-2 rounded border border-destructive/20">
-                  {walletData.privateKeyHex}
-                </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  ⚠️ Keep this private key secure! Used for signing NOSTR events.
-                </p>
-              </div>
-              
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-medium">Public Key (HEX)</label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => copyToClipboard(walletData.nostrHexId, "NOSTR HEX ID")}
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                </div>
-                <p className="text-xs font-mono break-all bg-background p-2 rounded border">
-                  {walletData.nostrHexId}
-                </p>
-              </div>
-              
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-sm font-medium">Public Key (npub)</label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => copyToClipboard(walletData.nostrNpubId, "NOSTR npub ID")}
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                </div>
-                <p className="text-xs font-mono break-all bg-background p-2 rounded border">
-                  {walletData.nostrNpubId}
-                </p>
-              </div>
-            </div>
+          {/* Hidden NOSTR identity fields - kept for session data but not displayed */}
+          {/* NOSTR keys are stored internally but not shown to user to reduce complexity */}
+
+          {/* Security Note */}
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <p className="text-sm text-yellow-800">
+              <strong>Note:</strong> Hey Man, just a reminder — your Private Key is never stored anywhere. If you lose it, you lose both your identity and your Lana forever.
+            </p>
           </div>
         </div>
 
-        {/* Email Input */}
-        <div className="mt-6">
-          <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-            Email Address <span className="text-destructive">*</span>
-          </label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="Enter your email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full"
-          />
-          <p className="text-xs text-muted-foreground mt-1">
-            Required to receive wallet information and NOSTR profile details.
-          </p>
-        </div>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 mt-6">
@@ -348,11 +272,10 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
           
           <Button 
             onClick={handleEmailAndNostr}
-            disabled={!email.trim()}
             className="bg-primary hover:bg-primary-glow text-primary-foreground flex items-center gap-2"
           >
-            <Mail className="w-4 h-4" />
-            Send Wallet & Create NOSTR Profile
+            <Key className="w-4 h-4" />
+            Create NOSTR Profile
           </Button>
         </div>
       </DialogContent>
