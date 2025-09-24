@@ -3,6 +3,7 @@ import GameCanvas from "@/components/GameCanvas";
 import GameStats from "@/components/GameStats";
 import GameEndDialog from "@/components/GameEndDialog";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import PrizeAvailabilityBadge from "@/components/PrizeAvailabilityBadge";
 import { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { setReturnUrlData, getReturnUrlData } from "@/utils/sessionStorage";
@@ -68,6 +69,9 @@ const Index = () => {
               </div>
             </div>
           )}
+
+          {/* Prize Availability Badge */}
+          <PrizeAvailabilityBadge />
 
           {/* Header with logo and title */}
           <GameHeader />

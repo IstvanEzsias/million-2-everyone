@@ -43,5 +43,10 @@
     "selector": "Jezik",
     "english": "Angleščina",
     "slovenian": "Slovenščina"
+  },
+  "prize": {
+    "availableSlots": "Razpoložljive nagrade",
+    "realTimeBalance": "Stanje denarnice v realnem času",
+    "error": "Napaka pri nalaganju nagrad"
   }
 }

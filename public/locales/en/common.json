@@ -43,5 +43,10 @@
     "selector": "Language",
     "english": "English",
     "slovenian": "Slovenian"
+  },
+  "prize": {
+    "availableSlots": "Available Prizes",
+    "realTimeBalance": "Real-time wallet balance",
+    "error": "Failed to load prizes"
   }
 }
