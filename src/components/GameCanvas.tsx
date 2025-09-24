@@ -200,11 +200,8 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
   };
 
   useEffect(() => {
-    // Initial fetch
+    // Fetch prizes only once on component load
     fetchAvailablePrizes();
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchAvailablePrizes, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   // Load the jumping face image
