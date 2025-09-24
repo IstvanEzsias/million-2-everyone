@@ -69,7 +69,6 @@ const NostrProfile = () => {
   const [showReport, setShowReport] = useState(false);
   const [creationResult, setCreationResult] = useState<any>(null);
   const [showVerificationDialog, setShowVerificationDialog] = useState(false);
-  const [profileCreated, setProfileCreated] = useState(false);
 
   useEffect(() => {
     const sessionData = getWalletSessionData();
@@ -168,10 +167,9 @@ const NostrProfile = () => {
         throw error;
       }
 
-      // Show the report dialog with results and mark profile as created
+      // Show the report dialog with results
       setCreationResult(data);
       setShowReport(true);
-      setProfileCreated(true);
       
     } catch (error: any) {
       console.error('Profile creation error:', error);
@@ -193,45 +191,6 @@ const NostrProfile = () => {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <p className="mt-4 text-muted-foreground">Loading wallet data...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (profileCreated) {
-    return (
-      <div className="min-h-screen bg-gradient-background py-8">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <Card>
-            <CardHeader>
-              <CardTitle>NOSTR Profile Created Successfully!</CardTitle>
-              <CardDescription>
-                Your NOSTR profile has been created and broadcasted to the network.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center space-y-6">
-              <div className="text-green-600 text-6xl mb-4">✓</div>
-              <p className="text-lg">Your NOSTR profile is now live on the network!</p>
-              <div className="space-y-4">
-                <Button 
-                  onClick={() => navigate("/")}
-                  className="mr-4"
-                >
-                  Back to Game
-                </Button>
-                <Button 
-                  variant="outline"
-                  onClick={() => {
-                    setProfileCreated(false);
-                    setShowReport(false);
-                    setCreationResult(null);
-                  }}
-                >
-                  Create Another Profile
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
     );
