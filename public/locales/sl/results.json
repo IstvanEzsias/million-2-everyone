@@ -1,0 +1,32 @@
+{
+  "title": "Poročilo o ustvarjanju NOSTR profila",
+  "description": "Podrobni rezultati vašega procesa ustvarjanja profila",
+  "loading": "Nalaganje rezultatov...",
+  "overallStatus": "Splošno stanje",
+  "success": "Uspeh",
+  "failed": "Neuspešno",
+  "nostrEvent": "NOSTR dogodek",
+  "eventId": "ID dogodka:",
+  "databaseStorage": "Shranjevanje v bazo podatkov",
+  "playerRecordCreated": "Zapis igralca uspešno ustvarjen",
+  "playerId": "ID igralca:",
+  "relayBroadcasting": "Oddajanje preko relay strežnikov",
+  "totalRelays": "Skupaj relay strežnikov",
+  "successful": "Uspešno",
+  "detailedResults": "Podrobni rezultati:",
+  "error": "Napaka",
+  "walletRegistration": "Registracija denarnice",
+  "walletRegisteredSuccess": "Denarnica uspešno registrirana pri Lana registru",
+  "registrationFailed": "Registracija neuspešna",
+  "walletId": "ID denarnice:",
+  "status": "Stanje:",
+  "nextSteps": "Naslednji koraki",
+  "emailNotification": "Sistem obvestil po e-pošti (kmalu na voljo)",
+  "errorDetails": "Podrobnosti napake",
+  "buttons": {
+    "returnToSite": "Vrnitev na {{siteName}}",
+    "stayAndExplore": "Ostani in raziskuj",
+    "createAnotherProfile": "Ustvari drug profil",
+    "backToHome": "Nazaj domov"
+  }
+}

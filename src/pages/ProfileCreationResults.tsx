@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, Clock, Wifi, Database, Mail, Wallet, ArrowLeft, RotateCcw } from 'lucide-react';
 import { clearWalletSessionData, getReturnUrlData, clearReturnUrlData } from '@/utils/sessionStorage';
+import { useTranslation } from 'react-i18next';
 
 interface RelayResult {
   url: string;
@@ -42,6 +43,7 @@ const ProfileCreationResults = () => {
   const location = useLocation();
   const [result, setResult] = useState<ProfileCreationResult | null>(null);
   const [returnUrlData, setReturnUrlData] = useState<{url: string, siteName?: string} | null>(null);
+  const { t } = useTranslation('results');
 
   useEffect(() => {
     // Get the result from navigation state
@@ -82,7 +84,7 @@ const ProfileCreationResults = () => {
       <div className="min-h-screen bg-gradient-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading results...</p>
+          <p className="mt-4 text-muted-foreground">{t('loading')}</p>
         </div>
       </div>
     );
@@ -99,20 +101,20 @@ const ProfileCreationResults = () => {
               ) : (
                 <XCircle className="h-6 w-6 text-red-500" />
               )}
-              NOSTR Profile Creation Report
+              {t('title')}
             </CardTitle>
             <CardDescription>
-              Detailed results of your profile creation process
+              {t('description')}
             </CardDescription>
           </CardHeader>
           
           <CardContent className="space-y-6">
             {/* Overall Status */}
             <div className="p-4 rounded-lg border">
-              <h3 className="font-semibold mb-2">Overall Status</h3>
+              <h3 className="font-semibold mb-2">{t('overallStatus')}</h3>
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant={result.success ? "default" : "destructive"}>
-                  {result.success ? "Success" : "Failed"}
+                  {result.success ? t('success') : t('failed')}
                 </Badge>
                 <span className="text-sm text-muted-foreground">
                   {result.message || result.error}
@@ -126,11 +128,11 @@ const ProfileCreationResults = () => {
                 <div className="p-4 rounded-lg border">
                   <h3 className="font-semibold mb-2 flex items-center gap-2">
                     <Wifi className="h-4 w-4" />
-                    NOSTR Event
+                    {t('nostrEvent')}
                   </h3>
                   <div className="space-y-2 text-sm">
                     <div>
-                      <span className="font-medium">Event ID:</span>
+                      <span className="font-medium">{t('eventId')}</span>
                       <code className="ml-2 text-xs bg-muted px-1 py-0.5 rounded">
                         {result.eventId}
                       </code>
@@ -142,15 +144,15 @@ const ProfileCreationResults = () => {
                 <div className="p-4 rounded-lg border">
                   <h3 className="font-semibold mb-2 flex items-center gap-2">
                     <Database className="h-4 w-4" />
-                    Database Storage
+                    {t('databaseStorage')}
                   </h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span>Player record created successfully</span>
+                      <span>{t('playerRecordCreated')}</span>
                     </div>
                     <div>
-                      <span className="font-medium">Player ID:</span>
+                      <span className="font-medium">{t('playerId')}</span>
                       <code className="ml-2 text-xs bg-muted px-1 py-0.5 rounded">
                         {result.playerId}
                       </code>
@@ -163,7 +165,7 @@ const ProfileCreationResults = () => {
                   <div className="p-4 rounded-lg border">
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
                       <Wifi className="h-4 w-4" />
-                      Relay Broadcasting
+                      {t('relayBroadcasting')}
                     </h3>
                     
                     <div className="grid grid-cols-3 gap-4 mb-4">
@@ -171,24 +173,24 @@ const ProfileCreationResults = () => {
                         <div className="text-2xl font-bold text-blue-600">
                           {result.relayResults.total}
                         </div>
-                        <div className="text-xs text-muted-foreground">Total Relays</div>
+                        <div className="text-xs text-muted-foreground">{t('totalRelays')}</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-green-600">
                           {result.relayResults.successful}
                         </div>
-                        <div className="text-xs text-muted-foreground">Successful</div>
+                        <div className="text-xs text-muted-foreground">{t('successful')}</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-red-600">
                           {result.relayResults.failed}
                         </div>
-                        <div className="text-xs text-muted-foreground">Failed</div>
+                        <div className="text-xs text-muted-foreground">{t('failed')}</div>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <h4 className="font-medium text-sm">Detailed Results:</h4>
+                      <h4 className="font-medium text-sm">{t('detailedResults')}</h4>
                       <div className="max-h-40 overflow-y-auto space-y-1">
                         {result.relayResults.details.map((relay, index) => (
                           <div
@@ -212,7 +214,7 @@ const ProfileCreationResults = () => {
                               )}
                               {relay.error && (
                                 <span className="text-xs text-red-500" title={relay.error}>
-                                  Error
+                                  {t('error')}
                                 </span>
                               )}
                             </div>
@@ -228,7 +230,7 @@ const ProfileCreationResults = () => {
                   <div className="p-4 rounded-lg border">
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
                       <Wallet className="h-4 w-4" />
-                      Wallet Registration
+                      {t('walletRegistration')}
                     </h3>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center gap-2">
@@ -236,26 +238,26 @@ const ProfileCreationResults = () => {
                           <>
                             <CheckCircle className="h-4 w-4 text-green-500" />
                             <span className="text-green-600">
-                              Wallet registered successfully with Lana Registry
+                              {t('walletRegisteredSuccess')}
                             </span>
                           </>
                         ) : (
                           <>
                             <XCircle className="h-4 w-4 text-red-500" />
                             <span className="text-red-600">
-                              {result.walletRegistration.message || 'Registration failed'}
+                              {result.walletRegistration.message || t('registrationFailed')}
                             </span>
                           </>
                         )}
                       </div>
                       <div>
-                        <span className="font-medium">Wallet ID:</span>
+                        <span className="font-medium">{t('walletId')}</span>
                         <code className="ml-2 text-xs bg-muted px-1 py-0.5 rounded">
                           {result.walletRegistration.wallet_id}
                         </code>
                       </div>
                       <div>
-                        <span className="font-medium">Status:</span>
+                        <span className="font-medium">{t('status')}</span>
                         <Badge variant={result.walletRegistration.status === 'ok' ? 'default' : 'destructive'} className="ml-2">
                           {result.walletRegistration.status}
                         </Badge>
@@ -266,11 +268,11 @@ const ProfileCreationResults = () => {
 
                 {/* Next Steps */}
                 <div className="p-4 rounded-lg border bg-blue-50 dark:bg-blue-950">
-                  <h3 className="font-semibold mb-2">Next Steps</h3>
+                  <h3 className="font-semibold mb-2">{t('nextSteps')}</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Mail className="h-4 w-4" />
-                      <span>Email notification system (Coming soon)</span>
+                      <span>{t('emailNotification')}</span>
                     </div>
                   </div>
                 </div>
@@ -279,7 +281,7 @@ const ProfileCreationResults = () => {
 
             {!result.success && (
               <div className="p-4 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950">
-                <h3 className="font-semibold mb-2 text-red-800 dark:text-red-200">Error Details</h3>
+                <h3 className="font-semibold mb-2 text-red-800 dark:text-red-200">{t('errorDetails')}</h3>
                 <p className="text-sm text-red-700 dark:text-red-300">
                   {result.error}
                 </p>
@@ -292,26 +294,26 @@ const ProfileCreationResults = () => {
                 <>
                   <Button onClick={handleReturnToSite} className="bg-primary hover:bg-primary/90 flex items-center gap-2">
                     <ArrowLeft className="h-4 w-4" />
-                    Return to {returnUrlData.siteName || 'Referring Site'}
+                    {t('buttons.returnToSite', { siteName: returnUrlData.siteName || 'Referring Site' })}
                   </Button>
                   <Button onClick={handleBackToHome} variant="outline" className="flex items-center gap-2">
                     <ArrowLeft className="h-4 w-4" />
-                    Stay and Explore
+                    {t('buttons.stayAndExplore')}
                   </Button>
                   <Button onClick={handleCreateAnother} variant="outline" className="flex items-center gap-2">
                     <RotateCcw className="h-4 w-4" />
-                    Create Another Profile
+                    {t('buttons.createAnotherProfile')}
                   </Button>
                 </>
               ) : (
                 <>
                   <Button onClick={handleBackToHome} variant="outline" className="flex items-center gap-2">
                     <ArrowLeft className="h-4 w-4" />
-                    Back to Home
+                    {t('buttons.backToHome')}
                   </Button>
                   <Button onClick={handleCreateAnother} className="flex items-center gap-2">
                     <RotateCcw className="h-4 w-4" />
-                    Create Another Profile
+                    {t('buttons.createAnotherProfile')}
                   </Button>
                 </>
               )}

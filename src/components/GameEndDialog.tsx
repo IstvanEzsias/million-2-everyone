@@ -8,6 +8,7 @@ import { Copy, RefreshCw, Key, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { setWalletSessionData } from "@/utils/sessionStorage";
 import hundredMillionLogo from "@/assets/100-million-logo.png";
+import { useTranslation } from 'react-i18next';
 
 interface GameEndDialogProps {
   open: boolean;
@@ -19,6 +20,7 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
   const [walletData, setWalletData] = useState<WalletData | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [librariesLoaded, setLibrariesLoaded] = useState(false);
+  const { t } = useTranslation('profile');
 
   // Check if libraries are loaded with timeout fallback
   useEffect(() => {
@@ -59,16 +61,16 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
       console.log("Wallet generated successfully:", wallet);
       setWalletData(wallet);
       toast({
-        title: "🎉 Wallet Created!",
-        description: "Your LanaCoin wallet has been generated successfully.",
+        title: t('notifications.walletCreated'),
+        description: t('notifications.walletCreatedDesc'),
       });
     } catch (error) {
       console.error("Wallet generation error:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to generate wallet. Please try again.";
       toast({
-        title: "Error",
+        title: t('notifications.noWalletData'),
         description: errorMessage.includes("libraries not loaded") 
-          ? "Cryptographic libraries are still loading. Please refresh the page and try again." 
+          ? t('notifications.cryptoLibraryError') 
           : errorMessage,
         variant: "destructive",
       });
@@ -83,16 +85,16 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
       const wallet = await generateWallet();
       setWalletData(wallet);
       toast({
-        title: "🔄 Wallet Regenerated!",
-        description: "A new LanaCoin wallet has been generated.",
+        title: t('notifications.walletRegenerated'),
+        description: t('notifications.walletRegeneratedDesc'),
       });
     } catch (error) {
       console.error("Wallet regeneration error:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to regenerate wallet. Please try again.";
       toast({
-        title: "Error",
+        title: t('notifications.noWalletData'),
         description: errorMessage.includes("libraries not loaded") 
-          ? "Cryptographic libraries are still loading. Please refresh the page and try again." 
+          ? t('notifications.cryptoLibraryError') 
           : errorMessage,
         variant: "destructive",
       });
@@ -104,16 +106,16 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
     toast({
-      title: "Copied!",
-      description: `${label} copied to clipboard.`,
+      title: t('notifications.copied'),
+      description: t('notifications.copiedDesc', { label }),
     });
   };
 
   const handleEmailAndNostr = () => {
     if (!walletData) {
       toast({
-        title: "Error",
-        description: "No wallet data available. Please generate a wallet first.",
+        title: t('notifications.noWalletData'),
+        description: t('notifications.noWalletDataDesc'),
         variant: "destructive",
       });
       return;
@@ -142,10 +144,10 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center text-xl font-bold text-primary">
-              🎉 Congratulations! 🎉
+              {t('dialogs.gameEnd.congratulations')}
             </DialogTitle>
             <DialogDescription className="text-center text-base mt-4">
-              You earned 1 LanaCoin that is going to become Worth 100 Million
+              {t('dialogs.gameEnd.earnedDescription')}
             </DialogDescription>
           </DialogHeader>
           
@@ -158,15 +160,15 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
               {isGenerating ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generating...
+                  {t('dialogs.gameEnd.generating')}
                 </>
               ) : !librariesLoaded ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Loading Libraries...
+                  {t('dialogs.gameEnd.loadingLibraries')}
                 </>
               ) : (
-                "Create Lana Wallet"
+                t('dialogs.gameEnd.createWallet')
               )}
             </Button>
           </div>
@@ -189,10 +191,10 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
           </div>
           
           <DialogTitle className="text-center text-xl font-bold text-primary">
-            🎉 Your Lana Wallet is Ready! 🎉
+            {t('dialogs.gameEnd.walletReady')}
           </DialogTitle>
           <DialogDescription className="text-center text-base mt-2">
-            Keep your private key safe - you'll need it to access your wallet
+            {t('dialogs.gameEnd.keepPrivateKeySafe')}
           </DialogDescription>
         </DialogHeader>
         
@@ -202,7 +204,7 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-semibold text-primary flex items-center gap-2">
                 <Key className="w-4 h-4" />
-                LanaCoin Address
+                {t('dialogs.gameEnd.lanaCoinAddress')}
               </h3>
               <Button
                 variant="ghost"
@@ -220,7 +222,7 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
           {/* Private Key WIF */}
           <div className="bg-destructive/10 p-4 rounded-lg border-destructive/20 border">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-semibold text-destructive">Private Key (WIF)</h3>
+              <h3 className="font-semibold text-destructive">{t('dialogs.gameEnd.privateKeyWIF')}</h3>
               <Button
                 variant="ghost"
                 size="sm"
@@ -233,7 +235,7 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
               {walletData.privateKeyWIF}
             </p>
             <p className="text-xs text-muted-foreground mt-2">
-              ⚠️ Keep this private key secure! Anyone with this key can access your wallet.
+              {t('dialogs.gameEnd.privateKeyWarning')}
             </p>
           </div>
 
@@ -243,7 +245,7 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
           {/* Security Note */}
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <p className="text-sm text-yellow-800">
-              <strong>Note:</strong> Hey Man, just a reminder — your Private Key is never stored anywhere. If you lose it, you lose both your identity and your Lana forever.
+              <strong>{t('labels.info', { ns: 'common' })}:</strong> {t('help.privateKey')}
             </p>
           </div>
         </div>
@@ -260,12 +262,12 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
             {isGenerating ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Generating...
+                {t('dialogs.gameEnd.generating')}
               </>
             ) : (
               <>
                 <RefreshCw className="w-4 h-4" />
-                Regenerate Wallet
+                {t('dialogs.gameEnd.regenerateWallet')}
               </>
             )}
           </Button>
@@ -275,7 +277,7 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
             className="bg-primary hover:bg-primary-glow text-primary-foreground flex items-center gap-2"
           >
             <Key className="w-4 h-4" />
-            Create NOSTR Profile
+            {t('dialogs.gameEnd.createNostrProfile')}
           </Button>
         </div>
       </DialogContent>

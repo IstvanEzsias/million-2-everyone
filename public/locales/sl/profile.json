@@ -6,6 +6,50 @@
     "optional": "Neobvezne informacije",
     "banking": "Bančne informacije"
   },
+  "dialogs": {
+    "gameEnd": {
+      "congratulations": "🎉 Čestitamo! 🎉",
+      "earnedDescription": "Zaslužili ste 1 LanaCoin, ki bo postal Vreden 100 milijonov",
+      "createWallet": "Ustvari Lana denarnico",
+      "generating": "Generiranje...",
+      "loadingLibraries": "Nalaganje knjižnic...",
+      "walletReady": "🎉 Vaša Lana denarnica je pripravljena! 🎉",
+      "keepPrivateKeySafe": "Ohranite svoj zasebni ključ varen - potrebovali ga boste za dostop do vaše denarnice",
+      "lanaCoinAddress": "LanaCoin naslov",
+      "privateKeyWIF": "Zasebni ključ (WIF)",
+      "privateKeyWarning": "⚠️ Ohranite ta zasebni ključ varen! Kdorkoli s tem ključem lahko dostopa do vaše denarnice.",
+      "regenerateWallet": "Generiraj novo denarnico",
+      "createNostrProfile": "Ustvari NOSTR profil"
+    },
+    "privateKeyVerification": {
+      "title": "Preverjanje zasebnega ključa",
+      "description": "Sedaj preverimo, kako resno jemljete svoj zasebni ključ. Če ste ga pravilno shranili, ga morate imeti prav zdaj. 🙂",
+      "enterPrivateKey": "Vnesite svoj zasebni ključ (WIF)",
+      "placeholder": "Vnesite svoj zasebni ključ tukaj...",
+      "verifyKey": "Preveri zasebni ključ",
+      "lostKey": "Izgubil sem ga. Peljite me nazaj na igro.",
+      "incorrectKey": "To ni pravi zasebni ključ."
+    }
+  },
+  "notifications": {
+    "walletCreated": "🎉 Denarnica ustvarjena!",
+    "walletCreatedDesc": "Vaša LanaCoin denarnica je bila uspešno generirana.",
+    "walletRegenerated": "🔄 Denarnica ponovno generirana!",
+    "walletRegeneratedDesc": "Nova LanaCoin denarnica je bila generirana.",
+    "copied": "Kopirano!",
+    "copiedDesc": "{{label}} kopirano v odložišče.",
+    "noWalletData": "Napaka",
+    "noWalletDataDesc": "Podatki denarnice niso na voljo. Prosimo, najprej generirajte denarnico.",
+    "cryptoLibraryError": "Kriptografske knjižnice se še vedno nalagajo. Prosimo, osvežite stran in poskusite znova.",
+    "validationError": "Napaka pri preverjanju",
+    "validationErrorDesc": "Prosimo, popravite napake spodaj",
+    "invalidFile": "Neveljavna datoteka",
+    "invalidFileDesc": "Prosimo, izberite veljavno slikovno datoteko (JPEG, PNG, WEBP) pod 5MB",
+    "imageUploaded": "Slika uspešno naložena",
+    "imageUploadedDesc": "Vaša profilna slika je bila naložena in stisnjena",
+    "uploadFailed": "Nalaganje neuspešno",
+    "uploadFailedDesc": "Nalaganje slike ni uspelo. Prosimo, poskusite znova."
+  },
   "fields": {
     "name": "Polno ime",
     "displayName": "Prikazno ime",

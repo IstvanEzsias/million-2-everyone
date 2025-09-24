@@ -1,15 +1,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Code } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 const ReferralDocumentation = () => {
+  const { t } = useTranslation('documentation');
   return (
     <div className="min-h-screen bg-gradient-background">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <header className="mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-4">Referral & Redirect System Documentation</h1>
+          <h1 className="text-4xl font-bold text-primary mb-4">{t('title')}</h1>
           <p className="text-lg text-muted-foreground">
-            Complete guide for implementing the Lana Game referral system on your website.
+            {t('subtitle')}
           </p>
         </header>
 
@@ -19,13 +21,12 @@ const ReferralDocumentation = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Code className="h-5 w-5" />
-                Overview
+                {t('sections.overview.title')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p>
-                The referral system allows external websites to send users to the Lana Game with automatic 
-                return navigation after profile creation. Users will be redirected back to your site seamlessly.
+                {t('sections.overview.description')}
               </p>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">Secure URL validation</Badge>

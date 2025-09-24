@@ -12,7 +12,11 @@
     "edit": "Edit",
     "delete": "Delete",
     "confirm": "Confirm",
-    "retry": "Retry"
+    "retry": "Retry",
+    "creating": "Creating Profile...",
+    "createProfile": "Create NOSTR Profile",
+    "uploading": "Uploading...",
+    "uploadImage": "Upload Image"
   },
   "labels": {
     "required": "Required",

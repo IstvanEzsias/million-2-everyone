@@ -12,7 +12,11 @@
     "edit": "Uredi",
     "delete": "Izbriši",
     "confirm": "Potrdi",
-    "retry": "Poskusi znova"
+    "retry": "Poskusi znova",
+    "creating": "Ustvarjanje profila...",
+    "createProfile": "Ustvari NOSTR profil",
+    "uploading": "Nalaganje...",
+    "uploadImage": "Naloži sliko"
   },
   "labels": {
     "required": "Obvezno",

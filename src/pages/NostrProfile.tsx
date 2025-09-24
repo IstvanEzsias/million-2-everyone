@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getWalletSessionData, clearWalletSessionData, type WalletSessionData } from "@/utils/sessionStorage";
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/ImageUpload";
+import { useTranslation } from 'react-i18next';
 
 import PrivateKeyVerificationDialog from "@/components/PrivateKeyVerificationDialog";
 
@@ -41,6 +42,7 @@ interface NostrProfileData {
 const NostrProfile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation('profile');
   const [walletData, setWalletData] = useState<WalletSessionData | null>(null);
   const [formData, setFormData] = useState<NostrProfileData>({
     name: "",
@@ -72,8 +74,8 @@ const NostrProfile = () => {
     const sessionData = getWalletSessionData();
     if (!sessionData) {
       toast({
-        title: "No wallet data found",
-        description: "Please generate a wallet first",
+        title: t('loadingStates.noWalletData'),
+        description: t('loadingStates.noWalletDescription'),
         variant: "destructive",
       });
       navigate("/");
@@ -91,24 +93,24 @@ const NostrProfile = () => {
     const newErrors: Partial<NostrProfileData> = {};
     
     // Required field validation
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.display_name.trim()) newErrors.display_name = "Display name is required";
-    if (!formData.about.trim()) newErrors.about = "About description is required";
-    if (!formData.location.trim()) newErrors.location = "Location is required";
-    if (!formData.currency.trim()) newErrors.currency = "Currency is required";
-    if (!formData.lanoshi2lash.trim()) newErrors.lanoshi2lash = "Lanoshi2lash value is required";
-    if (!formData.whoAreYou.trim()) newErrors.whoAreYou = "Please specify if you are Human or AI";
-    if (!formData.orgasmic_profile.trim()) newErrors.orgasmic_profile = "Orgasmic profile is required";
-    if (!formData.tags_t.trim()) newErrors.tags_t = "Interest tags are required";
-    if (!formData.tags_o.trim()) newErrors.tags_o = "Intimacy interest tags are required";
+    if (!formData.name.trim()) newErrors.name = t('validation.nameRequired');
+    if (!formData.display_name.trim()) newErrors.display_name = t('validation.displayNameRequired');
+    if (!formData.about.trim()) newErrors.about = t('validation.aboutRequired');
+    if (!formData.location.trim()) newErrors.location = t('validation.locationRequired');
+    if (!formData.currency.trim()) newErrors.currency = t('validation.currencyRequired');
+    if (!formData.lanoshi2lash.trim()) newErrors.lanoshi2lash = t('validation.lanoshi2lashRequired');
+    if (!formData.whoAreYou.trim()) newErrors.whoAreYou = t('validation.whoAreYouRequired');
+    if (!formData.orgasmic_profile.trim()) newErrors.orgasmic_profile = t('validation.orgasmicProfileRequired');
+    if (!formData.tags_t.trim()) newErrors.tags_t = t('validation.interestTagsRequired');
+    if (!formData.tags_o.trim()) newErrors.tags_o = t('validation.intimacyTagsRequired');
 
 
     // URL validation if provided
     if (formData.website && !/^https?:\/\/.+/.test(formData.website)) {
-      newErrors.website = "Please enter a valid URL starting with http:// or https://";
+      newErrors.website = t('validation.invalidUrl', { ns: 'common' });
     }
     if (formData.picture && !/^https?:\/\/.+/.test(formData.picture)) {
-      newErrors.picture = "Please enter a valid URL starting with http:// or https://";
+      newErrors.picture = t('validation.invalidUrl', { ns: 'common' });
     }
 
     setErrors(newErrors);
@@ -127,8 +129,8 @@ const NostrProfile = () => {
     
     if (!validateForm()) {
       toast({
-        title: "Validation Error",
-        description: "Please fix the errors below",
+        title: t('notifications.validationError'),
+        description: t('notifications.validationErrorDesc'),
         variant: "destructive",
       });
       return;
@@ -190,7 +192,7 @@ const NostrProfile = () => {
       <div className="min-h-screen bg-gradient-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Loading wallet data...</p>
+          <p className="mt-4 text-muted-foreground">{t('loadingStates.walletData')}</p>
         </div>
       </div>
     );
@@ -201,97 +203,100 @@ const NostrProfile = () => {
       <div className="container mx-auto px-4 max-w-4xl">
         <Card>
           <CardHeader>
-            <CardTitle>Create Your Lana NOSTR Profile</CardTitle>
+            <CardTitle>{t('title')}</CardTitle>
             <CardDescription>
-              Complete your profile information to create a KIND 0 NOSTR event
+              {t('description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Required Fields Section */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-primary">Required Information</h3>
+                <h3 className="text-lg font-semibold text-primary">{t('sections.required')}</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="name">Full Name *</Label>
+                    <Label htmlFor="name">{t('fields.name')} *</Label>
                     <Input
                       id="name"
                       value={formData.name}
                       onChange={(e) => handleInputChange("name", e.target.value)}
+                      placeholder={t('placeholders.name')}
                       className={errors.name ? "border-destructive" : ""}
                     />
                     {errors.name && <p className="text-sm text-destructive mt-1">{errors.name}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="display_name">Display Name *</Label>
+                    <Label htmlFor="display_name">{t('fields.displayName')} *</Label>
                     <Input
                       id="display_name"
                       value={formData.display_name}
                       onChange={(e) => handleInputChange("display_name", e.target.value)}
+                      placeholder={t('placeholders.displayName')}
                       className={errors.display_name ? "border-destructive" : ""}
                     />
                     {errors.display_name && <p className="text-sm text-destructive mt-1">{errors.display_name}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="location">Location *</Label>
+                    <Label htmlFor="location">{t('fields.location')} *</Label>
                     <Input
                       id="location"
                       value={formData.location}
                       onChange={(e) => handleInputChange("location", e.target.value)}
+                      placeholder={t('placeholders.location')}
                       className={errors.location ? "border-destructive" : ""}
                     />
                     {errors.location && <p className="text-sm text-destructive mt-1">{errors.location}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="currency">Currency *</Label>
+                    <Label htmlFor="currency">{t('fields.currency')} *</Label>
                     <Select value={formData.currency} onValueChange={(value) => handleInputChange("currency", value)}>
                       <SelectTrigger className={errors.currency ? "border-destructive" : ""}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="USD">USD</SelectItem>
-                        <SelectItem value="EUR">EUR</SelectItem>
-                        <SelectItem value="GBP">GBP</SelectItem>
+                        <SelectItem value="USD">{t('options.currencies.USD')}</SelectItem>
+                        <SelectItem value="EUR">{t('options.currencies.EUR')}</SelectItem>
+                        <SelectItem value="GBP">{t('options.currencies.GBP')}</SelectItem>
                       </SelectContent>
                     </Select>
                     {errors.currency && <p className="text-sm text-destructive mt-1">{errors.currency}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="lanoshi2lash">Lanoshi2lash *</Label>
+                    <Label htmlFor="lanoshi2lash">{t('fields.lanoshi2lash')} *</Label>
                     <Input
                       id="lanoshi2lash"
                       value={formData.lanoshi2lash}
                       onChange={(e) => handleInputChange("lanoshi2lash", e.target.value)}
-                      placeholder="Exchange rate value"
+                      placeholder={t('placeholders.lanoshi2lash')}
                       className={errors.lanoshi2lash ? "border-destructive" : ""}
                     />
                     <p className="text-sm text-muted-foreground mt-1">
-                      1 Lana equals 100,000,000 Lanoshi. A Lash is like giving someone a token of appreciation. We recommend setting 1 Lash = 100 Lanoshi at the beginning.
+                      {t('help.lanoshi2lash')}
                     </p>
                     {errors.lanoshi2lash && <p className="text-sm text-destructive mt-1">{errors.lanoshi2lash}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="whoAreYou">Who Are You *</Label>
+                    <Label htmlFor="whoAreYou">{t('fields.whoAreYou')} *</Label>
                     <Select value={formData.whoAreYou} onValueChange={(value) => handleInputChange("whoAreYou", value)}>
                       <SelectTrigger className={errors.whoAreYou ? "border-destructive" : ""}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Human">Human</SelectItem>
-                        <SelectItem value="AI">AI</SelectItem>
+                        <SelectItem value="Human">{t('options.whoAreYou.Human')}</SelectItem>
+                        <SelectItem value="AI">{t('options.whoAreYou.AI')}</SelectItem>
                       </SelectContent>
                     </Select>
                     {errors.whoAreYou && <p className="text-sm text-destructive mt-1">{errors.whoAreYou}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="lanaWalletID">LanaCoin Address</Label>
+                    <Label htmlFor="lanaWalletID">{t('fields.lanaWalletID')}</Label>
                     <Input
                       id="lanaWalletID"
                       value={formData.lanaWalletID}
@@ -308,29 +313,29 @@ const NostrProfile = () => {
                 {/* Security Note */}
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
                   <p className="text-sm text-yellow-800">
-                    <strong>Note:</strong> Hey Man, just a reminder — your Private Key is never stored anywhere. If you lose it, you lose both your identity and your Lana forever.
+                    <strong>{t('labels.info', { ns: 'common' })}:</strong> {t('help.privateKey')}
                   </p>
                 </div>
 
                 <div>
-                  <Label htmlFor="about">About *</Label>
+                  <Label htmlFor="about">{t('fields.about')} *</Label>
                   <Textarea
                     id="about"
                     value={formData.about}
                     onChange={(e) => handleInputChange("about", e.target.value)}
-                    placeholder="Tell us about yourself..."
+                    placeholder={t('placeholders.about')}
                     className={errors.about ? "border-destructive" : ""}
                   />
                   {errors.about && <p className="text-sm text-destructive mt-1">{errors.about}</p>}
                 </div>
 
                 <div>
-                  <Label htmlFor="orgasmic_profile">Orgasmic Profile *</Label>
+                  <Label htmlFor="orgasmic_profile">{t('fields.orgasmicProfile')} *</Label>
                   <Textarea
                     id="orgasmic_profile"
                     value={formData.orgasmic_profile}
                     onChange={(e) => handleInputChange("orgasmic_profile", e.target.value)}
-                    placeholder="Orgasmic profile information and preferences..."
+                    placeholder={t('placeholders.orgasmicProfile')}
                     className={errors.orgasmic_profile ? "border-destructive" : ""}
                   />
                   {errors.orgasmic_profile && <p className="text-sm text-destructive mt-1">{errors.orgasmic_profile}</p>}
@@ -338,24 +343,24 @@ const NostrProfile = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="tags_t">Interest Tags * (comma-separated)</Label>
+                    <Label htmlFor="tags_t">{t('fields.interestTags')} * {t('commaNote')}</Label>
                     <Input
                       id="tags_t"
                       value={formData.tags_t}
                       onChange={(e) => handleInputChange("tags_t", e.target.value)}
-                      placeholder="bitcoin, nostr, decentralization, privacy"
+                      placeholder={t('placeholders.interestTags')}
                       className={errors.tags_t ? "border-destructive" : ""}
                     />
                     {errors.tags_t && <p className="text-sm text-destructive mt-1">{errors.tags_t}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="tags_o">Intimacy Interest Tags * (comma-separated)</Label>
+                    <Label htmlFor="tags_o">{t('fields.intimacyTags')} * {t('commaNote')}</Label>
                     <Input
                       id="tags_o"
                       value={formData.tags_o}
                       onChange={(e) => handleInputChange("tags_o", e.target.value)}
-                      placeholder="deep_connection, meaningful_intimacy, emotional_bond"
+                      placeholder={t('placeholders.intimacyTags')}
                       className={errors.tags_o ? "border-destructive" : ""}
                     />
                     {errors.tags_o && <p className="text-sm text-destructive mt-1">{errors.tags_o}</p>}
@@ -365,25 +370,25 @@ const NostrProfile = () => {
 
               {/* Optional Fields Section */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-primary">Optional Information</h3>
+                <h3 className="text-lg font-semibold text-primary">{t('sections.optional')}</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <ImageUpload
                       value={formData.picture}
                       onChange={(url) => handleInputChange("picture", url)}
-                      label="Profile Picture"
+                      label={t('fields.picture')}
                     />
                     {errors.picture && <p className="text-sm text-destructive mt-1">{errors.picture}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="website">Website</Label>
+                    <Label htmlFor="website">{t('fields.website')}</Label>
                     <Input
                       id="website"
                       value={formData.website}
                       onChange={(e) => handleInputChange("website", e.target.value)}
-                      placeholder="https://yourdomain.com"
+                      placeholder={t('placeholders.website')}
                       className={errors.website ? "border-destructive" : ""}
                     />
                     {errors.website && <p className="text-sm text-destructive mt-1">{errors.website}</p>}
@@ -391,60 +396,60 @@ const NostrProfile = () => {
 
 
                   <div>
-                    <Label htmlFor="payment_link">Payment Link</Label>
+                    <Label htmlFor="payment_link">{t('fields.paymentLink')}</Label>
                     <Input
                       id="payment_link"
                       value={formData.payment_link}
                       onChange={(e) => handleInputChange("payment_link", e.target.value)}
-                      placeholder="Lightning address or payment URL"
+                      placeholder={t('placeholders.paymentLink')}
                     />
                   </div>
                 </div>
 
                 {/* Banking Information */}
                 <div className="space-y-4">
-                  <h4 className="text-md font-medium text-primary">Banking Information</h4>
+                  <h4 className="text-md font-medium text-primary">{t('sections.banking')}</h4>
                   <p className="text-sm text-muted-foreground">
-                    If you decide to sell some of your Lanas or Lanoshis, please provide your payment details so others know where to send the money.
+                    {t('help.banking')}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="bankName">Bank Name</Label>
+                      <Label htmlFor="bankName">{t('fields.bankName')}</Label>
                       <Input
                         id="bankName"
                         value={formData.bankName}
                         onChange={(e) => handleInputChange("bankName", e.target.value)}
-                        placeholder="Example Bank"
+                        placeholder={t('placeholders.bankName')}
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="bankSWIFT">SWIFT/BIC Code</Label>
+                      <Label htmlFor="bankSWIFT">{t('fields.bankSWIFT')}</Label>
                       <Input
                         id="bankSWIFT"
                         value={formData.bankSWIFT}
                         onChange={(e) => handleInputChange("bankSWIFT", e.target.value)}
-                        placeholder="EXAMPLEUS33"
+                        placeholder={t('placeholders.bankSWIFT')}
                       />
                     </div>
 
                     <div className="md:col-span-2">
-                      <Label htmlFor="bankAddress">Bank Address</Label>
+                      <Label htmlFor="bankAddress">{t('fields.bankAddress')}</Label>
                       <Input
                         id="bankAddress"
                         value={formData.bankAddress}
                         onChange={(e) => handleInputChange("bankAddress", e.target.value)}
-                        placeholder="123 Banking St, New York, NY"
+                        placeholder={t('placeholders.bankAddress')}
                       />
                     </div>
 
                     <div className="md:col-span-2">
-                      <Label htmlFor="bankAccount">Bank Account Number</Label>
+                      <Label htmlFor="bankAccount">{t('fields.bankAccount')}</Label>
                       <Input
                         id="bankAccount"
                         value={formData.bankAccount}
                         onChange={(e) => handleInputChange("bankAccount", e.target.value)}
-                        placeholder="1234567890"
+                        placeholder={t('placeholders.bankAccount')}
                       />
                     </div>
                   </div>
@@ -458,10 +463,10 @@ const NostrProfile = () => {
                   variant="outline" 
                   onClick={() => navigate("/")}
                 >
-                  Cancel
+                  {t('buttons.cancel', { ns: 'common' })}
                 </Button>
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Creating Profile..." : "Create NOSTR Profile"}
+                  {isSubmitting ? t('buttons.creating', { ns: 'common' }) : t('buttons.createProfile', { ns: 'common' })}
                 </Button>
               </div>
             </form>

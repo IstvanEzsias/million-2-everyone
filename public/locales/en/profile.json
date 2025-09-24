@@ -75,5 +75,49 @@
       "AI": "AI"
     }
   },
-  "commaNote": "(comma-separated)"
+  "commaNote": "(comma-separated)",
+  "dialogs": {
+    "gameEnd": {
+      "congratulations": "🎉 Congratulations! 🎉",
+      "earnedDescription": "You earned 1 LanaCoin that is going to become Worth 100 Million",
+      "createWallet": "Create Lana Wallet",
+      "generating": "Generating...",
+      "loadingLibraries": "Loading Libraries...",
+      "walletReady": "🎉 Your Lana Wallet is Ready! 🎉",
+      "keepPrivateKeySafe": "Keep your private key safe - you'll need it to access your wallet",
+      "lanaCoinAddress": "LanaCoin Address",
+      "privateKeyWIF": "Private Key (WIF)",
+      "privateKeyWarning": "⚠️ Keep this private key secure! Anyone with this key can access your wallet.",
+      "regenerateWallet": "Regenerate Wallet",
+      "createNostrProfile": "Create NOSTR Profile"
+    },
+    "privateKeyVerification": {
+      "title": "Private Key Verification",
+      "description": "Now let's test how serious you are about your Private Key. If you saved it properly, you should have it right now. 🙂",
+      "enterPrivateKey": "Enter Your Private Key (WIF)",
+      "placeholder": "Enter your private key here...",
+      "verifyKey": "Verify Private Key",
+      "lostKey": "I lost it. Take me back to the game.",
+      "incorrectKey": "This is not the proper private key."
+    }
+  },
+  "notifications": {
+    "walletCreated": "🎉 Wallet Created!",
+    "walletCreatedDesc": "Your LanaCoin wallet has been generated successfully.",
+    "walletRegenerated": "🔄 Wallet Regenerated!",
+    "walletRegeneratedDesc": "A new LanaCoin wallet has been generated.",
+    "copied": "Copied!",
+    "copiedDesc": "{{label}} copied to clipboard.",
+    "noWalletData": "Error",
+    "noWalletDataDesc": "No wallet data available. Please generate a wallet first.",
+    "cryptoLibraryError": "Cryptographic libraries are still loading. Please refresh the page and try again.",
+    "validationError": "Validation Error",
+    "validationErrorDesc": "Please fix the errors below",
+    "invalidFile": "Invalid file",
+    "invalidFileDesc": "Please select a valid image file (JPEG, PNG, WEBP) under 5MB",
+    "imageUploaded": "Image uploaded successfully",
+    "imageUploadedDesc": "Your profile picture has been uploaded and compressed",
+    "uploadFailed": "Upload failed",
+    "uploadFailedDesc": "Failed to upload image. Please try again."
+  }
 }

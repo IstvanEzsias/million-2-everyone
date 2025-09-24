@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { compressImage, validateImageFile } from "@/utils/imageProcessor";
 import { Upload, Image, X } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 interface ImageUploadProps {
   value: string;
@@ -18,6 +19,7 @@ export const ImageUpload = ({ value, onChange, label = "Profile Picture" }: Imag
   const [preview, setPreview] = useState<string>(value);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const { t } = useTranslation('profile');
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -25,8 +27,8 @@ export const ImageUpload = ({ value, onChange, label = "Profile Picture" }: Imag
 
     if (!validateImageFile(file)) {
       toast({
-        title: "Invalid file",
-        description: "Please select a valid image file (JPEG, PNG, WEBP) under 5MB",
+        title: t('notifications.invalidFile'),
+        description: t('notifications.invalidFileDesc'),
         variant: "destructive",
       });
       return;
@@ -66,15 +68,15 @@ export const ImageUpload = ({ value, onChange, label = "Profile Picture" }: Imag
       onChange(publicUrl);
 
       toast({
-        title: "Image uploaded successfully",
-        description: "Your profile picture has been uploaded and compressed",
+        title: t('notifications.imageUploaded'),
+        description: t('notifications.imageUploadedDesc'),
       });
 
     } catch (error) {
       console.error('Upload error:', error);
       toast({
-        title: "Upload failed",
-        description: "Failed to upload image. Please try again.",
+        title: t('notifications.uploadFailed'),
+        description: t('notifications.uploadFailedDesc'),
         variant: "destructive",
       });
     } finally {
@@ -126,7 +128,7 @@ export const ImageUpload = ({ value, onChange, label = "Profile Picture" }: Imag
           disabled={isUploading}
         >
           <Upload className="h-4 w-4 mr-2" />
-          {isUploading ? "Uploading..." : "Upload Image"}
+          {isUploading ? t('buttons.uploading', { ns: 'common' }) : t('buttons.uploadImage', { ns: 'common' })}
         </Button>
       </div>
 

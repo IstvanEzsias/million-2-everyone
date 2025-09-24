@@ -43,7 +43,7 @@ i18n
     
     // Define namespaces
     defaultNS: 'common',
-    ns: ['common', 'game', 'profile', 'documentation'],
+    ns: ['common', 'game', 'profile', 'documentation', 'results'],
   });
 
 export default i18n;

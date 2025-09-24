@@ -1,0 +1,32 @@
+{
+  "title": "NOSTR Profile Creation Report",
+  "description": "Detailed results of your profile creation process",
+  "loading": "Loading results...",
+  "overallStatus": "Overall Status",
+  "success": "Success",
+  "failed": "Failed",
+  "nostrEvent": "NOSTR Event",
+  "eventId": "Event ID:",
+  "databaseStorage": "Database Storage",
+  "playerRecordCreated": "Player record created successfully",
+  "playerId": "Player ID:",
+  "relayBroadcasting": "Relay Broadcasting",
+  "totalRelays": "Total Relays",
+  "successful": "Successful",
+  "detailedResults": "Detailed Results:",
+  "error": "Error",
+  "walletRegistration": "Wallet Registration",
+  "walletRegisteredSuccess": "Wallet registered successfully with Lana Registry",
+  "registrationFailed": "Registration failed",
+  "walletId": "Wallet ID:",
+  "status": "Status:",
+  "nextSteps": "Next Steps",
+  "emailNotification": "Email notification system (Coming soon)",
+  "errorDetails": "Error Details",
+  "buttons": {
+    "returnToSite": "Return to {{siteName}}",
+    "stayAndExplore": "Stay and Explore",
+    "createAnotherProfile": "Create Another Profile",
+    "backToHome": "Back to Home"
+  }
+}
