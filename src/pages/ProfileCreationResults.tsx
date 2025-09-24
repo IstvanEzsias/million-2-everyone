@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, Clock, Wifi, Database, Mail, Wallet, ArrowLeft, RotateCcw } from 'lucide-react';
-import { clearWalletSessionData } from '@/utils/sessionStorage';
+import { clearWalletSessionData, getReturnUrlData, clearReturnUrlData } from '@/utils/sessionStorage';
 
 interface RelayResult {
   url: string;
@@ -41,6 +41,7 @@ const ProfileCreationResults = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [result, setResult] = useState<ProfileCreationResult | null>(null);
+  const [returnUrlData, setReturnUrlData] = useState<{url: string, siteName?: string} | null>(null);
 
   useEffect(() => {
     // Get the result from navigation state
@@ -50,6 +51,12 @@ const ProfileCreationResults = () => {
     } else {
       // If no result data, redirect back to home
       navigate('/');
+    }
+
+    // Check for return URL data
+    const returnData = getReturnUrlData();
+    if (returnData) {
+      setReturnUrlData({ url: returnData.url, siteName: returnData.siteName });
     }
   }, [location.state, navigate]);
 
@@ -61,6 +68,13 @@ const ProfileCreationResults = () => {
     // Clear session data and go back to create profile
     clearWalletSessionData();
     navigate('/');
+  };
+
+  const handleReturnToSite = () => {
+    if (returnUrlData) {
+      clearReturnUrlData();
+      window.location.href = returnUrlData.url;
+    }
   };
 
   if (!result) {
@@ -273,15 +287,34 @@ const ProfileCreationResults = () => {
             )}
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button onClick={handleBackToHome} variant="outline" className="flex items-center gap-2">
-                <ArrowLeft className="h-4 w-4" />
-                Back to Home
-              </Button>
-              <Button onClick={handleCreateAnother} className="flex items-center gap-2">
-                <RotateCcw className="h-4 w-4" />
-                Create Another Profile
-              </Button>
+            <div className="flex flex-wrap gap-4 justify-center pt-4">
+              {returnUrlData ? (
+                <>
+                  <Button onClick={handleReturnToSite} className="bg-primary hover:bg-primary/90 flex items-center gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    Return to {returnUrlData.siteName || 'Referring Site'}
+                  </Button>
+                  <Button onClick={handleBackToHome} variant="outline" className="flex items-center gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    Stay and Explore
+                  </Button>
+                  <Button onClick={handleCreateAnother} variant="outline" className="flex items-center gap-2">
+                    <RotateCcw className="h-4 w-4" />
+                    Create Another Profile
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button onClick={handleBackToHome} variant="outline" className="flex items-center gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Home
+                  </Button>
+                  <Button onClick={handleCreateAnother} className="flex items-center gap-2">
+                    <RotateCcw className="h-4 w-4" />
+                    Create Another Profile
+                  </Button>
+                </>
+              )}
             </div>
           </CardContent>
         </Card>

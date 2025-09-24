@@ -1,7 +1,8 @@
 import GameHeader from "@/components/GameHeader";
 import GameCanvas from "@/components/GameCanvas";
 import GameStats from "@/components/GameStats";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { setReturnUrlData, getReturnUrlData } from "@/utils/sessionStorage";
 
 interface GameState {
   price: number;
@@ -17,11 +18,46 @@ const Index = () => {
     jumps: 0,
     gameRunning: true
   });
+  const [returnUrlInfo, setReturnUrlInfo] = useState<{url: string, siteName?: string} | null>(null);
+
+  useEffect(() => {
+    // Check for return_url parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnUrl = urlParams.get('return_url');
+    const siteName = urlParams.get('site_name');
+    
+    if (returnUrl) {
+      const success = setReturnUrlData(returnUrl, siteName || undefined);
+      if (success) {
+        setReturnUrlInfo({ url: returnUrl, siteName: siteName || undefined });
+        // Clean URL by removing the parameters
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    } else {
+      // Check if we already have return URL data
+      const existingData = getReturnUrlData();
+      if (existingData) {
+        setReturnUrlInfo({ url: existingData.url, siteName: existingData.siteName });
+      }
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-background">
       <div className="container mx-auto px-4 py-8">
         <main>
+          {/* Return URL info */}
+          {returnUrlInfo && (
+            <div className="mb-6 text-center">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg text-sm">
+                <span>🔗</span>
+                <span>
+                  You'll return to {returnUrlInfo.siteName || 'the referring site'} after creating your profile
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Header with logo and title */}
           <GameHeader />
           
