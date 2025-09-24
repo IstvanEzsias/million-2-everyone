@@ -1,0 +1,43 @@
+{
+  "buttons": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "next": "Next",
+    "back": "Back",
+    "restart": "Restart",
+    "close": "Close",
+    "continue": "Continue",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "retry": "Retry"
+  },
+  "labels": {
+    "required": "Required",
+    "optional": "Optional",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidUrl": "Please enter a valid URL starting with http:// or https://",
+    "invalidEmail": "Please enter a valid email address"
+  },
+  "navigation": {
+    "home": "Home",
+    "profile": "Profile",
+    "settings": "Settings",
+    "help": "Help",
+    "about": "About"
+  },
+  "language": {
+    "selector": "Language",
+    "english": "English",
+    "slovenian": "Slovenian"
+  }
+}

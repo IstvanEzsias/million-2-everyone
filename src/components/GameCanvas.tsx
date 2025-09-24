@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { toast } from "@/hooks/use-toast";
 import jumpingFace from "@/assets/jumping-face.png";
 import GameEndDialog from "./GameEndDialog";
@@ -11,6 +12,7 @@ interface GameState {
 }
 
 const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => void }) => {
+  const { t } = useTranslation('game');
   const [showEndDialog, setShowEndDialog] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef<GameState>({
@@ -113,8 +115,8 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     if (newState.users >= userCap && !hasShownUserCapMessage) {
       setHasShownUserCapMessage(true);
       toast({
-        title: "🌍 Global Cap Reached!",
-        description: "8 billion users achieved!",
+        title: t('notifications.globalCap'),
+        description: t('notifications.globalCapDescription'),
       });
       createConfetti(100);
     }
@@ -419,7 +421,7 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
         <div className="absolute top-8 left-1/2 transform -translate-x-1/2 pointer-events-none">
           <div className="bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-2 md:px-6 md:py-3 rounded-xl border-2 border-primary-glow shadow-lg">
             <div className="text-xs md:text-sm font-semibold opacity-90 mb-1 text-center">
-              💰 Lana Price
+              {t('stats.price')}
             </div>
             <div className="text-lg md:text-2xl font-black text-center">
               €{fmtMoney(gameStateRef.current.price)}
@@ -433,13 +435,13 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
           onClick={jump}
           className="bg-primary hover:bg-primary-glow text-primary-foreground font-bold py-3 px-6 rounded-xl shadow-button-custom btn-press transition-all duration-200"
         >
-          Jump (Space / Tap)
+          {t('controls.jump')}
         </button>
         <button
           onClick={reset}
           className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-bold py-3 px-6 rounded-xl shadow-button-custom btn-press transition-all duration-200"
         >
-          Restart Game
+          {t('controls.restart')}
         </button>
       </div>
       

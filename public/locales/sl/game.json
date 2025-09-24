@@ -1,0 +1,33 @@
+{
+  "header": {
+    "title": "Igraj in zasluži svoje LanaCoin",
+    "howToPlay": "Kako igrati:",
+    "instructions": "Skačite čez ovire, da povečate Lanino vrednost! Opravite 37 uspešnih skokov, da zaslužite svoj 1 Registriran Lana. Vsak skok podvoji ceno in bazo uporabnikov!"
+  },
+  "stats": {
+    "price": "💰 Cena Lana",
+    "users": "👥 Uporabniki",
+    "progress": "🏃‍♂️ Napredek"
+  },
+  "status": {
+    "initial": "Zabavajmo se, medtem ko se bogatimo.",
+    "inProgress": "🔥 Odličen napredek! Nadaljujte s skakanjem do 37!",
+    "completed": "🎉 Čestitamo! Zaslužili ste 1 Registriran Lana! 🎉",
+    "gameOver": "💥 Konec igre! Ponovno zaženite in poskusite znova za svojo Lana nagrado."
+  },
+  "controls": {
+    "jump": "Skoči (Preslednica / Tapni)",
+    "restart": "Ponovno zaženi igro"
+  },
+  "footer": {
+    "whatsNext": "Kaj sledi",
+    "description": "Po končani igri boste ustvarili svojo Lana denarnico in podpisali svoj profil preko decentraliziranega Nostr protokola. Od takrat naprej ste lastniki svojih podatkov—vaš zasebni ključ ostane pri vas in odpre dostop do 20+ aplikacij v Lana svetu.",
+    "ownership": "Lana je v lasti vseh, ki sodelujejo v tem ekosistemu. Skupaj ustvarimo novo realnost",
+    "referralDocs": "Dokumentacija sistema napotitev"
+  },
+  "notifications": {
+    "globalCap": "🌍 Globalna meja dosežena!",
+    "globalCapDescription": "8 milijard uporabnikov doseženih!"
+  },
+  "returnNotice": "Po ustvarjanju profila se boste vrnili na {{siteName}}"
+}

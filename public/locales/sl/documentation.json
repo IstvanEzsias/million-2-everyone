@@ -1,0 +1,73 @@
+{
+  "title": "Dokumentacija sistema napotitev",
+  "subtitle": "Vodič za integracijo 100 Million to Everyone",
+  "sections": {
+    "overview": {
+      "title": "Pregled",
+      "description": "Sistem napotitev 100 Million to Everyone vam omogoča integracijo naše Lana igre in ustvarjanja profila v vašo spletno stran ali aplikacijo. Uporabniki, ki dokončajo igro preko vaše napotitve, bodo preusmerjeni nazaj na vaš določeni URL z njihovimi novimi Lana NOSTR podatki profila."
+    },
+    "quickStart": {
+      "title": "Hiter začetek",
+      "step1": "1. Osnovna implementacija",
+      "step2": "2. Z imenom strani po meri"
+    },
+    "parameters": {
+      "title": "URL parametri",
+      "returnUrl": {
+        "name": "return_url",
+        "description": "URL, kamor bodo uporabniki preusmerjeni po dokončanju profila",
+        "required": "Obvezno",
+        "example": "https://vasastran.com/uspeh"
+      },
+      "siteName": {
+        "name": "site_name",
+        "description": "Ime vaše strani po meri (bo prikazano uporabnikom)",
+        "required": "Neobvezno",
+        "example": "Ime vaše aplikacije"
+      }
+    },
+    "implementation": {
+      "title": "Primeri implementacije",
+      "htmlLink": "HTML povezava",
+      "javascript": "JavaScript",
+      "react": "React komponenta"
+    },
+    "dataFlow": {
+      "title": "Tok podatkov",
+      "steps": {
+        "step1": "1. Uporabnik klikne vašo napotitveno povezavo",
+        "step2": "2. Uporabnik dokonča igro (37 skokov)",
+        "step3": "3. Uporabnik ustvari svoj NOSTR profil",
+        "step4": "4. Uporabnik je preusmerjen na vaš return_url",
+        "step5": "5. Podatki profila so na voljo v URL-ju"
+      }
+    },
+    "returnData": {
+      "title": "Struktura vrnjenih podatkov",
+      "description": "Ko uporabniki dokončajo svoj profil, bodo preusmerjeni na vaš return_url z naslednjimi parametri poizvedbe:",
+      "fields": {
+        "success": "Boolean, ki označuje, ali je bilo ustvarjanje profila uspešno",
+        "walletId": "ID uporabnikove LanaCoin denarnice",
+        "nostrPubkey": "Javni ključ uporabnika NOSTR",
+        "profileData": "Base64 kodirani JSON z informacijami profila"
+      }
+    },
+    "security": {
+      "title": "Varnostne funkcije",
+      "urlValidation": "Validacija URL: Sprejeti so samo HTTPS URL-ji",
+      "domainWhitelist": "Seznam dovoljenih domen: URL-ji morajo biti iz odobrenih domen",
+      "urlExpiration": "Potekanje URL: Vrnitve URL potečejo po 24 urah",
+      "noStorage": "Brez shranjevanja podatkov: Ne shranjujemo vaših vrnitvenih URL-jev ali uporabniških podatkov"
+    },
+    "testing": {
+      "title": "Testiranje vaše integracije",
+      "description": "Uporabite te testne parametre za preverjanje vaše integracije:"
+    },
+    "support": {
+      "title": "Podpora",
+      "description": "Za tehnično podporo ali vprašanja o sistemu napotitev:",
+      "contact": "Kontaktirajte nas preko naših uradnih kanalov",
+      "documentation": "Preverite to dokumentacijo za posodobitve"
+    }
+  }
+}

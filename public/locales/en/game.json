@@ -1,0 +1,33 @@
+{
+  "header": {
+    "title": "Play and earn Your LanaCoin",
+    "howToPlay": "How to Play:",
+    "instructions": "Jump over obstacles to increase Lana's value! Complete 37 successful jumps to earn your 1 Registered Lana. Each jump doubles the price and user base!"
+  },
+  "stats": {
+    "price": "💰 Lana Price",
+    "users": "👥 Users",
+    "progress": "🏃‍♂️ Progress"
+  },
+  "status": {
+    "initial": "Let's have some fun while getting rich.",
+    "inProgress": "🔥 Great progress! Keep jumping to reach 37!",
+    "completed": "🎉 Congratulations! You've earned 1 Registered Lana! 🎉",
+    "gameOver": "💥 Game Over! Restart to try again for your Lana reward."
+  },
+  "controls": {
+    "jump": "Jump (Space / Tap)",
+    "restart": "Restart Game"
+  },
+  "footer": {
+    "whatsNext": "What's next",
+    "description": "After you complete the game, you'll create your Lana Wallet and sign your profile via the decentralised Nostr protocol. From then on, you own your data—your private key stays with you and unlocks access to 20+ apps across Lana World.",
+    "ownership": "Lana is owned by everyone who participates this eco system. Let's co-create the new reality",
+    "referralDocs": "Referral System Documentation"
+  },
+  "notifications": {
+    "globalCap": "🌍 Global Cap Reached!",
+    "globalCapDescription": "8 billion users achieved!"
+  },
+  "returnNotice": "You'll return to {{siteName}} after creating your profile"
+}

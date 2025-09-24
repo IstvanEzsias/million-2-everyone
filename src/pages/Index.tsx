@@ -1,7 +1,9 @@
 import GameHeader from "@/components/GameHeader";
 import GameCanvas from "@/components/GameCanvas";
 import GameStats from "@/components/GameStats";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 import { setReturnUrlData, getReturnUrlData } from "@/utils/sessionStorage";
 
 interface GameState {
@@ -12,6 +14,7 @@ interface GameState {
 }
 
 const Index = () => {
+  const { t } = useTranslation('game');
   const [gameState, setGameState] = useState<GameState>({
     price: 0.001,
     users: 100,
@@ -45,6 +48,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-background">
       <div className="container mx-auto px-4 py-8">
+        {/* Language Switcher */}
+        <div className="flex justify-end mb-4">
+          <LanguageSwitcher />
+        </div>
+        
         <main>
           {/* Return URL info */}
           {returnUrlInfo && (
@@ -52,7 +60,7 @@ const Index = () => {
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg text-sm">
                 <span>🔗</span>
                 <span>
-                  You'll return to {returnUrlInfo.siteName || 'the referring site'} after creating your profile
+                  {t('returnNotice', { siteName: returnUrlInfo.siteName || 'the referring site' })}
                 </span>
               </div>
             </div>
@@ -72,19 +80,19 @@ const Index = () => {
           {/* Footer info */}
           <footer className="mt-12 text-center text-muted-foreground">
             <div className="max-w-2xl mx-auto">
-              <h3 className="text-lg font-semibold text-primary mb-2">What's next</h3>
+              <h3 className="text-lg font-semibold text-primary mb-2">{t('footer.whatsNext')}</h3>
               <p className="mb-4">
-                After you complete the game, you'll create your Lana Wallet and sign your profile via the decentralised Nostr protocol. From then on, you own your data—your private key stays with you and unlocks access to 20+ apps across Lana World.
+                {t('footer.description')}
               </p>
               <div className="text-sm opacity-75 mb-4">
-                Lana is owned by everyone who participates this eco system. Let's co-create the new reality
+                {t('footer.ownership')}
               </div>
               <div className="text-xs">
                 <a 
                   href="/referral-docs" 
                   className="text-primary hover:text-primary/80 underline"
                 >
-                  Referral System Documentation
+                  {t('footer.referralDocs')}
                 </a>
               </div>
             </div>

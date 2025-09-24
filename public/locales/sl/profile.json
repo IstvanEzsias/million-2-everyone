@@ -1,0 +1,79 @@
+{
+  "title": "Ustvarite svoj Lana NOSTR profil",
+  "description": "Izpolnite informacije o profilu za ustvaritev KIND 0 NOSTR dogodka",
+  "sections": {
+    "required": "Obvezne informacije",
+    "optional": "Neobvezne informacije",
+    "banking": "Bančne informacije"
+  },
+  "fields": {
+    "name": "Polno ime",
+    "displayName": "Prikazno ime",
+    "location": "Lokacija",
+    "currency": "Valuta",
+    "lanoshi2lash": "Lanoshi2lash",
+    "whoAreYou": "Kdo ste",
+    "lanaWalletID": "LanaCoin naslov",
+    "about": "O sebi",
+    "orgasmicProfile": "Orgazmičen profil",
+    "interestTags": "Oznake interesov",
+    "intimacyTags": "Oznake intimnih interesov",
+    "picture": "Profilna slika",
+    "website": "Spletna stran",
+    "paymentLink": "Plačilna povezava",
+    "bankName": "Ime banke",
+    "bankSWIFT": "SWIFT/BIC koda",
+    "bankAddress": "Naslov banke",
+    "bankAccount": "Bančni račun"
+  },
+  "placeholders": {
+    "name": "Vaše polno ime",
+    "displayName": "Vaše prikazno ime",
+    "location": "Vaša lokacija",
+    "lanoshi2lash": "Vrednost menjalnega tečaja",
+    "about": "Povejte nam o sebi...",
+    "orgasmicProfile": "Informacije in preference orgazmičnega profila...",
+    "interestTags": "bitcoin, nostr, decentralizacija, zasebnost",
+    "intimacyTags": "globoka_povezava, pomembna_intimnost, čustvena_vez",
+    "website": "https://vasadomena.com",
+    "paymentLink": "Lightning naslov ali plačilni URL",
+    "bankName": "Primer banke",
+    "bankSWIFT": "PRIMERSI33",
+    "bankAddress": "Ulični naslov banke",
+    "bankAccount": "Številka računa"
+  },
+  "help": {
+    "lanoshi2lash": "1 Lana je enak 100.000.000 Lanoshi. Lash je kot dajanje žetona zahvale. Priporočamo nastavitev 1 Lash = 100 Lanoshi na začetku.",
+    "banking": "Če se odločite prodati nekaj svojih Lanov ali Lanoshijev, prosimo podajte svoje plačilne podatke, da drugi vedo, kam poslati denar.",
+    "privateKey": "Hej človek, samo opomnik — vaš zasebni ključ ni nikjer shranjen. Če ga izgubite, izgubite svojo identiteto in Lano za vedno."
+  },
+  "validation": {
+    "nameRequired": "Ime je obvezno",
+    "displayNameRequired": "Prikazno ime je obvezno",
+    "aboutRequired": "Opis o sebi je obvezen",
+    "locationRequired": "Lokacija je obvezna",
+    "currencyRequired": "Valuta je obvezna",
+    "lanoshi2lashRequired": "Vrednost Lanoshi2lash je obvezna",
+    "whoAreYouRequired": "Prosimo, navedite, ali ste človek ali AI",
+    "orgasmicProfileRequired": "Orgazmičen profil je obvezen",
+    "interestTagsRequired": "Oznake interesov so obvezne",
+    "intimacyTagsRequired": "Oznake intimnih interesov so obvezne"
+  },
+  "loadingStates": {
+    "walletData": "Nalaganje podatkov denarnice...",
+    "noWalletData": "Podatki denarnice niso najdeni",
+    "noWalletDescription": "Prosimo, najprej generirajte denarnico"
+  },
+  "options": {
+    "currencies": {
+      "USD": "USD",
+      "EUR": "EUR",
+      "GBP": "GBP"
+    },
+    "whoAreYou": {
+      "Human": "Človek",
+      "AI": "UI"
+    }
+  },
+  "commaNote": "(ločeno z vejicami)"
+}

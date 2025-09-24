@@ -1,0 +1,73 @@
+{
+  "title": "Referral System Documentation",
+  "subtitle": "Integration Guide for 100 Million to Everyone",
+  "sections": {
+    "overview": {
+      "title": "Overview",
+      "description": "The 100 Million to Everyone referral system allows you to integrate our Lana game and profile creation into your website or app. Users who complete the game on your referral will be redirected back to your specified URL with their new Lana NOSTR profile data."
+    },
+    "quickStart": {
+      "title": "Quick Start",
+      "step1": "1. Basic Implementation",
+      "step2": "2. With Custom Site Name"
+    },
+    "parameters": {
+      "title": "URL Parameters",
+      "returnUrl": {
+        "name": "return_url",
+        "description": "The URL where users will be redirected after completing their profile",
+        "required": "Required",
+        "example": "https://yoursite.com/success"
+      },
+      "siteName": {
+        "name": "site_name", 
+        "description": "Custom name for your site (will be displayed to users)",
+        "required": "Optional",
+        "example": "Your App Name"
+      }
+    },
+    "implementation": {
+      "title": "Implementation Examples",
+      "htmlLink": "HTML Link",
+      "javascript": "JavaScript",
+      "react": "React Component"
+    },
+    "dataFlow": {
+      "title": "Data Flow",
+      "steps": {
+        "step1": "1. User clicks your referral link",
+        "step2": "2. User completes the game (37 jumps)",
+        "step3": "3. User creates their NOSTR profile",
+        "step4": "4. User is redirected to your return_url",
+        "step5": "5. Profile data is available in the URL"
+      }
+    },
+    "returnData": {
+      "title": "Return Data Structure",
+      "description": "When users complete their profile, they'll be redirected to your return_url with the following query parameters:",
+      "fields": {
+        "success": "Boolean indicating if profile creation was successful",
+        "walletId": "The user's LanaCoin wallet ID",
+        "nostrPubkey": "The user's NOSTR public key",
+        "profileData": "Base64 encoded JSON with profile information"
+      }
+    },
+    "security": {
+      "title": "Security Features",
+      "urlValidation": "URL Validation: Only HTTPS URLs are accepted",
+      "domainWhitelist": "Domain Whitelist: URLs must be from approved domains",
+      "urlExpiration": "URL Expiration: Return URLs expire after 24 hours",
+      "noStorage": "No Data Storage: We don't store your return URLs or user data"
+    },
+    "testing": {
+      "title": "Testing Your Integration",
+      "description": "Use these test parameters to verify your integration:"
+    },
+    "support": {
+      "title": "Support",
+      "description": "For technical support or questions about the referral system:",
+      "contact": "Contact us through our official channels",
+      "documentation": "Check this documentation for updates"
+    }
+  }
+}

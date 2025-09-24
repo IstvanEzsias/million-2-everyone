@@ -1,0 +1,79 @@
+{
+  "title": "Create Your Lana NOSTR Profile",
+  "description": "Complete your profile information to create a KIND 0 NOSTR event",
+  "sections": {
+    "required": "Required Information",
+    "optional": "Optional Information",
+    "banking": "Banking Information"
+  },
+  "fields": {
+    "name": "Full Name",
+    "displayName": "Display Name",
+    "location": "Location",
+    "currency": "Currency",
+    "lanoshi2lash": "Lanoshi2lash",
+    "whoAreYou": "Who Are You",
+    "lanaWalletID": "LanaCoin Address",
+    "about": "About",
+    "orgasmicProfile": "Orgasmic Profile",
+    "interestTags": "Interest Tags",
+    "intimacyTags": "Intimacy Interest Tags",
+    "picture": "Profile Picture",
+    "website": "Website",
+    "paymentLink": "Payment Link",
+    "bankName": "Bank Name",
+    "bankSWIFT": "SWIFT/BIC Code",
+    "bankAddress": "Bank Address",
+    "bankAccount": "Bank Account"
+  },
+  "placeholders": {
+    "name": "Your full name",
+    "displayName": "Your display name",
+    "location": "Your location",
+    "lanoshi2lash": "Exchange rate value",
+    "about": "Tell us about yourself...",
+    "orgasmicProfile": "Orgasmic profile information and preferences...",
+    "interestTags": "bitcoin, nostr, decentralization, privacy",
+    "intimacyTags": "deep_connection, meaningful_intimacy, emotional_bond",
+    "website": "https://yourdomain.com",
+    "paymentLink": "Lightning address or payment URL",
+    "bankName": "Example Bank",
+    "bankSWIFT": "EXAMPLEUS33",
+    "bankAddress": "Bank street address",
+    "bankAccount": "Account number"
+  },
+  "help": {
+    "lanoshi2lash": "1 Lana equals 100,000,000 Lanoshi. A Lash is like giving someone a token of appreciation. We recommend setting 1 Lash = 100 Lanoshi at the beginning.",
+    "banking": "If you decide to sell some of your Lanas or Lanoshis, please provide your payment details so others know where to send the money.",
+    "privateKey": "Hey Man, just a reminder — your Private Key is never stored anywhere. If you lose it, you lose both your identity and your Lana forever."
+  },
+  "validation": {
+    "nameRequired": "Name is required",
+    "displayNameRequired": "Display name is required",
+    "aboutRequired": "About description is required",
+    "locationRequired": "Location is required",
+    "currencyRequired": "Currency is required",
+    "lanoshi2lashRequired": "Lanoshi2lash value is required",
+    "whoAreYouRequired": "Please specify if you are Human or AI",
+    "orgasmicProfileRequired": "Orgasmic profile is required",
+    "interestTagsRequired": "Interest tags are required",
+    "intimacyTagsRequired": "Intimacy interest tags are required"
+  },
+  "loadingStates": {
+    "walletData": "Loading wallet data...",
+    "noWalletData": "No wallet data found",
+    "noWalletDescription": "Please generate a wallet first"
+  },
+  "options": {
+    "currencies": {
+      "USD": "USD",
+      "EUR": "EUR", 
+      "GBP": "GBP"
+    },
+    "whoAreYou": {
+      "Human": "Human",
+      "AI": "AI"
+    }
+  },
+  "commaNote": "(comma-separated)"
+}

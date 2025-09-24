@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface GameState {
   price: number;
   users: number;
@@ -6,6 +8,7 @@ interface GameState {
 }
 
 const GameStats = ({ gameState }: { gameState: GameState }) => {
+  const { t } = useTranslation('game');
   const fmtMoney = (x: number) => x.toLocaleString(undefined, { maximumFractionDigits: 2 });
   const fmtInt = (n: number) => Math.round(n).toLocaleString();
   const maxJumps = 37;
@@ -16,7 +19,7 @@ const GameStats = ({ gameState }: { gameState: GameState }) => {
         {/* Price Display */}
         <div className="bg-card rounded-xl p-4 border-3 border-primary shadow-card-custom">
           <div className="text-sm font-semibold text-muted-foreground mb-1">
-            💰 Lana Price
+            {t('stats.price')}
           </div>
           <div className="text-2xl font-black text-primary">
             €{fmtMoney(gameState.price)}
@@ -26,7 +29,7 @@ const GameStats = ({ gameState }: { gameState: GameState }) => {
         {/* Users Display */}
         <div className="bg-card rounded-xl p-4 border-3 border-secondary shadow-card-custom">
           <div className="text-sm font-semibold text-muted-foreground mb-1">
-            👥 Users
+            {t('stats.users')}
           </div>
           <div className="text-2xl font-black text-secondary">
             {fmtInt(gameState.users)}
@@ -36,7 +39,7 @@ const GameStats = ({ gameState }: { gameState: GameState }) => {
         {/* Jumps Progress */}
         <div className="bg-card rounded-xl p-4 border-3 border-accent shadow-card-custom">
           <div className="text-sm font-semibold text-muted-foreground mb-1">
-            🏃‍♂️ Progress
+            {t('stats.progress')}
           </div>
           <div className="text-2xl font-black text-accent">
             {gameState.jumps} / {maxJumps}
@@ -54,25 +57,25 @@ const GameStats = ({ gameState }: { gameState: GameState }) => {
       <div className="mt-4 text-center">
         {gameState.jumps === 0 && gameState.gameRunning && (
           <div className="text-muted-foreground">
-            Let's have some fun while getting rich.
+            {t('status.initial')}
           </div>
         )}
         
         {gameState.jumps > 0 && gameState.jumps < maxJumps && gameState.gameRunning && (
           <div className="text-primary font-semibold">
-            🔥 Great progress! Keep jumping to reach 37!
+            {t('status.inProgress')}
           </div>
         )}
         
         {gameState.jumps >= maxJumps && (
           <div className="text-secondary font-bold text-lg animate-pulse-glow">
-            🎉 Congratulations! You've earned 1 Registered Lana! 🎉
+            {t('status.completed')}
           </div>
         )}
         
         {!gameState.gameRunning && gameState.jumps < maxJumps && (
           <div className="text-destructive font-semibold">
-            💥 Game Over! Restart to try again for your Lana reward.
+            {t('status.gameOver')}
           </div>
         )}
       </div>

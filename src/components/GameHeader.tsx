@@ -1,6 +1,8 @@
 import lanaLogo from "@/assets/lana-logo.png";
+import { useTranslation } from 'react-i18next';
 
 const GameHeader = () => {
+  const { t } = useTranslation('game');
   return (
     <header className="w-full text-center py-8 px-4">
       <div className="max-w-4xl mx-auto">
@@ -15,15 +17,14 @@ const GameHeader = () => {
         
         {/* Main Title */}
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-red-400 mb-4 tracking-tight">
-          Play and earn Your LanaCoin
+          {t('header.title')}
         </h1>
         
         {/* Game instructions */}
         <div className="mt-8 p-6 bg-card rounded-xl shadow-card-custom border-3 border-primary max-w-2xl mx-auto">
-          <h2 className="text-xl font-bold text-primary mb-2">How to Play:</h2>
+          <h2 className="text-xl font-bold text-primary mb-2">{t('header.howToPlay')}</h2>
           <p className="text-black">
-            Jump over obstacles to increase Lana's value! Complete 37 successful jumps to earn your 1 Registered Lana. 
-            Each jump doubles the price and user base!
+            {t('header.instructions')}
           </p>
         </div>
       </div>

@@ -1,0 +1,43 @@
+{
+  "buttons": {
+    "submit": "Potrdi",
+    "cancel": "Prekliči",
+    "save": "Shrani",
+    "next": "Naprej",
+    "back": "Nazaj",
+    "restart": "Ponovi",
+    "close": "Zapri",
+    "continue": "Nadaljuj",
+    "create": "Ustvari",
+    "edit": "Uredi",
+    "delete": "Izbriši",
+    "confirm": "Potrdi",
+    "retry": "Poskusi znova"
+  },
+  "labels": {
+    "required": "Obvezno",
+    "optional": "Neobvezno",
+    "loading": "Nalaganje...",
+    "error": "Napaka",
+    "success": "Uspeh",
+    "warning": "Opozorilo",
+    "info": "Informacija"
+  },
+  "validation": {
+    "required": "To polje je obvezno",
+    "invalidUrl": "Prosimo, vnesite veljaven URL, ki se začne z http:// ali https://",
+    "invalidEmail": "Prosimo, vnesite veljaven e-mail naslov"
+  },
+  "navigation": {
+    "home": "Domov",
+    "profile": "Profil",
+    "settings": "Nastavitve",
+    "help": "Pomoč",
+    "about": "O nas"
+  },
+  "language": {
+    "selector": "Jezik",
+    "english": "Angleščina",
+    "slovenian": "Slovenščina"
+  }
+}
