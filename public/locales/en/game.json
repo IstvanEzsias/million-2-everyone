@@ -29,5 +29,9 @@
     "globalCap": "🌍 Global Cap Reached!",
     "globalCapDescription": "8 billion users achieved!"
   },
-  "returnNotice": "You'll return to {{siteName}} after creating your profile"
+  "returnNotice": "You'll return to {{siteName}} after creating your profile",
+  "skip": {
+    "button": "Skip Game & Create Wallet",
+    "description": "Skip the game and create your wallet directly (no prize earned)"
+  }
 }

@@ -29,5 +29,9 @@
     "globalCap": "🌍 Globalna meja dosežena!",
     "globalCapDescription": "8 milijard uporabnikov doseženih!"
   },
-  "returnNotice": "Po ustvarjanju profila se boste vrnili na {{siteName}}"
+  "returnNotice": "Po ustvarjanju profila se boste vrnili na {{siteName}}",
+  "skip": {
+    "button": "Preskoči igro in ustvari denarnico",
+    "description": "Preskoči igro in neposredno ustvari denarnico (brez nagrade)"
+  }
 }

@@ -13,9 +13,10 @@ import { useTranslation } from 'react-i18next';
 interface GameEndDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  playedGame?: boolean;
 }
 
-const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
+const GameEndDialog = ({ open, onOpenChange, playedGame = true }: GameEndDialogProps) => {
   const navigate = useNavigate();
   const [walletData, setWalletData] = useState<WalletData | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -128,6 +129,7 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
       walletId: walletData.lanaAddress,
       nostrHex: walletData.nostrHexId,
       email: "", // No email required anymore
+      playedGame: playedGame
     });
 
     // Navigate to NOSTR profile page
@@ -144,10 +146,10 @@ const GameEndDialog = ({ open, onOpenChange }: GameEndDialogProps) => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center text-xl font-bold text-primary">
-              {t('dialogs.gameEnd.congratulations')}
+              {playedGame ? t('dialogs.gameEnd.congratulations') : t('dialogs.gameEnd.skipTitle')}
             </DialogTitle>
             <DialogDescription className="text-center text-base mt-4">
-              {t('dialogs.gameEnd.earnedDescription')}
+              {playedGame ? t('dialogs.gameEnd.earnedDescription') : t('dialogs.gameEnd.skipDescription')}
             </DialogDescription>
           </DialogHeader>
           

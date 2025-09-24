@@ -19,7 +19,9 @@
       "privateKeyWIF": "Zasebni ključ (WIF)",
       "privateKeyWarning": "⚠️ Ohranite ta zasebni ključ varen! Kdorkoli s tem ključem lahko dostopa do vaše denarnice.",
       "regenerateWallet": "Generiraj novo denarnico",
-      "createNostrProfile": "Ustvari NOSTR profil"
+      "createNostrProfile": "Ustvari NOSTR profil",
+      "skipTitle": "Ustvari denarnico",
+      "skipDescription": "Ustvarite denarnico neposredno brez zaslužene LanaCoin nagrade"
     },
     "privateKeyVerification": {
       "title": "Preverjanje zasebnega ključa",

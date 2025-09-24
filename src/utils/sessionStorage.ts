@@ -5,6 +5,7 @@ export interface WalletSessionData {
   walletId: string;
   nostrHex: string;
   email: string;
+  playedGame?: boolean;
 }
 
 export interface ReturnUrlData {

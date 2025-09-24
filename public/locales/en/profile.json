@@ -89,7 +89,9 @@
       "privateKeyWIF": "Private Key (WIF)",
       "privateKeyWarning": "⚠️ Keep this private key secure! Anyone with this key can access your wallet.",
       "regenerateWallet": "Regenerate Wallet",
-      "createNostrProfile": "Create NOSTR Profile"
+      "createNostrProfile": "Create NOSTR Profile",
+      "skipTitle": "Create Wallet",
+      "skipDescription": "Create your wallet directly without earning the LanaCoin prize"
     },
     "privateKeyVerification": {
       "title": "Private Key Verification",

@@ -158,7 +158,8 @@ const NostrProfile = () => {
           walletId: walletData.walletId,
           nostrHex: walletData.nostrHex,
           nostrPrivateKey: walletData.nostrPrivateKey,
-          email: walletData.email
+          email: walletData.email,
+          playedGame: walletData.playedGame || false
         }
         }
       });

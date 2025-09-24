@@ -1,10 +1,12 @@
 import GameHeader from "@/components/GameHeader";
 import GameCanvas from "@/components/GameCanvas";
 import GameStats from "@/components/GameStats";
+import GameEndDialog from "@/components/GameEndDialog";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { setReturnUrlData, getReturnUrlData } from "@/utils/sessionStorage";
+import { Button } from "@/components/ui/button";
 
 interface GameState {
   price: number;
@@ -22,6 +24,7 @@ const Index = () => {
     gameRunning: true
   });
   const [returnUrlInfo, setReturnUrlInfo] = useState<{url: string, siteName?: string} | null>(null);
+  const [showSkipDialog, setShowSkipDialog] = useState(false);
 
   useEffect(() => {
     // Check for return_url parameter
@@ -77,6 +80,17 @@ const Index = () => {
             <GameCanvas onStateChange={setGameState} />
           </div>
           
+          {/* Skip Game Button */}
+          <div className="flex justify-center mt-8">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowSkipDialog(true)}
+              className="bg-background/50 border-primary/30 text-primary hover:bg-primary/10"
+            >
+              {t('skip.button')}
+            </Button>
+          </div>
+          
           {/* Footer info */}
           <footer className="mt-12 text-center text-muted-foreground">
             <div className="max-w-2xl mx-auto">
@@ -98,6 +112,13 @@ const Index = () => {
             </div>
           </footer>
         </main>
+        
+        {/* Skip Game Dialog */}
+        <GameEndDialog 
+          open={showSkipDialog} 
+          onOpenChange={setShowSkipDialog}
+          playedGame={false}
+        />
       </div>
     </div>
   );

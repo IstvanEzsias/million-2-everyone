@@ -447,7 +447,8 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       
       <GameEndDialog 
         open={showEndDialog} 
-        onOpenChange={setShowEndDialog} 
+        onOpenChange={setShowEndDialog}
+        playedGame={true}
       />
     </div>
   );
