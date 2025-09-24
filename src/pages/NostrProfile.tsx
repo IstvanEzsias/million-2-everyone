@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getWalletSessionData, clearWalletSessionData, type WalletSessionData } from "@/utils/sessionStorage";
 import { supabase } from "@/integrations/supabase/client";
 import { ImageUpload } from "@/components/ImageUpload";
-import { ProfileCreationReport } from "@/components/ProfileCreationReport";
+
 import PrivateKeyVerificationDialog from "@/components/PrivateKeyVerificationDialog";
 
 interface NostrProfileData {
@@ -66,8 +66,6 @@ const NostrProfile = () => {
 
   const [errors, setErrors] = useState<Partial<NostrProfileData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showReport, setShowReport] = useState(false);
-  const [creationResult, setCreationResult] = useState<any>(null);
   const [showVerificationDialog, setShowVerificationDialog] = useState(false);
 
   useEffect(() => {
@@ -167,19 +165,21 @@ const NostrProfile = () => {
         throw error;
       }
 
-      // Show the report dialog with results
-      setCreationResult(data);
-      setShowReport(true);
+      // Navigate to results page with the data
+      navigate('/profile-results', { state: { result: data } });
       
     } catch (error: any) {
       console.error('Profile creation error:', error);
       
-      // Show error in report dialog
-      setCreationResult({
-        success: false,
-        error: error.message || "Failed to create NOSTR profile. Please try again."
+      // Navigate to results page with the error
+      navigate('/profile-results', { 
+        state: { 
+          result: {
+            success: false,
+            error: error.message || "Failed to create NOSTR profile. Please try again."
+          }
+        } 
       });
-      setShowReport(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -468,11 +468,6 @@ const NostrProfile = () => {
           </CardContent>
         </Card>
 
-        <ProfileCreationReport
-          open={showReport}
-          onOpenChange={setShowReport}
-          result={creationResult}
-        />
 
         <PrivateKeyVerificationDialog
           open={showVerificationDialog}
