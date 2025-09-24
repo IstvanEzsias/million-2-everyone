@@ -17,7 +17,7 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef<GameState>({
     price: 0.001,
-    users: 100,
+    users: 10,
     jumps: 0,
     gameRunning: true
   });
@@ -161,7 +161,7 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
   const reset = () => {
     const newState = {
       price: 0.001,
-      users: 100,
+      users: 10,
       jumps: 0,
       gameRunning: true
     };
