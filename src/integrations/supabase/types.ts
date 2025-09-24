@@ -65,36 +65,30 @@ export type Database = {
       players: {
         Row: {
           created_at: string
-          email: string | null
           id: string
           nostrhex: string | null
           played_the_game: boolean
           received_lana: boolean
-          send_email_after_payment: boolean
           transactionid: string | null
           updated_at: string
           walletid: string | null
         }
         Insert: {
           created_at?: string
-          email?: string | null
           id?: string
           nostrhex?: string | null
           played_the_game?: boolean
           received_lana?: boolean
-          send_email_after_payment?: boolean
           transactionid?: string | null
           updated_at?: string
           walletid?: string | null
         }
         Update: {
           created_at?: string
-          email?: string | null
           id?: string
           nostrhex?: string | null
           played_the_game?: boolean
           received_lana?: boolean
-          send_email_after_payment?: boolean
           transactionid?: string | null
           updated_at?: string
           walletid?: string | null

@@ -211,7 +211,7 @@ serve(async (req) => {
   try {
     const { profileData, walletData } = await req.json() as {
       profileData: ProfileData
-      walletData: { walletId: string, nostrHex: string, nostrPrivateKey: string, email: string, playedGame?: boolean }
+      walletData: { walletId: string, nostrHex: string, nostrPrivateKey: string, playedGame?: boolean }
     }
 
     console.log('Creating NOSTR profile for:', profileData.name)
@@ -276,7 +276,6 @@ serve(async (req) => {
       .insert({
         walletid: walletData.walletId,
         nostrhex: walletData.nostrHex,
-        email: walletData.email,
         played_the_game: walletData.playedGame || false
       })
       .select()
