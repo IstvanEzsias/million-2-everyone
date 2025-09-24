@@ -70,8 +70,7 @@ const Index = () => {
             </div>
           )}
 
-          {/* Prize Availability Badge */}
-          <PrizeAvailabilityBadge />
+          {/* Prize Availability Badge - Now integrated in game canvas */}
 
           {/* Header with logo and title */}
           <GameHeader />

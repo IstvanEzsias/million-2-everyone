@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from "@/hooks/use-toast";
 import jumpingFace from "@/assets/jumping-face.png";
 import GameEndDialog from "./GameEndDialog";
+import { supabase } from '@/integrations/supabase/client';
 
 interface GameState {
   price: number;
@@ -31,6 +32,7 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
   }>>([]);
 
   const [hasShownUserCapMessage, setHasShownUserCapMessage] = useState(false);
+  const [availablePrizes, setAvailablePrizes] = useState<number>(0);
 
   // Game constants
   const W = 960;
@@ -183,6 +185,27 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     setParticles([]);
     setHasShownUserCapMessage(false);
   };
+
+  // Fetch available prizes
+  const fetchAvailablePrizes = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('get-available-prizes');
+      if (error) throw error;
+      if (data?.success) {
+        setAvailablePrizes(data.availablePrizes);
+      }
+    } catch (error) {
+      console.error('❌ Error fetching prizes:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Initial fetch
+    fetchAvailablePrizes();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchAvailablePrizes, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Load the jumping face image
   const jumpingFaceImg = useRef<HTMLImageElement | null>(null);
@@ -416,6 +439,16 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
           onClick={jump}
         />
         
+        {/* Prize availability display in the top area */}
+        <div className="absolute top-4 right-6 pointer-events-none">
+          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-full border-2 border-emerald-300 shadow-2xl backdrop-blur-sm">
+            <div className="text-sm font-bold text-center flex items-center gap-2">
+              <span>🎁</span>
+              <span>{availablePrizes.toLocaleString()} Prizes</span>
+            </div>
+          </div>
+        </div>
+
         {/* Price overlay in the middle of the game */}
         <div className="absolute top-8 left-1/2 transform -translate-x-1/2 pointer-events-none">
           <div className="bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-2 md:px-6 md:py-3 rounded-xl border-2 border-primary-glow shadow-lg">
