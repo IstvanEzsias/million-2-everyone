@@ -20,8 +20,6 @@
   "registrationFailed": "Registracija neuspešna",
   "walletId": "ID denarnice:",
   "status": "Stanje:",
-  "nextSteps": "Naslednji koraki",
-  "emailNotification": "Sistem obvestil po e-pošti (kmalu na voljo)",
   "errorDetails": "Podrobnosti napake",
   "buttons": {
     "returnToSite": "Vrnitev na {{siteName}}",

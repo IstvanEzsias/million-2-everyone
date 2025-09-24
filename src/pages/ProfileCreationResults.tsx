@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, XCircle, Clock, Wifi, Database, Mail, Wallet, ArrowLeft, RotateCcw } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Wifi, Database, Wallet, ArrowLeft, RotateCcw } from 'lucide-react';
 import { clearWalletSessionData, getReturnUrlData, clearReturnUrlData } from '@/utils/sessionStorage';
 import { useTranslation } from 'react-i18next';
 
@@ -266,16 +266,6 @@ const ProfileCreationResults = () => {
                   </div>
                 )}
 
-                {/* Next Steps */}
-                <div className="p-4 rounded-lg border bg-blue-50 dark:bg-blue-950">
-                  <h3 className="font-semibold mb-2">{t('nextSteps')}</h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Mail className="h-4 w-4" />
-                      <span>{t('emailNotification')}</span>
-                    </div>
-                  </div>
-                </div>
               </>
             )}
 

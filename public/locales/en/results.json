@@ -20,8 +20,6 @@
   "registrationFailed": "Registration failed",
   "walletId": "Wallet ID:",
   "status": "Status:",
-  "nextSteps": "Next Steps",
-  "emailNotification": "Email notification system (Coming soon)",
   "errorDetails": "Error Details",
   "buttons": {
     "returnToSite": "Return to {{siteName}}",
