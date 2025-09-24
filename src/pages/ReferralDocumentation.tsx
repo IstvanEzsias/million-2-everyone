@@ -46,13 +46,13 @@ const ReferralDocumentation = () => {
                 <div>
                   <h4 className="font-semibold mb-2">1. Basic Implementation</h4>
                   <div className="bg-muted p-4 rounded-lg font-mono text-sm">
-                    {`https://yourgame.com/?return_url=https://yoursite.com/success`}
+                    {`https://100milliontoeveryone.com/?return_url=https://yoursite.com/success`}
                   </div>
                 </div>
                 <div>
                   <h4 className="font-semibold mb-2">2. With Custom Site Name</h4>
                   <div className="bg-muted p-4 rounded-lg font-mono text-sm">
-                    {`https://yourgame.com/?return_url=https://yoursite.com/success&site_name=Your%20App`}
+                    {`https://100milliontoeveryone.com/?return_url=https://yoursite.com/success&site_name=Your%20App`}
                   </div>
                 </div>
               </div>
@@ -177,7 +177,7 @@ const ReferralDocumentation = () => {
                 <h4 className="font-semibold mb-2">HTML Link</h4>
                 <div className="bg-muted p-4 rounded-lg">
                   <code className="text-sm">
-                    {`<a href="https://yourgame.com/?return_url=https://yoursite.com/welcome&site_name=My%20App" 
+                    {`<a href="https://100milliontoeveryone.com/?return_url=https://yoursite.com/welcome&site_name=My%20App" 
    target="_blank" 
    className="btn btn-primary">
   Play Lana Game & Create Profile
@@ -193,7 +193,7 @@ const ReferralDocumentation = () => {
                     {`function openLanaGame() {
   const returnUrl = encodeURIComponent('https://yoursite.com/profile-created');
   const siteName = encodeURIComponent('Your App');
-  const gameUrl = \`https://yourgame.com/?return_url=\${returnUrl}&site_name=\${siteName}\`;
+  const gameUrl = \`https://100milliontoeveryone.com/?return_url=\${returnUrl}&site_name=\${siteName}\`;
   
   window.open(gameUrl, '_blank');
 }`}
@@ -212,7 +212,7 @@ const ReferralDocumentation = () => {
       site_name: 'Your App Name'
     });
     
-    window.open(\`https://yourgame.com/?\${params}\`, '_blank');
+    window.open(\`https://100milliontoeveryone.com/?\${params}\`, '_blank');
   };
 
   return (
