@@ -23,7 +23,8 @@ async function connectElectrum(electrumServer: string, electrumPort: number, max
         console.log(`✅ Connected to ${server.hostname}:${server.port}`);
         return conn;
       } catch (error) {
-        console.error(`❌ Failed to connect to ${server.hostname}:${server.port}:`, error.message);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown connection error';
+        console.error(`❌ Failed to connect to ${server.hostname}:${server.port}:`, errorMessage);
       }
     }
     
@@ -161,9 +162,10 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('❌ Error in get-available-prizes function:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     return new Response(JSON.stringify({
       success: false,
-      error: error.message,
+      error: errorMessage,
       availablePrizes: 0,
       timestamp: new Date().toISOString()
     }), {

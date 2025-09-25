@@ -73,7 +73,7 @@ function base58CheckDecode(str: string): Uint8Array {
 
 // SHA256 double hash
 async function sha256d(data: Uint8Array): Promise<Uint8Array> {
-  const hash1 = await crypto.subtle.digest('SHA-256', data);
+  const hash1 = await crypto.subtle.digest('SHA-256', new Uint8Array(data));
   const hash2 = await crypto.subtle.digest('SHA-256', hash1);
   return new Uint8Array(hash2);
 }
@@ -188,7 +188,7 @@ class Point {
       if (scalar & 1n) {
         result = result.add(addend);
       }
-      addend = addend.add(addend);
+      addend = addend.add(addend) as this;
       scalar >>= 1n;
     }
     return result;
@@ -337,7 +337,8 @@ async function connectElectrum(electrumServer: string, electrumPort: number, max
         console.log(`✅ Connected to ${server.hostname}:${server.port}`);
         return conn;
       } catch (error) {
-        console.error(`❌ Failed to connect to ${server.hostname}:${server.port}:`, error.message);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown connection error';
+        console.error(`❌ Failed to connect to ${server.hostname}:${server.port}:`, errorMessage);
       }
     }
     
@@ -438,7 +439,8 @@ async function validateWalletState(walletAddress: string, electrumServer: string
     return { balance, utxos };
   } catch (error) {
     console.error(`❌ Wallet validation failed:`, error);
-    throw new Error(`Wallet validation failed: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown validation error';
+    throw new Error(`Wallet validation failed: ${errorMessage}`);
   }
 }
 
@@ -668,7 +670,8 @@ async function buildSignedTx(utxos: any[], privateKeyWIF: string, recipients: Ar
     return finalTxHex;
   } catch (error) {
     console.error('❌ Transaction building error:', error);
-    throw new Error(`Failed to build transaction: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown transaction error';
+    throw new Error(`Failed to build transaction: ${errorMessage}`);
   }
 }
 
@@ -847,10 +850,11 @@ serve(async (req) => {
     
   } catch (error) {
     console.error('❌ LANA distribution error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown distribution error';
     
     return new Response(JSON.stringify({
       success: false,
-      error: error.message,
+      error: errorMessage,
       timestamp: new Date().toISOString()
     }), {
       status: 500,
