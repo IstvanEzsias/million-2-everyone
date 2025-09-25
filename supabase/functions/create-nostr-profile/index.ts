@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4'
-import { finalizeEvent, verifyEvent } from "https://esm.sh/nostr-tools@2.17.0"
+import { finalizeEvent } from "https://esm.sh/nostr-tools@2.17.0/pure"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -34,15 +34,28 @@ interface WalletRegistrationResult {
 }
 
 interface ProfileData {
+  // Required fields
   name: string
+  display_name: string
   about: string
-  picture: string
-  nip05: string
-  banner: string
-  website: string
-  lud16: string
+  location: string
   currency: string
   lanoshi2lash: string
+  whoAreYou: string
+  orgasmic_profile: string
+  tags_t: string // Things interested in
+  tags_o: string // Intimacy interests
+  
+  // Optional fields
+  picture: string
+  website: string
+  nip05: string
+  payment_link: string
+  lanaWalletID: string // Prefilled, read-only
+  bankName: string
+  bankAddress: string
+  bankSWIFT: string
+  bankAccount: string
 }
 
 // Helper function to convert hex string to bytes
@@ -121,12 +134,13 @@ async function registerWalletWithLanaRegistry(
     }
   } catch (error) {
     console.error('Lana Registry API error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return {
       success: false,
       wallet_id: walletId,
       status: 'error',
-      message: `Registry API error: ${error.message}`,
-      error: error.message
+      message: `Registry API error: ${errorMessage}`,
+      error: errorMessage
     }
   }
 }
@@ -193,10 +207,11 @@ async function broadcastToRelay(relay: string, event: NostrEvent): Promise<Relay
     })
   } catch (error) {
     console.error(`Failed to connect to ${relay}:`, error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return {
       url: relay,
       success: false,
-      error: error.message || 'Unknown error',
+      error: errorMessage,
       responseTime: Date.now() - startTime
     }
   }
@@ -215,6 +230,7 @@ serve(async (req) => {
     }
 
     console.log('Creating NOSTR profile for:', profileData.name)
+    console.log('Profile data received:', JSON.stringify(profileData, null, 2))
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
@@ -233,18 +249,54 @@ serve(async (req) => {
 
     console.log(`Found ${relays?.length || 0} relays`)
 
-    // Create NOSTR metadata event (kind 0)
+    // Create NOSTR metadata event (kind 0) with ALL profile fields
     const content = JSON.stringify({
+      // Standard Nostr fields
       name: profileData.name,
+      display_name: profileData.display_name,
       about: profileData.about,
       picture: profileData.picture,
-      nip05: profileData.nip05,
-      banner: profileData.banner,
       website: profileData.website,
-      lud16: profileData.lud16,
+      nip05: profileData.nip05,
+      
+      // Payment & Location fields
+      payment_link: profileData.payment_link,
+      location: profileData.location,
       currency: profileData.currency,
-      lanoshi2lash: profileData.lanoshi2lash
+      
+      // LanaCoins specific fields
+      lanoshi2lash: profileData.lanoshi2lash,
+      lanaWalletID: profileData.lanaWalletID,
+      whoAreYou: profileData.whoAreYou,
+      orgasmic_profile: profileData.orgasmic_profile,
+      
+      // Banking information fields
+      bankName: profileData.bankName,
+      bankAddress: profileData.bankAddress,
+      bankSWIFT: profileData.bankSWIFT,
+      bankAccount: profileData.bankAccount
     })
+
+    console.log('Event content created:', content)
+
+    // Parse tags from comma-separated strings
+    const tagsT = profileData.tags_t ? profileData.tags_t.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0) : []
+    const tagsO = profileData.tags_o ? profileData.tags_o.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0) : []
+    
+    // Create event tags according to Nostr specification
+    const eventTags: string[][] = []
+    
+    // Add "t" tags for things interested in
+    tagsT.forEach(tag => {
+      eventTags.push(['t', tag])
+    })
+    
+    // Add "o" tags for intimacy interests
+    tagsO.forEach(tag => {
+      eventTags.push(['o', tag])
+    })
+
+    console.log('Event tags created:', eventTags)
 
     // Use the public key directly (nostrHex is the public key)
     const publicKey = walletData.nostrHex
@@ -252,7 +304,7 @@ serve(async (req) => {
     const event = createEvent(
       publicKey,
       0, // kind 0 for metadata
-      [],
+      eventTags,
       content,
       walletData.nostrPrivateKey
     )
@@ -322,10 +374,11 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Profile creation failed:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
     
     return new Response(JSON.stringify({
       success: false,
-      error: error.message || 'Unknown error occurred'
+      error: errorMessage
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 500
