@@ -41,8 +41,8 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
   const gravity = 0.3; // Much slower
   const jumpForce = 9; // Much slower
   const baseSpeed = 5; // Much slower
-  const obstacleMinGap = 320; // Much wider for more delay
-  const obstacleMaxGap = 480;
+  const obstacleMinGap = 360; // Much wider for more delay
+  const obstacleMaxGap = 540;
   const target = 100_000_000;
   const userCap = 8_000_000_000;
   const maxJumps = 37;
@@ -321,8 +321,8 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       }
     }
 
-    // Keep constant speed to prevent game from becoming too fast
-    speedRef.current = baseSpeed;
+    // Slower speed increase
+    speedRef.current = baseSpeed + Math.min(1, gameStateRef.current.jumps * 0.2);
   };
 
   const draw = () => {
@@ -459,6 +459,17 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
           </div>
         </div>
 
+        {/* Price overlay in the middle of the game */}
+        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 pointer-events-none">
+          <div className="bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-2 md:px-6 md:py-3 rounded-xl border-2 border-primary-glow shadow-lg">
+            <div className="text-xs md:text-sm font-semibold opacity-90 mb-1 text-center">
+              {t('stats.price')}
+            </div>
+            <div className="text-lg md:text-2xl font-black text-center">
+              €{fmtMoney(gameStateRef.current.price)}
+            </div>
+          </div>
+        </div>
       </div>
       
       <div className="flex flex-wrap justify-center gap-4 mt-6">
