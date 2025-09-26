@@ -41,8 +41,8 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
   const gravity = 0.3; // Much slower
   const jumpForce = 9; // Much slower
   const baseSpeed = 5; // Much slower
-  const obstacleMinGap = 360; // Much wider for more delay
-  const obstacleMaxGap = 540;
+  const obstacleMinGap = 320; // Much wider for more delay
+  const obstacleMaxGap = 480;
   const target = 100_000_000;
   const userCap = 8_000_000_000;
   const maxJumps = 37;
@@ -349,19 +349,6 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
 
     // Draw player
     drawFace(ctx, playerRef.current.x, playerRef.current.y, playerRef.current.r);
-
-    // Draw price above player
-    const player = playerRef.current;
-    const state = gameStateRef.current;
-    const baseY = player.y - player.r - 30; // Position above the player
-    
-    ctx.save();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#000';
-    ctx.font = 'bold 18px system-ui';
-    ctx.fillText(`💰${fmtMoney(state.price)}`, player.x, baseY);
-    ctx.restore();
 
     // Draw obstacles
     ctx.fillStyle = '#f44';
