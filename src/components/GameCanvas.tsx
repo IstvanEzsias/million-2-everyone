@@ -350,6 +350,29 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     // Draw player
     drawFace(ctx, playerRef.current.x, playerRef.current.y, playerRef.current.r);
 
+    // Draw numbers above player
+    const player = playerRef.current;
+    const state = gameStateRef.current;
+    const baseY = player.y - player.r - 20; // Start above the player
+    const lineHeight = 24;
+    
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // Draw price (top)
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 16px system-ui';
+    ctx.fillText(`€${fmtMoney(state.price)}`, player.x, baseY - lineHeight * 2);
+    
+    // Draw users (middle)
+    ctx.fillText(fmtInt(state.users), player.x, baseY - lineHeight);
+    
+    // Draw jumps (bottom)
+    ctx.fillText(`${state.jumps}/37`, player.x, baseY);
+    
+    ctx.restore();
+
     // Draw obstacles
     ctx.fillStyle = '#f44';
     for (const o of obstaclesRef.current) {
