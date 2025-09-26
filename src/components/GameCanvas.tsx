@@ -321,8 +321,8 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       }
     }
 
-    // Slower speed increase
-    speedRef.current = baseSpeed + Math.min(1, gameStateRef.current.jumps * 0.2);
+    // Keep constant speed to prevent game from becoming too fast
+    speedRef.current = baseSpeed;
   };
 
   const draw = () => {
@@ -350,27 +350,17 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     // Draw player
     drawFace(ctx, playerRef.current.x, playerRef.current.y, playerRef.current.r);
 
-    // Draw numbers above player
+    // Draw price above player
     const player = playerRef.current;
     const state = gameStateRef.current;
-    const baseY = player.y - player.r - 20; // Start above the player
-    const lineHeight = 24;
+    const baseY = player.y - player.r - 30; // Position above the player
     
     ctx.save();
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    
-    // Draw price (top)
     ctx.fillStyle = '#000';
-    ctx.font = 'bold 16px system-ui';
-    ctx.fillText(`€${fmtMoney(state.price)}`, player.x, baseY - lineHeight * 2);
-    
-    // Draw users (middle)
-    ctx.fillText(fmtInt(state.users), player.x, baseY - lineHeight);
-    
-    // Draw jumps (bottom)
-    ctx.fillText(`${state.jumps}/37`, player.x, baseY);
-    
+    ctx.font = 'bold 18px system-ui';
+    ctx.fillText(`💰${fmtMoney(state.price)}`, player.x, baseY);
     ctx.restore();
 
     // Draw obstacles
@@ -469,17 +459,6 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
           </div>
         </div>
 
-        {/* Price overlay in the middle of the game */}
-        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 pointer-events-none">
-          <div className="bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-2 md:px-6 md:py-3 rounded-xl border-2 border-primary-glow shadow-lg">
-            <div className="text-xs md:text-sm font-semibold opacity-90 mb-1 text-center">
-              {t('stats.price')}
-            </div>
-            <div className="text-lg md:text-2xl font-black text-center">
-              €{fmtMoney(gameStateRef.current.price)}
-            </div>
-          </div>
-        </div>
       </div>
       
       <div className="flex flex-wrap justify-center gap-4 mt-6">
