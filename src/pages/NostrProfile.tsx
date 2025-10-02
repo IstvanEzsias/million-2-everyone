@@ -50,7 +50,7 @@ const NostrProfile = () => {
     about: "",
     location: "",
     currency: "GBP",
-    lanoshi2lash: "100",
+    lanoshi2lash: "10000",
     whoAreYou: "Human",
     orgasmic_profile: "",
     tags_t: "",
@@ -98,7 +98,14 @@ const NostrProfile = () => {
     if (!formData.about.trim()) newErrors.about = t('validation.aboutRequired');
     if (!formData.location.trim()) newErrors.location = t('validation.locationRequired');
     if (!formData.currency.trim()) newErrors.currency = t('validation.currencyRequired');
-    if (!formData.lanoshi2lash.trim()) newErrors.lanoshi2lash = t('validation.lanoshi2lashRequired');
+    if (!formData.lanoshi2lash.trim()) {
+      newErrors.lanoshi2lash = t('validation.lanoshi2lashRequired');
+    } else {
+      const lanoshiValue = parseInt(formData.lanoshi2lash);
+      if (isNaN(lanoshiValue) || lanoshiValue < 10000) {
+        newErrors.lanoshi2lash = "Minimalna vrednost je 10.000 Lanoshijev";
+      }
+    }
     if (!formData.whoAreYou.trim()) newErrors.whoAreYou = t('validation.whoAreYouRequired');
     if (!formData.orgasmic_profile.trim()) newErrors.orgasmic_profile = t('validation.orgasmicProfileRequired');
     if (!formData.tags_t.trim()) newErrors.tags_t = t('validation.interestTagsRequired');
@@ -271,13 +278,15 @@ const NostrProfile = () => {
                     <Label htmlFor="lanoshi2lash">{t('fields.lanoshi2lash')} *</Label>
                     <Input
                       id="lanoshi2lash"
+                      type="number"
+                      min="10000"
                       value={formData.lanoshi2lash}
                       onChange={(e) => handleInputChange("lanoshi2lash", e.target.value)}
                       placeholder={t('placeholders.lanoshi2lash')}
                       className={errors.lanoshi2lash ? "border-destructive" : ""}
                     />
                     <p className="text-sm text-muted-foreground mt-1">
-                      {t('help.lanoshi2lash')}
+                      1 Lana = 100,000,000 Lanoshi. Minimalna vrednost je 10.000 Lanoshijev.
                     </p>
                     {errors.lanoshi2lash && <p className="text-sm text-destructive mt-1">{errors.lanoshi2lash}</p>}
                   </div>
