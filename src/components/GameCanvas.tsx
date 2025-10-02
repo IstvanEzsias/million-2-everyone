@@ -17,7 +17,7 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
   const [showEndDialog, setShowEndDialog] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef<GameState>({
-    price: 0.001,
+    price: 0.1,
     users: 10,
     jumps: 0,
     gameRunning: true
