@@ -60,7 +60,12 @@ const GameEndDialog = ({ open, onOpenChange, playedGame = true }: GameEndDialogP
       console.log("Starting wallet generation...");
       const wallet = await generateWallet();
       console.log("Wallet generated successfully:", wallet);
-      setWalletData(wallet);
+      // Normalize the private key to prevent whitespace issues
+      const normalizedWallet = {
+        ...wallet,
+        privateKeyWIF: wallet.privateKeyWIF.trim()
+      };
+      setWalletData(normalizedWallet);
       toast({
         title: t('notifications.walletCreated'),
         description: t('notifications.walletCreatedDesc'),
@@ -84,7 +89,12 @@ const GameEndDialog = ({ open, onOpenChange, playedGame = true }: GameEndDialogP
     setIsGenerating(true);
     try {
       const wallet = await generateWallet();
-      setWalletData(wallet);
+      // Normalize the private key to prevent whitespace issues
+      const normalizedWallet = {
+        ...wallet,
+        privateKeyWIF: wallet.privateKeyWIF.trim()
+      };
+      setWalletData(normalizedWallet);
       toast({
         title: t('notifications.walletRegenerated'),
         description: t('notifications.walletRegeneratedDesc'),
@@ -105,7 +115,9 @@ const GameEndDialog = ({ open, onOpenChange, playedGame = true }: GameEndDialogP
   };
 
   const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
+    // Trim text before copying to prevent whitespace issues
+    const cleanText = text.trim();
+    navigator.clipboard.writeText(cleanText);
     toast({
       title: t('notifications.copied'),
       description: t('notifications.copiedDesc', { label }),

@@ -26,11 +26,24 @@ const PrivateKeyVerificationDialog = ({
   const { t } = useTranslation('profile');
 
   const handleVerification = () => {
-    if (inputPrivateKey.trim() === expectedPrivateKey) {
+    // Robust cleaning: remove all whitespace, newlines, tabs, and zero-width spaces
+    const cleanInput = inputPrivateKey.replace(/[\s\u200B-\u200D\uFEFF]/g, '');
+    const cleanExpected = expectedPrivateKey.replace(/[\s\u200B-\u200D\uFEFF]/g, '');
+    
+    if (cleanInput === cleanExpected) {
       setError("");
       setInputPrivateKey("");
       onVerificationSuccess();
     } else {
+      // Debug logging for troubleshooting
+      console.log('Private key verification failed', {
+        inputLength: cleanInput.length,
+        expectedLength: cleanExpected.length,
+        inputFirstChar: cleanInput.charCodeAt(0),
+        expectedFirstChar: cleanExpected.charCodeAt(0),
+        inputLastChar: cleanInput.charCodeAt(cleanInput.length - 1),
+        expectedLastChar: cleanExpected.charCodeAt(cleanExpected.length - 1)
+      });
       setError(t('dialogs.privateKeyVerification.incorrectKey'));
     }
   };
