@@ -116,17 +116,18 @@ function bytesToHex(bytes: Uint8Array): string {
 }
 
 function hexToBytes(hex: string): Uint8Array {
-  return new Uint8Array(hex.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+  const bytes = new Uint8Array(hex.match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+  return new Uint8Array(bytes.buffer);
 }
 
 async function sha256(hex: string): Promise<string> {
   const buffer = hexToBytes(hex);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", buffer.buffer as ArrayBuffer);
   return bytesToHex(new Uint8Array(hashBuffer));
 }
 
 async function sha256d(data: Uint8Array): Promise<Uint8Array> {
-  const firstHash = await crypto.subtle.digest("SHA-256", data);
+  const firstHash = await crypto.subtle.digest("SHA-256", data.buffer as ArrayBuffer);
   const secondHash = await crypto.subtle.digest("SHA-256", firstHash);
   return new Uint8Array(secondHash);
 }
