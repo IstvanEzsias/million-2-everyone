@@ -396,7 +396,11 @@ const GameCanvas = ({
       const progressRatio = gameStateRef.current.jumps / maxJumps;
       const speedMultiplier = 1 + Math.pow(progressRatio, 2) * difficultySettings.speed_multiplier_max;
       calculatedSpeed = baseSpeed * speedMultiplier;
+    } else if (difficultySettings?.name === 'easy') {
+      // Beginner: scale increase proportionally (0.4 → 0.48 = +20%, same as original 5→6)
+      calculatedSpeed = baseSpeed + Math.min(0.08, gameStateRef.current.jumps * 0.016);
     } else {
+      // Intermediate: keep original linear progression
       calculatedSpeed = baseSpeed + Math.min(1, gameStateRef.current.jumps * 0.2);
     }
     
@@ -505,6 +509,9 @@ const GameCanvas = ({
 
   // Game loop
   useEffect(() => {
+    if (!difficultySettings) return; // Don't start loop until settings loaded
+
+    let frameId = 0;
     let lastTime = 0;
     let acc = 0;
     const step = 1000 / 60;
@@ -520,13 +527,15 @@ const GameCanvas = ({
       }
 
       draw();
-      requestAnimationFrame(loop);
+      frameId = requestAnimationFrame(loop);
     };
 
     reset();
-    requestAnimationFrame(loop);
+    frameId = requestAnimationFrame(loop);
 
-    return () => {};
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId);
+    };
   }, [difficultySettings]);
 
   // Keyboard controls
