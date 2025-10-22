@@ -37,13 +37,14 @@ const GameCanvas = ({
   const [showEndDialog, setShowEndDialog] = useState(false);
   const [availablePrizes, setAvailablePrizes] = useState<number>(0);
   const [difficultySettings, setDifficultySettings] = useState<DifficultySettings | null>(null);
+  const [isLoadingSettings, setIsLoadingSettings] = useState(true);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef<GameState>({
     price: 0.1,
     users: 10,
     jumps: 0,
-    gameRunning: true
+    gameRunning: false
   });
 
   const [particles, setParticles] = useState<Array<{
@@ -237,6 +238,7 @@ const GameCanvas = ({
   // Load difficulty settings
   useEffect(() => {
     const loadDifficultySettings = async () => {
+      setIsLoadingSettings(true);
       const { data, error } = await supabase
         .from('difficulty_levels')
         .select('*')
@@ -246,10 +248,19 @@ const GameCanvas = ({
       if (data && !error) {
         setDifficultySettings(data as DifficultySettings);
       }
+      setIsLoadingSettings(false);
     };
 
     loadDifficultySettings();
   }, [difficulty]);
+
+  // Initialize speed and start game when settings are loaded
+  useEffect(() => {
+    if (difficultySettings && !isLoadingSettings) {
+      speedRef.current = difficultySettings.base_speed;
+      gameStateRef.current.gameRunning = true;
+    }
+  }, [difficultySettings, isLoadingSettings]);
 
   useEffect(() => {
     fetchAvailablePrizes();
@@ -530,6 +541,16 @@ const GameCanvas = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  if (isLoadingSettings) {
+    return (
+      <div className="w-full max-w-4xl mx-auto">
+        <div className="flex flex-col items-center justify-center h-96">
+          <div className="text-xl font-bold">{t('status.loading', 'Loading game...')}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto">
