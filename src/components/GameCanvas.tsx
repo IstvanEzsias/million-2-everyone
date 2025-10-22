@@ -194,7 +194,7 @@ const GameCanvas = ({
     
     gameStateRef.current = newState;
     
-    speedRef.current = baseSpeed;
+    speedRef.current = difficultySettings?.base_speed || baseSpeed;
     nextBlockIndexRef.current = 1;
     
     const player = playerRef.current;
