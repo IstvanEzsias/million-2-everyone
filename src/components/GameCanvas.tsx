@@ -4,6 +4,7 @@ import { toast } from "@/hooks/use-toast";
 import jumpingFace from "@/assets/jumping-face.png";
 import GameEndDialog from "./GameEndDialog";
 import { supabase } from '@/integrations/supabase/client';
+import PrizeAvailabilityBadge from './PrizeAvailabilityBadge';
 
 interface GameState {
   price: number;
@@ -12,9 +13,31 @@ interface GameState {
   gameRunning: boolean;
 }
 
-const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => void }) => {
-  const { t } = useTranslation('game');
+interface DifficultySettings {
+  name: string;
+  base_speed: number;
+  obstacle_min_gap: number;
+  obstacle_max_gap: number;
+  speed_progression: 'linear' | 'exponential';
+  speed_multiplier_max: number;
+  reward_amount: number;
+  reward_type: string;
+  display_name_en: string;
+  display_name_sl: string;
+}
+
+const GameCanvas = ({ 
+  onStateChange,
+  difficulty = 'intermediate'
+}: { 
+  onStateChange: (state: GameState) => void;
+  difficulty?: string;
+}) => {
+  const { t, i18n } = useTranslation('game');
   const [showEndDialog, setShowEndDialog] = useState(false);
+  const [availablePrizes, setAvailablePrizes] = useState<number>(0);
+  const [difficultySettings, setDifficultySettings] = useState<DifficultySettings | null>(null);
+  
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef<GameState>({
     price: 0.1,
@@ -32,23 +55,23 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
   }>>([]);
 
   const [hasShownUserCapMessage, setHasShownUserCapMessage] = useState(false);
-  const [availablePrizes, setAvailablePrizes] = useState<number>(0);
 
   // Game constants
   const W = 960;
   const H = 540;
   const groundY = H - 90;
-  const gravity = 0.3; // Much slower
-  const jumpForce = 9; // Much slower
-  const baseSpeed = 5; // Much slower
-  const obstacleMinGap = 320; // Much wider for more delay
-  const obstacleMaxGap = 480;
-  const target = 100_000_000;
+  const gravity = 0.3;
+  const jumpForce = 9;
   const userCap = 8_000_000_000;
   const maxJumps = 37;
+  
+  // Dynamic game constants from difficulty settings
+  const baseSpeed = difficultySettings?.base_speed || 5;
+  const obstacleMinGap = difficultySettings?.obstacle_min_gap || 320;
+  const obstacleMaxGap = difficultySettings?.obstacle_max_gap || 480;
 
   // Game objects
-  const playerRef = useRef({ x: 120, y: groundY - 40, r: 40, vy: 0, onGround: true }); // Reduced radius from 50 to 40
+  const playerRef = useRef({ x: 120, y: groundY - 40, r: 40, vy: 0, onGround: true });
   const obstaclesRef = useRef<Array<{ x: number; w: number; h: number; counted: boolean; idx: number }>>([]);
   const speedRef = useRef(baseSpeed);
   const nextBlockIndexRef = useRef(1);
@@ -108,10 +131,7 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       gameRunning: state.gameRunning
     };
     
-    // Update the ref with new state
     gameStateRef.current = newState;
-    
-    // Notify parent component with new state
     onStateChange(newState);
 
     if (state.users < userCap && newState.users >= userCap) {
@@ -155,7 +175,10 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     
     ctx.font = '800 32px system-ui';
     ctx.fillStyle = '#d97706';
-    ctx.fillText('🏆 1 Registered Lana Earned! 🏆', W/2, H/2 + 120);
+    const rewardText = difficultySettings?.reward_type === 'lana8wonder' 
+      ? '🏆 Lana8Wonder Registration! 🏆'
+      : `🏆 ${difficultySettings?.reward_amount || 1} Registered Lana! 🏆`;
+    ctx.fillText(rewardText, W/2, H/2 + 120);
     
     ctx.restore();
   };
@@ -189,18 +212,46 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
   // Fetch available prizes
   const fetchAvailablePrizes = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('get-available-prizes');
-      if (error) throw error;
-      if (data?.success) {
-        setAvailablePrizes(data.availablePrizes);
+      const response = await fetch(
+        'https://wrhcgufugnyquufydvwl.supabase.co/functions/v1/get-available-prizes',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch available prizes');
       }
+
+      const data = await response.json();
+      setAvailablePrizes(data.available_prizes);
     } catch (error) {
-      console.error('❌ Error fetching prizes:', error);
+      console.error('Error fetching available prizes:', error);
+      setAvailablePrizes(0);
     }
   };
 
+  // Load difficulty settings
   useEffect(() => {
-    // Fetch prizes only once on component load
+    const loadDifficultySettings = async () => {
+      const { data, error } = await supabase
+        .from('difficulty_levels')
+        .select('*')
+        .eq('name', difficulty)
+        .single();
+
+      if (data && !error) {
+        setDifficultySettings(data as DifficultySettings);
+      }
+    };
+
+    loadDifficultySettings();
+  }, [difficulty]);
+
+  useEffect(() => {
     fetchAvailablePrizes();
   }, []);
 
@@ -215,20 +266,51 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     };
   }, []);
 
+  const drawSpeedometer = (ctx: CanvasRenderingContext2D) => {
+    if (!difficultySettings || difficultySettings.speed_progression !== 'exponential') return;
+    
+    const currentSpeed = speedRef.current;
+    const maxSpeed = baseSpeed * (1 + difficultySettings.speed_multiplier_max);
+    const speedPercent = ((currentSpeed - baseSpeed) / (maxSpeed - baseSpeed)) * 100;
+    
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(10, 10, 160, 60);
+    
+    // Speed bar
+    const barWidth = (Math.max(0, speedPercent) / 100) * 140;
+    const gradient = ctx.createLinearGradient(20, 40, 160, 40);
+    gradient.addColorStop(0, '#22c55e');
+    gradient.addColorStop(0.5, '#eab308');
+    gradient.addColorStop(1, '#ef4444');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(20, 45, barWidth, 15);
+    
+    // Border
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(20, 45, 140, 15);
+    
+    // Text
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 16px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText(`⚡ Speed: ${currentSpeed.toFixed(1)}x`, 20, 32);
+    
+    ctx.restore();
+  };
+
   const drawPriceAbovePlayer = (ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, price: number) => {
     ctx.save();
     
-    // Position closer to the player (no hat anymore)
     const textY = cy - r * 1.8;
     
-    // Money symbol (first line) - larger size
     ctx.fillStyle = '#22c55e';
     ctx.font = `bold ${r * 0.6}px system-ui`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('💰', cx, textY);
     
-    // Price number (second line) - larger size
     ctx.font = `bold ${r * 0.5}px system-ui`;
     ctx.fillText(`€${fmtMoney(price)}`, cx, textY + r * 0.7);
     
@@ -239,28 +321,22 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     ctx.save();
     
     if (jumpingFaceImg.current) {
-      // Draw the custom jumping face image - smaller size for better gameplay
-      const size = r * 1.4; // Reduced from r * 2 to r * 1.4
+      const size = r * 1.4;
       const x = cx - size / 2;
       const y = cy - size / 2;
       
-      // Add a slight bounce effect when jumping
       const player = playerRef.current;
       const bounceOffset = player.onGround ? 0 : Math.sin(Date.now() * 0.01) * 3;
       
       ctx.drawImage(jumpingFaceImg.current, x, y + bounceOffset, size, size);
-      
-      // Draw price above the player
       drawPriceAbovePlayer(ctx, cx, cy + bounceOffset, r, gameStateRef.current.price);
     } else {
-      // Fallback to drawn face if image hasn't loaded
       ctx.fillStyle = '#000';
       ctx.font = `${r * 1.8}px Arial Black`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('100', cx, cy - r * 0.2);
       
-      // Draw eyes (pupils)
       ctx.beginPath();
       ctx.arc(cx - r * 0.25, cy - r * 0.25, r * 0.12, 0, Math.PI * 2);
       ctx.fillStyle = '#000';
@@ -271,19 +347,16 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       ctx.fillStyle = '#000';
       ctx.fill();
       
-      // Draw smile
       ctx.strokeStyle = '#000';
       ctx.lineWidth = 6;
       ctx.beginPath();
       ctx.arc(cx, cy + r * 0.25, r * 0.5, 0.25 * Math.PI, 0.75 * Math.PI);
       ctx.stroke();
       
-      // Draw chin
       ctx.beginPath();
       ctx.arc(cx, cy + r * 0.55, r * 0.9, 0.15 * Math.PI, 0.85 * Math.PI);
       ctx.stroke();
       
-      // Draw price above the fallback face too
       drawPriceAbovePlayer(ctx, cx, cy, r, gameStateRef.current.price);
     }
     
@@ -295,7 +368,6 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
 
     const player = playerRef.current;
     
-    // Player physics
     player.vy += gravity;
     player.y += player.vy;
     
@@ -305,6 +377,19 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       player.vy = 0;
       player.onGround = true;
     }
+
+    // Dynamic speed calculation based on difficulty
+    let calculatedSpeed = baseSpeed;
+    
+    if (difficultySettings?.speed_progression === 'exponential') {
+      const progressRatio = gameStateRef.current.jumps / maxJumps;
+      const speedMultiplier = 1 + Math.pow(progressRatio, 2) * difficultySettings.speed_multiplier_max;
+      calculatedSpeed = baseSpeed * speedMultiplier;
+    } else {
+      calculatedSpeed = baseSpeed + Math.min(1, gameStateRef.current.jumps * 0.2);
+    }
+    
+    speedRef.current = calculatedSpeed;
 
     // Move obstacles
     const speed = speedRef.current;
@@ -317,11 +402,20 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       obstaclesRef.current.shift();
     }
 
-    // Spawn new obstacles (but only if we haven't reached max jumps)
+    // Spawn new obstacles
     const last = obstaclesRef.current[obstaclesRef.current.length - 1];
     if (last && nextBlockIndexRef.current <= maxJumps) {
-      const s = Math.min(1.6, speed / baseSpeed);
-      if (last.x < W - (obstacleMinGap * s + Math.random() * (obstacleMaxGap * s - obstacleMinGap * s))) {
+      let gapMultiplier = 1;
+      
+      if (difficultySettings?.speed_progression === 'exponential') {
+        const progressRatio = gameStateRef.current.jumps / maxJumps;
+        gapMultiplier = 1 - (progressRatio * 0.3);
+      }
+      
+      const effectiveMinGap = obstacleMinGap * gapMultiplier;
+      const effectiveMaxGap = obstacleMaxGap * gapMultiplier;
+      
+      if (last.x < W - (effectiveMinGap + Math.random() * (effectiveMaxGap - effectiveMinGap))) {
         spawnObstacle(W + 60 + Math.random() * 120);
       }
     }
@@ -333,22 +427,17 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
         onSuccessfulJump();
       }
 
-      // Collision detection - more forgiving hitbox
       const rx = o.x, ry = groundY - o.h, rw = o.w, rh = o.h;
       const cx = Math.max(rx, Math.min(player.x, rx + rw));
       const cy = Math.max(ry, Math.min(player.y, ry + rh));
       const dx = player.x - cx;
       const dy = player.y - cy;
       
-      // Reduced collision radius for more forgiving gameplay
-      const collisionRadius = player.r * 0.7; // 70% of visual radius for more forgiving collisions
+      const collisionRadius = player.r * 0.7;
       if (dx * dx + dy * dy < collisionRadius * collisionRadius) {
         gameStateRef.current.gameRunning = false;
       }
     }
-
-    // Slower speed increase
-    speedRef.current = baseSpeed + Math.min(1, gameStateRef.current.jumps * 0.2);
   };
 
   const draw = () => {
@@ -358,11 +447,9 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Clear canvas
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, W, H);
 
-    // Draw ground
     ctx.fillStyle = '#ffe6e6';
     ctx.fillRect(0, groundY, W, H - groundY);
     
@@ -373,17 +460,15 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
     ctx.lineTo(W, groundY);
     ctx.stroke();
 
-    // Draw player
     drawFace(ctx, playerRef.current.x, playerRef.current.y, playerRef.current.r);
+    drawSpeedometer(ctx);
 
-    // Draw obstacles
     ctx.fillStyle = '#f44';
     for (const o of obstaclesRef.current) {
       ctx.fillRect(o.x, groundY - o.h, o.w, o.h);
       ctx.strokeStyle = '#a11';
       ctx.strokeRect(o.x, groundY - o.h, o.w, o.h);
       
-      // Draw obstacle number
       ctx.fillStyle = '#fff';
       ctx.font = '700 14px system-ui';
       ctx.textAlign = 'center';
@@ -391,7 +476,6 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       ctx.fillStyle = '#f44';
     }
 
-    // Draw particles
     setParticles(prev => {
       return prev.map(p => ({
         ...p,
@@ -428,15 +512,11 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
       requestAnimationFrame(loop);
     };
 
-    // Initialize game
     reset();
     requestAnimationFrame(loop);
 
-    // Cleanup
-    return () => {
-      // Animation frame cleanup handled by React
-    };
-  }, []);
+    return () => {};
+  }, [difficultySettings]);
 
   // Keyboard controls
   useEffect(() => {
@@ -462,48 +542,35 @@ const GameCanvas = ({ onStateChange }: { onStateChange: (state: GameState) => vo
           onClick={jump}
         />
         
-        {/* Prize availability display in the top area */}
-        <div className="absolute top-4 right-6 pointer-events-none">
-          <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-full border-2 border-emerald-300 shadow-2xl backdrop-blur-sm">
-            <div className="text-sm font-bold text-center flex items-center gap-2">
-              <span>🎁</span>
-              <span>{availablePrizes.toLocaleString()} Prizes</span>
-            </div>
+        {availablePrizes > 0 && (
+          <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+            {availablePrizes} prizes left
           </div>
-        </div>
-
-        {/* Price overlay in the middle of the game */}
-        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 pointer-events-none">
-          <div className="bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-2 md:px-6 md:py-3 rounded-xl border-2 border-primary-glow shadow-lg">
-            <div className="text-xs md:text-sm font-semibold opacity-90 mb-1 text-center">
-              {t('stats.price')}
-            </div>
-            <div className="text-lg md:text-2xl font-black text-center">
-              €{fmtMoney(gameStateRef.current.price)}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
       
-      <div className="flex flex-wrap justify-center gap-4 mt-6">
+      <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center items-center">
         <button
           onClick={jump}
-          className="bg-primary hover:bg-primary-glow text-primary-foreground font-bold py-3 px-6 rounded-xl shadow-button-custom btn-press transition-all duration-200"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3 px-8 rounded-xl text-lg"
         >
           {t('controls.jump')}
         </button>
+        
         <button
           onClick={reset}
-          className="bg-secondary hover:bg-secondary/80 text-secondary-foreground font-bold py-3 px-6 rounded-xl shadow-button-custom btn-press transition-all duration-200"
+          className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold py-3 px-8 rounded-xl text-lg"
         >
           {t('controls.restart')}
         </button>
       </div>
-      
+
       <GameEndDialog 
         open={showEndDialog} 
         onOpenChange={setShowEndDialog}
         playedGame={true}
+        difficulty={difficulty}
+        difficultySettings={difficultySettings}
       />
     </div>
   );

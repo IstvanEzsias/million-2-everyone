@@ -44,6 +44,60 @@ export type Database = {
         }
         Relationships: []
       }
+      difficulty_levels: {
+        Row: {
+          base_speed: number
+          created_at: string | null
+          description_en: string
+          description_sl: string
+          display_name_en: string
+          display_name_sl: string
+          id: string
+          name: string
+          obstacle_max_gap: number
+          obstacle_min_gap: number
+          reward_amount: number
+          reward_type: string
+          sort_order: number
+          speed_multiplier_max: number | null
+          speed_progression: string | null
+        }
+        Insert: {
+          base_speed: number
+          created_at?: string | null
+          description_en: string
+          description_sl: string
+          display_name_en: string
+          display_name_sl: string
+          id?: string
+          name: string
+          obstacle_max_gap: number
+          obstacle_min_gap: number
+          reward_amount: number
+          reward_type: string
+          sort_order: number
+          speed_multiplier_max?: number | null
+          speed_progression?: string | null
+        }
+        Update: {
+          base_speed?: number
+          created_at?: string | null
+          description_en?: string
+          description_sl?: string
+          display_name_en?: string
+          display_name_sl?: string
+          id?: string
+          name?: string
+          obstacle_max_gap?: number
+          obstacle_min_gap?: number
+          reward_amount?: number
+          reward_type?: string
+          sort_order?: number
+          speed_multiplier_max?: number | null
+          speed_progression?: string | null
+        }
+        Relationships: []
+      }
       nostr_relays: {
         Row: {
           created_at: string
@@ -64,7 +118,9 @@ export type Database = {
       }
       players: {
         Row: {
+          completed_difficulties: string[] | null
           created_at: string
+          difficulty_level: string | null
           id: string
           nostrhex: string | null
           played_the_game: boolean
@@ -74,7 +130,9 @@ export type Database = {
           walletid: string | null
         }
         Insert: {
+          completed_difficulties?: string[] | null
           created_at?: string
+          difficulty_level?: string | null
           id?: string
           nostrhex?: string | null
           played_the_game?: boolean
@@ -84,7 +142,9 @@ export type Database = {
           walletid?: string | null
         }
         Update: {
+          completed_difficulties?: string[] | null
           created_at?: string
+          difficulty_level?: string | null
           id?: string
           nostrhex?: string | null
           played_the_game?: boolean

@@ -10,18 +10,34 @@ import { setWalletSessionData } from "@/utils/sessionStorage";
 import hundredMillionLogo from "@/assets/100-million-logo.png";
 import { useTranslation } from 'react-i18next';
 
+interface DifficultySettings {
+  name: string;
+  reward_amount: number;
+  reward_type: string;
+  display_name_en: string;
+  display_name_sl: string;
+}
+
 interface GameEndDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   playedGame?: boolean;
+  difficulty?: string;
+  difficultySettings?: DifficultySettings | null;
 }
 
-const GameEndDialog = ({ open, onOpenChange, playedGame = true }: GameEndDialogProps) => {
+const GameEndDialog = ({ 
+  open, 
+  onOpenChange, 
+  playedGame = true,
+  difficulty = 'intermediate',
+  difficultySettings
+}: GameEndDialogProps) => {
   const navigate = useNavigate();
+  const { i18n, t } = useTranslation('profile');
   const [walletData, setWalletData] = useState<WalletData | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [librariesLoaded, setLibrariesLoaded] = useState(false);
-  const { t } = useTranslation('profile');
 
   // Check if libraries are loaded with timeout fallback
   useEffect(() => {
@@ -144,8 +160,25 @@ const GameEndDialog = ({ open, onOpenChange, playedGame = true }: GameEndDialogP
       playedGame: playedGame
     });
 
+    // Store difficulty for edge function
+    sessionStorage.setItem('game_difficulty', difficulty);
+
     // Navigate to NOSTR profile page
     navigate("/nostr-profile");
+  };
+
+  const getDifficultyDisplayName = () => {
+    if (!difficultySettings) return '';
+    return i18n.language === 'sl' ? difficultySettings.display_name_sl : difficultySettings.display_name_en;
+  };
+
+  const getRewardText = () => {
+    if (!difficultySettings) return '1 Registered Lana';
+    
+    if (difficultySettings.reward_type === 'lana8wonder') {
+      return '🏆 Lana8Wonder Registration';
+    }
+    return `🪙 ${difficultySettings.reward_amount} Registered Lana`;
   };
 
   const handleReset = () => {
@@ -158,10 +191,25 @@ const GameEndDialog = ({ open, onOpenChange, playedGame = true }: GameEndDialogP
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center text-xl font-bold text-primary">
-              {playedGame ? t('dialogs.gameEnd.congratulations') : t('dialogs.gameEnd.skipTitle')}
+              {playedGame && difficultySettings?.reward_type === 'lana8wonder' 
+                ? '🔥 LEGENDARY VICTORY! 🔥'
+                : playedGame ? t('dialogs.gameEnd.congratulations') : t('dialogs.gameEnd.skipTitle')
+              }
             </DialogTitle>
             <DialogDescription className="text-center text-base mt-4">
-              {playedGame ? t('dialogs.gameEnd.earnedDescription') : t('dialogs.gameEnd.skipDescription')}
+              {playedGame ? (
+                <div className="space-y-2">
+                  <p className="text-lg font-semibold">
+                    Congratulations! You've completed the {getDifficultyDisplayName()} level!
+                  </p>
+                  <p className="text-xl font-bold text-primary">
+                    Reward: {getRewardText()}
+                  </p>
+                  <p className="text-sm">
+                    Create your wallet to claim your reward.
+                  </p>
+                </div>
+              ) : t('dialogs.gameEnd.skipDescription')}
             </DialogDescription>
           </DialogHeader>
           

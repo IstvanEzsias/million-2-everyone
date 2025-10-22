@@ -2,6 +2,7 @@ import GameHeader from "@/components/GameHeader";
 import GameCanvas from "@/components/GameCanvas";
 import GameStats from "@/components/GameStats";
 import GameEndDialog from "@/components/GameEndDialog";
+import { DifficultySelector } from "@/components/DifficultySelector";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import PrizeAvailabilityBadge from "@/components/PrizeAvailabilityBadge";
 import { useState, useEffect } from "react";
@@ -26,6 +27,8 @@ const Index = () => {
   });
   const [returnUrlInfo, setReturnUrlInfo] = useState<{url: string, siteName?: string} | null>(null);
   const [showSkipDialog, setShowSkipDialog] = useState(false);
+  const [showDifficultySelector, setShowDifficultySelector] = useState(true);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('intermediate');
 
   useEffect(() => {
     // Check for return_url parameter
@@ -49,6 +52,11 @@ const Index = () => {
     }
   }, []);
 
+  const handleDifficultySelect = (difficulty: string) => {
+    setSelectedDifficulty(difficulty);
+    setShowDifficultySelector(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-background">
       <div className="container mx-auto px-4 py-8">
@@ -58,30 +66,40 @@ const Index = () => {
         </div>
         
         <main>
-          {/* Return URL info */}
-          {returnUrlInfo && (
-            <div className="mb-6 text-center">
-              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg text-sm">
-                <span>🔗</span>
-                <span>
-                  {t('returnNotice', { siteName: returnUrlInfo.siteName || 'the referring site' })}
-                </span>
+          <DifficultySelector 
+            open={showDifficultySelector}
+            onSelect={handleDifficultySelect}
+          />
+
+          {!showDifficultySelector && (
+            <>
+              {/* Return URL info */}
+              {returnUrlInfo && (
+                <div className="mb-6 text-center">
+                  <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg text-sm">
+                    <span>🔗</span>
+                    <span>
+                      {t('returnNotice', { siteName: returnUrlInfo.siteName || 'the referring site' })}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Header with logo and title */}
+              <GameHeader />
+              
+              {/* Game stats display */}
+              <GameStats gameState={gameState} />
+              
+              {/* Game canvas */}
+              <div className="flex justify-center">
+                <GameCanvas 
+                  onStateChange={setGameState}
+                  difficulty={selectedDifficulty}
+                />
               </div>
-            </div>
+            </>
           )}
-
-          {/* Prize Availability Badge - Now integrated in game canvas */}
-
-          {/* Header with logo and title */}
-          <GameHeader />
-          
-          {/* Game stats display */}
-          <GameStats gameState={gameState} />
-          
-          {/* Game canvas */}
-          <div className="flex justify-center">
-            <GameCanvas onStateChange={setGameState} />
-          </div>
           
           {/* Skip Game Button */}
           <div className="flex justify-center mt-8">

@@ -33,5 +33,26 @@
   "skip": {
     "button": "Skip Game & Create Wallet",
     "description": "Skip the game and create your wallet directly (no prize earned)"
+  },
+  "difficulty": {
+    "title": "Choose Your Challenge",
+    "select": "Play This Level",
+    "completed": "✅ Completed",
+    "easy": {
+      "name": "Beginner",
+      "description": "Perfect for learning! Slower speed, wider gaps.",
+      "reward": "Earn 1 Registered Lana"
+    },
+    "intermediate": {
+      "name": "Intermediate",
+      "description": "Balanced challenge for experienced players.",
+      "reward": "Earn 3 Registered Lana"
+    },
+    "impossible": {
+      "name": "Legendary",
+      "description": "🔥 Only legends conquer this! Speed ramps to insane levels.",
+      "reward": "🏆 Win Lana8Wonder Registration!",
+      "subtext": "Join the elite few who beat the impossible"
+    }
   }
 }

@@ -33,5 +33,26 @@
   "skip": {
     "button": "Preskoči igro in ustvari denarnico",
     "description": "Preskoči igro in neposredno ustvari denarnico (brez nagrade)"
+  },
+  "difficulty": {
+    "title": "Izberite svoj izziv",
+    "select": "Igraj to raven",
+    "completed": "✅ Dokončano",
+    "easy": {
+      "name": "Začetnik",
+      "description": "Popolno za učenje! Počasnejša hitrost, širše razdalje.",
+      "reward": "Zaslužite 1 registriran Lana"
+    },
+    "intermediate": {
+      "name": "Vmesni",
+      "description": "Uravnotežen izziv za izkušene igralce.",
+      "reward": "Zaslužite 3 registrirane Lana"
+    },
+    "impossible": {
+      "name": "Legendarni",
+      "description": "🔥 Samo legende osvojijo to! Hitrost se povečuje do nore ravni.",
+      "reward": "🏆 Zmaga prinese registracijo Lana8Wonder!",
+      "subtext": "Pridružite se eliti, ki je premagala nemogoče"
+    }
   }
 }
