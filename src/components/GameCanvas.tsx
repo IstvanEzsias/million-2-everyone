@@ -62,7 +62,7 @@ const GameCanvas = ({
   const H = 540;
   const groundY = H - 90;
   const gravity = 0.3;
-  const jumpForce = 9;
+  const baseJumpForce = 9; // Base jump force that scales with speed
   const userCap = 8_000_000_000;
   const maxJumps = 37;
   
@@ -117,7 +117,9 @@ const GameCanvas = ({
     
     const player = playerRef.current;
     if (player.onGround) {
-      player.vy = -jumpForce;
+      // Scale jump force with current speed to maintain playability
+      const scaledJumpForce = baseJumpForce * (speedRef.current / baseSpeed);
+      player.vy = -scaledJumpForce;
       player.onGround = false;
     }
   };
