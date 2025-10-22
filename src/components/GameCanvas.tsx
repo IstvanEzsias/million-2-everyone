@@ -117,9 +117,9 @@ const GameCanvas = ({
     
     const player = playerRef.current;
     if (player.onGround) {
-      // Scale jump force exponentially with speed (power of 1.3)
+      // Scale jump force exponentially with speed (power of 1.6)
       const speedRatio = speedRef.current / baseSpeed;
-      const scaledJumpForce = baseJumpForce * Math.pow(speedRatio, 1.3);
+      const scaledJumpForce = baseJumpForce * Math.pow(speedRatio, 1.6);
       player.vy = -scaledJumpForce;
       player.onGround = false;
     }
@@ -382,9 +382,9 @@ const GameCanvas = ({
 
     const player = playerRef.current;
     
-    // Apply scaled gravity based on speed (power of 1.5)
+    // Apply scaled gravity based on speed (power of 1.2)
     const speedRatio = speedRef.current / baseSpeed;
-    const scaledGravity = baseGravity * Math.pow(speedRatio, 1.5);
+    const scaledGravity = baseGravity * Math.pow(speedRatio, 1.2);
     player.vy += scaledGravity;
     player.y += player.vy;
     
