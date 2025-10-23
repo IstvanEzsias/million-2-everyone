@@ -26,6 +26,20 @@ interface DifficultySettings {
   display_name_sl: string;
 }
 
+// Fallback difficulty settings for safety
+const FALLBACK_SETTINGS: DifficultySettings = {
+  name: 'easy',
+  display_name_en: 'Chill Mode',
+  display_name_sl: 'Chill Mode',
+  base_speed: 3.0,
+  obstacle_min_gap: 400,
+  obstacle_max_gap: 550,
+  speed_progression: 'linear',
+  speed_multiplier_max: 0.2,
+  reward_amount: 1,
+  reward_type: 'lana'
+};
+
 const GameCanvas = ({ 
   onStateChange,
   difficulty = 'intermediate'
@@ -38,6 +52,7 @@ const GameCanvas = ({
   const [availablePrizes, setAvailablePrizes] = useState<number>(0);
   const [difficultySettings, setDifficultySettings] = useState<DifficultySettings | null>(null);
   const [isLoadingSettings, setIsLoadingSettings] = useState(true);
+  const [showDebug, setShowDebug] = useState(false);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef<GameState>({
@@ -236,6 +251,12 @@ const GameCanvas = ({
     }
   };
 
+  // URL parameter detection for debug mode
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setShowDebug(params.get('debug') === '1');
+  }, []);
+
   // Load difficulty settings
   useEffect(() => {
     const loadDifficultySettings = async () => {
@@ -248,6 +269,14 @@ const GameCanvas = ({
 
       if (data && !error) {
         setDifficultySettings(data as DifficultySettings);
+      } else {
+        console.error('Failed to load difficulty settings, using fallback:', error);
+        setDifficultySettings(FALLBACK_SETTINGS);
+        toast({
+          title: "Settings Load Error",
+          description: "Using default difficulty settings",
+          variant: "destructive"
+        });
       }
       setIsLoadingSettings(false);
     };
@@ -329,6 +358,40 @@ const GameCanvas = ({
     ctx.restore();
   };
 
+  const drawDebugOverlay = (ctx: CanvasRenderingContext2D) => {
+    if (!showDebug || !difficultySettings) return;
+    
+    const progressRatio = gameStateRef.current.jumps / maxJumps;
+    const speedRatio = speedRef.current / baseSpeed;
+    
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+    ctx.fillRect(10, H - 180, 300, 170);
+    
+    ctx.fillStyle = '#00ff00';
+    ctx.font = 'bold 14px monospace';
+    ctx.textAlign = 'left';
+    
+    const lines = [
+      `Difficulty: ${difficultySettings.display_name_en}`,
+      `Base Speed: ${baseSpeed.toFixed(1)}`,
+      `Progression: ${difficultySettings.speed_progression}`,
+      `Multiplier Max: ${difficultySettings.speed_multiplier_max}`,
+      `---`,
+      `Current Speed: ${speedRef.current.toFixed(2)}`,
+      `Progress: ${(progressRatio * 100).toFixed(1)}%`,
+      `Speed Ratio: ${speedRatio.toFixed(2)}x`,
+      `Gravity: ${(baseGravity * speedRatio).toFixed(2)}`,
+      `Jumps: ${gameStateRef.current.jumps}/${maxJumps}`
+    ];
+    
+    lines.forEach((line, i) => {
+      ctx.fillText(line, 20, H - 160 + i * 16);
+    });
+    
+    ctx.restore();
+  };
+
   const drawFace = (ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) => {
     ctx.save();
     
@@ -393,19 +456,19 @@ const GameCanvas = ({
       player.onGround = true;
     }
 
-    // Dynamic speed calculation based on difficulty
+    // Dynamic speed calculation based on difficulty settings
     let calculatedSpeed = baseSpeed;
     
     if (difficultySettings?.speed_progression === 'exponential') {
+      // Exponential progression: speed increases faster as you progress
       const progressRatio = gameStateRef.current.jumps / maxJumps;
       const speedMultiplier = 1 + Math.pow(progressRatio, 2) * difficultySettings.speed_multiplier_max;
       calculatedSpeed = baseSpeed * speedMultiplier;
-    } else if (difficultySettings?.name === 'easy') {
-      // Beginner: scale increase proportionally (0.4 → 0.48 = +20%, same as original 5→6)
-      calculatedSpeed = baseSpeed + Math.min(0.08, gameStateRef.current.jumps * 0.016);
     } else {
-      // Intermediate: keep original linear progression
-      calculatedSpeed = baseSpeed + Math.min(1, gameStateRef.current.jumps * 0.2);
+      // Linear progression (default): speed increases steadily
+      const progressRatio = gameStateRef.current.jumps / maxJumps;
+      const speedMultiplier = 1 + (progressRatio * difficultySettings.speed_multiplier_max);
+      calculatedSpeed = baseSpeed * speedMultiplier;
     }
     
     speedRef.current = calculatedSpeed;
@@ -481,6 +544,7 @@ const GameCanvas = ({
 
     drawFace(ctx, playerRef.current.x, playerRef.current.y, playerRef.current.r);
     drawSpeedometer(ctx);
+    drawDebugOverlay(ctx);
 
     ctx.fillStyle = '#f44';
     for (const o of obstaclesRef.current) {
