@@ -42,7 +42,8 @@
   "language": {
     "selector": "Language",
     "english": "English",
-    "slovenian": "Slovenian"
+    "slovenian": "Slovenian",
+    "hungarian": "Hungarian"
   },
   "prize": {
     "availableSlots": "Available Prizes",

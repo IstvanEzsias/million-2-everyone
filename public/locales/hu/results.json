@@ -1,0 +1,30 @@
+{
+  "title": "NOSTR profil létrehozási jelentés",
+  "description": "A profil létrehozási folyamat részletes eredményei",
+  "loading": "Eredmények betöltése...",
+  "overallStatus": "Összesített státusz",
+  "success": "Sikeres",
+  "failed": "Sikertelen",
+  "nostrEvent": "NOSTR esemény",
+  "eventId": "Esemény ID:",
+  "databaseStorage": "Adatbázis tárolás",
+  "playerRecordCreated": "Játékos rekord sikeresen létrehozva",
+  "playerId": "Játékos ID:",
+  "relayBroadcasting": "Relay közvetítés",
+  "totalRelays": "Összes relay",
+  "successful": "Sikeres",
+  "detailedResults": "Részletes eredmények:",
+  "error": "Hiba",
+  "walletRegistration": "Tárca regisztráció",
+  "walletRegisteredSuccess": "Tárca sikeresen regisztrálva a Lana Registry-ben",
+  "registrationFailed": "Regisztráció sikertelen",
+  "walletId": "Tárca ID:",
+  "status": "Státusz:",
+  "errorDetails": "Hiba részletei",
+  "buttons": {
+    "returnToSite": "Vissza a(z) {{siteName}} oldalra",
+    "stayAndExplore": "Maradj és fedezd fel",
+    "createAnotherProfile": "Másik profil létrehozása",
+    "backToHome": "Vissza a kezdőlapra"
+  }
+}

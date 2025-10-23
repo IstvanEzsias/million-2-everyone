@@ -42,7 +42,8 @@
   "language": {
     "selector": "Jezik",
     "english": "Angleščina",
-    "slovenian": "Slovenščina"
+    "slovenian": "Slovenščina",
+    "hungarian": "Madžarščina"
   },
   "prize": {
     "availableSlots": "Razpoložljive nagrade",

@@ -1,0 +1,62 @@
+{
+  "header": {
+    "title": "Játssz és keress LanaCoin-t!",
+    "instruction": "Ugorj át az akadályokon, hogy növeld Lana értékét! 🚀",
+    "howToPlay": "Így játszhatsz"
+  },
+  "stats": {
+    "lanaPrice": "Lana Ár",
+    "users": "Felhasználók",
+    "progress": "Haladás"
+  },
+  "status": {
+    "initial": "Kattints a Jump gombra az ugráshoz!",
+    "inProgress": "Rajta! Ugorj át az akadályokon!",
+    "completed": "Gratulálok! Megszerezted az 1 Regisztrált Lanát! 🎉",
+    "gameOver": "Nem sikerült! Próbáld újra!"
+  },
+  "controls": {
+    "jump": "Ugorj!",
+    "restart": "Újrakezdés"
+  },
+  "footer": {
+    "postGameNote": "A játék után létrehozhatod a Lana Tárcád és NOSTR Profilt 🔥",
+    "dataOwnership": "Minden adat a tiéd és a készülékedre van mentve!",
+    "referralNote": "Ajánlói integráció? Nézd meg a"
+  },
+  "notifications": {
+    "globalCapReached": "Elértük a globális limitet! Nincs több regisztrált Lana, de a LanaCoin-ok még mindig rendelkezésedre állnak. 💰"
+  },
+  "skip": {
+    "skipGame": "Hagyj ki mindent és hozd létre a tárcát",
+    "skipDescription": "Hozd létre közvetlenül a tárcád anélkül, hogy megszereznéd a LanaCoin nyereményt"
+  },
+  "difficulty": {
+    "selectLevel": "Válassz nehézségi szintet",
+    "selectDescription": "Minél nagyobb a kihívás, annál nagyobb a jutalom! 🎯",
+    "beginner": {
+      "title": "Kezdő 🌱",
+      "description": "Tökéletes tanuláshoz!",
+      "obstacles": "Lassú akadályok",
+      "reward": "Alap jutalom: 1 Regisztrált Lana"
+    },
+    "intermediate": {
+      "title": "Haladó ⚡",
+      "description": "Hozd ki magadból a maximumot!",
+      "obstacles": "Közepes sebesség",
+      "reward": "Dupla jutalom: 2 Regisztrált Lana"
+    },
+    "legendary": {
+      "title": "Legendás 🔥",
+      "description": "Csak a legendák csinálják meg!",
+      "obstacles": "Szuper gyors akadályok",
+      "reward": "Tripla jutalom: 3 Regisztrált Lana"
+    }
+  },
+  "levelSwitch": {
+    "confirmTitle": "Szint váltás",
+    "confirmMessage": "Biztos, hogy szeretnéd megváltoztatni a nehézségi szintet {{level}} közben? A haladásod el fog veszni.",
+    "stay": "Maradok",
+    "switchLevel": "Váltok"
+  }
+}

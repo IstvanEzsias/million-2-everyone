@@ -1,0 +1,73 @@
+{
+  "title": "Ajánlói rendszer dokumentáció",
+  "subtitle": "Integrációs útmutató a 100 Million to Everyone-hez",
+  "sections": {
+    "overview": {
+      "title": "Áttekintés",
+      "description": "A 100 Million to Everyone ajánlói rendszer lehetővé teszi, hogy integráld a Lana játékot és profil létrehozást a weboldaladba vagy appodba. Azok a felhasználók, akik befejezik a játékot az ajánlódon keresztül, visszairányítódnak a megadott URL-edre az új Lana NOSTR profil adataikkal."
+    },
+    "quickStart": {
+      "title": "Gyors kezdés",
+      "step1": "1. Alapvető implementáció",
+      "step2": "2. Egyedi oldalnévvel"
+    },
+    "parameters": {
+      "title": "URL paraméterek",
+      "returnUrl": {
+        "name": "return_url",
+        "description": "Az URL, ahová a felhasználók a profiljuk befejezése után átirányításra kerülnek",
+        "required": "Kötelező",
+        "example": "https://aweboldalad.hu/sikeres"
+      },
+      "siteName": {
+        "name": "site_name",
+        "description": "Egyedi név az oldaladnak (megjelenik a felhasználóknak)",
+        "required": "Nem kötelező",
+        "example": "Az appod neve"
+      }
+    },
+    "implementation": {
+      "title": "Implementációs példák",
+      "htmlLink": "HTML link",
+      "javascript": "JavaScript",
+      "react": "React komponens"
+    },
+    "dataFlow": {
+      "title": "Adatfolyam",
+      "steps": {
+        "step1": "1. A felhasználó rákattint az ajánlói linkre",
+        "step2": "2. A felhasználó befejezi a játékot (37 ugrás)",
+        "step3": "3. A felhasználó létrehozza a NOSTR profilját",
+        "step4": "4. A felhasználó átirányításra kerül a return_url-re",
+        "step5": "5. A profil adatok elérhetők az URL-ben"
+      }
+    },
+    "returnData": {
+      "title": "Visszatérő adatok struktúrája",
+      "description": "Amikor a felhasználók befejezik a profiljukat, átirányítódnak a return_url-edre az alábbi query paraméterekkel:",
+      "fields": {
+        "success": "Boolean érték, ami jelzi, hogy a profil létrehozása sikeres volt-e",
+        "walletId": "A felhasználó LanaCoin tárca ID-ja",
+        "nostrPubkey": "A felhasználó NOSTR publikus kulcsa",
+        "profileData": "Base64 kódolt JSON a profil információkkal"
+      }
+    },
+    "security": {
+      "title": "Biztonsági funkciók",
+      "urlValidation": "URL validáció: Csak HTTPS URL-ek fogadhatók el",
+      "domainWhitelist": "Domain fehérlista: Az URL-eknek jóváhagyott domainek közül kell származniuk",
+      "urlExpiration": "URL lejárat: A visszatérési URL-ek 24 óra után lejárnak",
+      "noStorage": "Nincs adat tárolás: Nem tároljuk a visszatérési URL-eket vagy felhasználói adatokat"
+    },
+    "testing": {
+      "title": "Az integráció tesztelése",
+      "description": "Használd ezeket a teszt paramétereket az integráció ellenőrzéséhez:"
+    },
+    "support": {
+      "title": "Támogatás",
+      "description": "Technikai támogatásért vagy kérdésekért az ajánlói rendszerrel kapcsolatban:",
+      "contact": "Lépj velünk kapcsolatba a hivatalos csatornáinkon keresztül",
+      "documentation": "Nézd meg ezt a dokumentációt a frissítésekért"
+    }
+  }
+}

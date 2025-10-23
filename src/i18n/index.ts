@@ -36,7 +36,7 @@ i18n
     },
 
     // Define supported languages
-    supportedLngs: ['en', 'sl'],
+    supportedLngs: ['en', 'sl', 'hu'],
     
     // Load only current language
     load: 'languageOnly',

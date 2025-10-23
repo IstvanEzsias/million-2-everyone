@@ -1,0 +1,55 @@
+{
+  "buttons": {
+    "submit": "Küldés",
+    "cancel": "Mégse",
+    "save": "Mentsd el",
+    "next": "Tovább",
+    "back": "Vissza",
+    "restart": "Újrakezdés",
+    "close": "Bezárás",
+    "continue": "Folytatás",
+    "create": "Hozd létre",
+    "edit": "Szerkesztés",
+    "delete": "Törlés",
+    "confirm": "Megerősítés",
+    "retry": "Próbáld újra",
+    "creating": "Profil létrehozása...",
+    "createProfile": "NOSTR Profil létrehozása",
+    "uploading": "Feltöltés...",
+    "uploadImage": "Kép feltöltése"
+  },
+  "labels": {
+    "required": "Kötelező",
+    "optional": "Nem kötelező",
+    "loading": "Betöltés...",
+    "error": "Hiba",
+    "success": "Siker",
+    "warning": "Figyelmeztetés",
+    "info": "Információ"
+  },
+  "validation": {
+    "required": "Ez a mező kötelező",
+    "invalidUrl": "Adj meg egy érvényes URL-t http:// vagy https:// kezdettel",
+    "invalidEmail": "Adj meg egy érvényes email címet"
+  },
+  "navigation": {
+    "home": "Kezdőlap",
+    "profile": "Profil",
+    "settings": "Beállítások",
+    "help": "Súgó",
+    "about": "Rólunk"
+  },
+  "language": {
+    "selector": "Nyelv",
+    "english": "Angol",
+    "slovenian": "Szlovén",
+    "hungarian": "Magyar"
+  },
+  "prize": {
+    "availableSlots": "Elérhető nyeremények",
+    "realTimeBalance": "Valós idejű tárca egyenleg",
+    "error": "Nem sikerült betölteni a nyereményeket"
+  },
+  "drawEntry": "Sorsolási részvétel",
+  "surprisePrizes": "Meglepetés nyeremények"
+}

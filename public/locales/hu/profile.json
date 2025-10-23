@@ -1,0 +1,125 @@
+{
+  "title": "Hozd létre a Lana NOSTR Profilt",
+  "description": "Töltsd ki a profil információkat egy KIND 0 NOSTR esemény létrehozásához",
+  "sections": {
+    "required": "Kötelező információk",
+    "optional": "Nem kötelező információk",
+    "banking": "Banki információk"
+  },
+  "fields": {
+    "name": "Teljes neved",
+    "displayName": "Megjelenített név",
+    "location": "Tartózkodási hely",
+    "currency": "Pénznem",
+    "lanoshi2lash": "Lanoshi2lash",
+    "whoAreYou": "Ki vagy te?",
+    "lanaWalletID": "LanaCoin cím",
+    "about": "Rólad",
+    "orgasmicProfile": "Orgazmikus profil",
+    "interestTags": "Érdeklődési címkék",
+    "intimacyTags": "Intimitás címkék",
+    "picture": "Profilkép",
+    "website": "Weboldal",
+    "paymentLink": "Fizetési link",
+    "bankName": "Bank neve",
+    "bankSWIFT": "SWIFT/BIC kód",
+    "bankAddress": "Bank címe",
+    "bankAccount": "Bankszámlaszám"
+  },
+  "placeholders": {
+    "name": "A teljes neved",
+    "displayName": "A megjelenített neved",
+    "location": "Hol laksz",
+    "lanoshi2lash": "Átváltási arány értéke",
+    "about": "Meséld el magad...",
+    "orgasmicProfile": "Orgazmikus profil információk és preferenciák...",
+    "interestTags": "bitcoin, nostr, decentralizáció, privacy",
+    "intimacyTags": "mély_kapcsolat, értelmes_intimitás, érzelmi_kötelék",
+    "website": "https://aweboldalad.hu",
+    "paymentLink": "Lightning cím vagy fizetési URL",
+    "bankName": "Példa Bank",
+    "bankSWIFT": "EXAMPLEHU33",
+    "bankAddress": "Bank utca, házszám",
+    "bankAccount": "Számlaszám"
+  },
+  "help": {
+    "lanoshi2lash": "1 Lana egyenlő 100,000,000 Lanoshi-val. A Lash olyan, mint egy megbecsülés jele. Javasoljuk, hogy kezdetben állítsd be: 1 Lash = 100 Lanoshi.",
+    "banking": "Ha úgy döntesz, hogy eladod a Lanád vagy Lanoshi-jaid egy részét, add meg a fizetési adataid, hogy mások tudják, hová küldjék a pénzt.",
+    "privateKey": "Hé Haver, ne feledd — a titkos kulcsod sehol sincs tárolva. Ha elveszíted, mindent elveszítesz: az identitásod és a Lanád is örökre elveszik."
+  },
+  "validation": {
+    "nameRequired": "A név kötelező",
+    "displayNameRequired": "A megjelenített név kötelező",
+    "aboutRequired": "A bemutatkozás kötelező",
+    "locationRequired": "A tartózkodási hely kötelező",
+    "currencyRequired": "A pénznem kötelező",
+    "lanoshi2lashRequired": "A Lanoshi2lash érték kötelező",
+    "whoAreYouRequired": "Add meg, hogy ember vagy mesterséges intelligencia vagy",
+    "orgasmicProfileRequired": "Az orgazmikus profil kötelező",
+    "interestTagsRequired": "Az érdeklődési címkék kötelezőek",
+    "intimacyTagsRequired": "Az intimitás címkék kötelezőek"
+  },
+  "loadingStates": {
+    "walletData": "Tárca adatok betöltése...",
+    "noWalletData": "Nincs tárca adat",
+    "noWalletDescription": "Először hozz létre egy tárcát"
+  },
+  "options": {
+    "currencies": {
+      "USD": "USD",
+      "EUR": "EUR",
+      "GBP": "GBP"
+    },
+    "whoAreYou": {
+      "Human": "Ember",
+      "AI": "Mesterséges intelligencia"
+    }
+  },
+  "commaNote": "(vesszővel elválasztva)",
+  "dialogs": {
+    "gameEnd": {
+      "congratulations": "🎉 Gratulálok! 🎉",
+      "earnedDescription": "Megszereztél 1 LanaCoin-t, ami 100 millió értékű lesz",
+      "createWallet": "Lana tárca létrehozása",
+      "generating": "Generálás...",
+      "loadingLibraries": "Könyvtárak betöltése...",
+      "walletReady": "🎉 A Lana tárcád készen áll! 🎉",
+      "keepPrivateKeySafe": "Őrizd meg biztonságban a titkos kulcsod - szükséged lesz rá a tárcád eléréséhez",
+      "lanaCoinAddress": "LanaCoin cím",
+      "privateKeyWIF": "Titkos kulcs (WIF)",
+      "privateKeyWarning": "⚠️ Tartsd biztonságban ezt a titkos kulcsot! Bárki, aki ismeri ezt a kulcsot, hozzáférhet a tárcádhoz.",
+      "regenerateWallet": "Tárca újragenerálása",
+      "createNostrProfile": "NOSTR profil létrehozása",
+      "skipTitle": "Tárca létrehozása",
+      "skipDescription": "Hozd létre közvetlenül a tárcád anélkül, hogy megszereznéd a LanaCoin nyereményt"
+    },
+    "privateKeyVerification": {
+      "title": "Titkos kulcs ellenőrzése",
+      "description": "Most teszteljük, mennyire komolyan veszed a titkos kulcsod. Ha rendesen elmentetted, most kéznél kellene lennie. 🙂",
+      "enterPrivateKey": "Add meg a titkos kulcsod (WIF)",
+      "placeholder": "Írd be a titkos kulcsod ide...",
+      "verifyKey": "Titkos kulcs ellenőrzése",
+      "lostKey": "Elvesztettem. Vigyél vissza a játékhoz.",
+      "incorrectKey": "Ez nem a helyes titkos kulcs."
+    }
+  },
+  "notifications": {
+    "walletCreated": "🎉 Tárca létrehozva!",
+    "walletCreatedDesc": "A LanaCoin tárcád sikeresen létrejött.",
+    "walletRegenerated": "🔄 Tárca újragenerálva!",
+    "walletRegeneratedDesc": "Egy új LanaCoin tárca lett létrehozva.",
+    "copied": "Másolva!",
+    "copiedDesc": "{{label}} a vágólapra másolva.",
+    "noWalletData": "Hiba",
+    "noWalletDataDesc": "Nincs elérhető tárca adat. Először hozz létre egy tárcát.",
+    "cryptoLibraryError": "A kriptográfiai könyvtárak még betöltődnek. Frissítsd az oldalt és próbáld újra.",
+    "validationError": "Validációs hiba",
+    "validationErrorDesc": "Javítsd ki az alábbi hibákat",
+    "invalidFile": "Érvénytelen fájl",
+    "invalidFileDesc": "Válassz egy érvényes képfájlt (JPEG, PNG, WEBP) 5MB alatt",
+    "imageUploaded": "Kép sikeresen feltöltve",
+    "imageUploadedDesc": "A profilképed feltöltve és tömörítve lett",
+    "uploadFailed": "Feltöltés sikertelen",
+    "uploadFailedDesc": "Nem sikerült feltölteni a képet. Próbáld újra."
+  }
+}
