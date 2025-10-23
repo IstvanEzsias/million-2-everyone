@@ -2,10 +2,9 @@ import GameHeader from "@/components/GameHeader";
 import GameCanvas from "@/components/GameCanvas";
 import GameStats from "@/components/GameStats";
 import GameEndDialog from "@/components/GameEndDialog";
-import { DifficultySelector } from "@/components/DifficultySelector";
+import { DifficultyCards } from "@/components/DifficultyCards";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import PrizeAvailabilityBadge from "@/components/PrizeAvailabilityBadge";
-import DifficultyTabs from "@/components/DifficultyTabs";
 import { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { setReturnUrlData, getReturnUrlData } from "@/utils/sessionStorage";
@@ -38,7 +37,6 @@ const Index = () => {
   });
   const [returnUrlInfo, setReturnUrlInfo] = useState<{url: string, siteName?: string} | null>(null);
   const [showSkipDialog, setShowSkipDialog] = useState(false);
-  const [showDifficultySelector, setShowDifficultySelector] = useState(true);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('intermediate');
   const [showLevelChangeConfirm, setShowLevelChangeConfirm] = useState(false);
   const [pendingDifficulty, setPendingDifficulty] = useState<string | null>(null);
@@ -64,11 +62,6 @@ const Index = () => {
       }
     }
   }, []);
-
-  const handleDifficultySelect = (difficulty: string) => {
-    setSelectedDifficulty(difficulty);
-    setShowDifficultySelector(false);
-  };
 
   const handleDifficultyChange = (newDifficulty: string) => {
     if (newDifficulty === selectedDifficulty) return;
@@ -108,49 +101,40 @@ const Index = () => {
         </div>
         
         <main>
-          <DifficultySelector 
-            open={showDifficultySelector}
-            onSelect={handleDifficultySelect}
-          />
-
-          {!showDifficultySelector && (
-            <>
-              {/* Return URL info */}
-              {returnUrlInfo && (
-                <div className="mb-6 text-center">
-                  <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg text-sm">
-                    <span>🔗</span>
-                    <span>
-                      {t('returnNotice', { siteName: returnUrlInfo.siteName || 'the referring site' })}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Header with logo and title */}
-              <GameHeader />
-              
-              {/* Game stats display */}
-              <GameStats gameState={gameState} />
-              
-              {/* Difficulty Level Tabs */}
-              <div className="flex justify-center mb-6">
-                <DifficultyTabs 
-                  currentDifficulty={selectedDifficulty}
-                  onSelect={handleDifficultyChange}
-                />
+          {/* Return URL info */}
+          {returnUrlInfo && (
+            <div className="mb-6 text-center">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg text-sm">
+                <span>🔗</span>
+                <span>
+                  {t('returnNotice', { siteName: returnUrlInfo.siteName || 'the referring site' })}
+                </span>
               </div>
-              
-              {/* Game canvas */}
-              <div className="flex justify-center">
-                <GameCanvas 
-                  key={selectedDifficulty}
-                  onStateChange={setGameState}
-                  difficulty={selectedDifficulty}
-                />
-              </div>
-            </>
+            </div>
           )}
+
+          {/* Header with logo and title */}
+          <GameHeader />
+          
+          {/* Game stats display */}
+          <GameStats gameState={gameState} />
+          
+          {/* Difficulty Selection Cards - Always visible */}
+          <div className="mb-8">
+            <DifficultyCards 
+              currentDifficulty={selectedDifficulty}
+              onSelect={handleDifficultyChange}
+            />
+          </div>
+          
+          {/* Game canvas */}
+          <div className="flex justify-center">
+            <GameCanvas 
+              key={selectedDifficulty}
+              onStateChange={setGameState}
+              difficulty={selectedDifficulty}
+            />
+          </div>
           
           {/* Skip Game Button */}
           <div className="flex justify-center mt-8">
