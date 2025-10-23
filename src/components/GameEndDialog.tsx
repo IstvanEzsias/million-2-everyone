@@ -175,7 +175,9 @@ const GameEndDialog = ({
   const getRewardText = () => {
     if (!difficultySettings) return '1 Registered Lana';
     
-    if (difficultySettings.reward_type === 'lana8wonder') {
+    if (difficultySettings.name === 'impossible' || difficultySettings.reward_type === 'draw_entry') {
+      return `🏆 8 LANA + ${t('common:drawEntry')} + ${t('common:surprisePrizes')}`;
+    } else if (difficultySettings.reward_type === 'lana8wonder') {
       return '🏆 Lana8Wonder Registration';
     }
     return `🪙 ${difficultySettings.reward_amount} Registered Lana`;

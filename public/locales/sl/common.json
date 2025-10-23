@@ -48,5 +48,7 @@
     "availableSlots": "Razpoložljive nagrade",
     "realTimeBalance": "Stanje denarnice v realnem času",
     "error": "Napaka pri nalaganju nagrad"
-  }
+  },
+  "drawEntry": "Vstop v žrebanje",
+  "surprisePrizes": "Presenečenje nagrade"
 }

@@ -48,5 +48,7 @@
     "availableSlots": "Available Prizes",
     "realTimeBalance": "Real-time wallet balance",
     "error": "Failed to load prizes"
-  }
+  },
+  "drawEntry": "Draw Entry",
+  "surprisePrizes": "Surprise Prizes"
 }

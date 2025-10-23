@@ -713,7 +713,7 @@ serve(async (req) => {
     console.log('👥 Fetching players who need LANA...');
     const { data: players, error: playersError } = await supabase
       .from('players')
-      .select('id, walletid')
+      .select('id, walletid, difficulty_level')
       .eq('received_lana', false)
       .eq('played_the_game', true)
       .not('walletid', 'is', null);
@@ -722,23 +722,50 @@ serve(async (req) => {
       throw new Error(`Failed to fetch players: ${playersError.message}`);
     }
     
-    if (!players || players.length === 0) {
+    // Fetch difficulty levels to get reward amounts
+    const { data: difficultyLevels, error: difficultyError } = await supabase
+      .from('difficulty_levels')
+      .select('name, reward_amount, reward_type')
+      .in('name', ['easy', 'intermediate']);
+
+    if (difficultyError || !difficultyLevels) {
+      console.error('❌ Error fetching difficulty levels:', difficultyError);
+      throw new Error('Failed to fetch difficulty levels');
+    }
+
+    // Create reward map (in satoshis: 1 LANA = 100,000,000 satoshis)
+    const rewardMap: { [key: string]: number } = {};
+    difficultyLevels.forEach(level => {
+      rewardMap[level.name] = Math.floor(level.reward_amount * 100_000_000);
+    });
+
+    console.log('💰 Reward amounts (satoshis):', rewardMap);
+
+    // Filter eligible players: must have wallet and NOT be impossible difficulty
+    // (impossible difficulty players get draw entries, not direct LANA via this function)
+    const eligiblePlayers = players.filter(p => 
+      p.difficulty_level !== 'impossible' &&
+      (p.difficulty_level === 'easy' || p.difficulty_level === 'intermediate')
+    );
+
+    if (!eligiblePlayers || eligiblePlayers.length === 0) {
       console.log('✅ No players need LANA distribution at this time');
       
       // Get stats for logging
       const { data: allPlayers } = await supabase
         .from('players')
-        .select('id, received_lana, played_the_game, walletid')
+        .select('id, received_lana, played_the_game, walletid, difficulty_level')
         .not('walletid', 'is', null);
       
       const stats = {
         total: allPlayers?.length || 0,
         alreadyReceived: allPlayers?.filter(p => p.received_lana).length || 0,
         didNotPlayGame: allPlayers?.filter(p => !p.played_the_game).length || 0,
-        eligible: allPlayers?.filter(p => !p.received_lana && p.played_the_game).length || 0
+        impossiblePlayers: allPlayers?.filter(p => p.difficulty_level === 'impossible').length || 0,
+        eligible: allPlayers?.filter(p => !p.received_lana && p.played_the_game && p.difficulty_level !== 'impossible').length || 0
       };
       
-      console.log(`📊 Player stats: ${stats.total} total, ${stats.alreadyReceived} already received, ${stats.didNotPlayGame} didn't play game, ${stats.eligible} eligible`);
+      console.log(`📊 Player stats: ${stats.total} total, ${stats.alreadyReceived} already received, ${stats.didNotPlayGame} didn't play game, ${stats.impossiblePlayers} legendary (draw only), ${stats.eligible} eligible`);
       
       return new Response(JSON.stringify({
         success: true,
@@ -750,7 +777,7 @@ serve(async (req) => {
       });
     }
     
-    console.log(`💰 Found ${players.length} eligible players needing LANA distribution (played game = true)`);
+    console.log(`💰 Found ${eligiblePlayers.length} eligible players needing LANA distribution (played game = true)`);
     
     // Validate wallet state
     const { balance, utxos } = await validateWalletState(settings.lana_wallet_id, electrumServer, electrumPort);
@@ -759,11 +786,14 @@ serve(async (req) => {
       throw new Error('No UTXOs available in LANA wallet');
     }
     
-    // Calculate total needed (1 LANA per player + fees)
-    const lanaAmount = 100000000; // 1 LANA in satoshis
+    // Calculate total based on each player's difficulty
+    const totalAmount = eligiblePlayers.reduce((sum, player) => {
+      const amount = rewardMap[player.difficulty_level] || rewardMap['easy'];
+      return sum + amount;
+    }, 0);
+    
     const feePerOutput = 1000; // Base fee per output
-    const totalAmount = players.length * lanaAmount;
-    const totalFee = feePerOutput * players.length + 5000; // Extra fee for the transaction
+    const totalFee = feePerOutput * eligiblePlayers.length + 5000; // Extra fee for the transaction
     const totalNeeded = totalAmount + totalFee;
     
     const totalAvailable = utxos.reduce((sum: number, utxo: any) => sum + utxo.value, 0);
@@ -772,12 +802,18 @@ serve(async (req) => {
       throw new Error(`Insufficient funds: need ${totalNeeded} satoshis, have ${totalAvailable} satoshis`);
     }
     
-    console.log(`💸 Transaction breakdown: ${players.length} recipients, ${totalAmount} satoshis total, ${totalFee} satoshis fee`);
+    console.log(`💸 Preparing to send LANA to ${eligiblePlayers.length} players:`);
+    eligiblePlayers.forEach(player => {
+      const amount = rewardMap[player.difficulty_level] || rewardMap['easy'];
+      const lanaAmount = amount / 100_000_000;
+      console.log(`  - ${player.walletid}: ${lanaAmount} LANA (${player.difficulty_level})`);
+    });
+    console.log(`💸 Total amount: ${totalAmount} satoshis (${totalAmount / 100_000_000} LANA), fee: ${totalFee} satoshis`);
     
-    // Build recipients array
-    const recipients = players.map(player => ({
+    // Build recipients array with correct amounts per difficulty
+    const recipients = eligiblePlayers.map(player => ({
       address: player.walletid,
-      amount: lanaAmount
+      amount: rewardMap[player.difficulty_level] || rewardMap['easy']
     }));
     
     // Build and sign transaction
@@ -820,7 +856,7 @@ serve(async (req) => {
     
     // Update all players to mark as received and set transaction ID
     console.log('📝 Updating player records...');
-    const playerIds = players.map(p => p.id);
+    const playerIds = eligiblePlayers.map(p => p.id);
     
     const { error: updateError } = await supabase
       .from('players')
@@ -835,15 +871,19 @@ serve(async (req) => {
       throw new Error(`Failed to update player records: ${updateError.message}`);
     }
     
-    console.log(`✅ Successfully distributed 1 LANA to ${players.length} players`);
+    console.log(`✅ Successfully distributed LANA to ${eligiblePlayers.length} players (total: ${totalAmount / 100_000_000} LANA)`);
     
     return new Response(JSON.stringify({
       success: true,
-      message: `Successfully distributed 1 LANA to ${players.length} players`,
+      message: `Successfully distributed ${totalAmount / 100_000_000} LANA to ${eligiblePlayers.length} players`,
       transactionId: transactionId,
-      processed: players.length,
+      processed: eligiblePlayers.length,
       totalAmount: totalAmount,
-      fee: totalFee
+      fee: totalFee,
+      breakdown: eligiblePlayers.map(p => ({
+        difficulty: p.difficulty_level,
+        amount: (rewardMap[p.difficulty_level] || rewardMap['easy']) / 100_000_000
+      }))
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
