@@ -54,5 +54,12 @@
       "reward": "🏆 Win Lana8Wonder Registration!",
       "subtext": "Join the elite few who beat the impossible"
     }
+  },
+  "levelSwitch": {
+    "title": "Switch Difficulty Level?",
+    "description": "Your current progress ({{jumps}} jumps) will be reset. Are you sure?",
+    "cancel": "Cancel",
+    "confirm": "Switch Level",
+    "current": "Current"
   }
 }

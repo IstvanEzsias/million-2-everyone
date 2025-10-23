@@ -5,10 +5,21 @@ import GameEndDialog from "@/components/GameEndDialog";
 import { DifficultySelector } from "@/components/DifficultySelector";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import PrizeAvailabilityBadge from "@/components/PrizeAvailabilityBadge";
+import DifficultyTabs from "@/components/DifficultyTabs";
 import { useState, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { setReturnUrlData, getReturnUrlData } from "@/utils/sessionStorage";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface GameState {
   price: number;
@@ -29,6 +40,8 @@ const Index = () => {
   const [showSkipDialog, setShowSkipDialog] = useState(false);
   const [showDifficultySelector, setShowDifficultySelector] = useState(true);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('intermediate');
+  const [showLevelChangeConfirm, setShowLevelChangeConfirm] = useState(false);
+  const [pendingDifficulty, setPendingDifficulty] = useState<string | null>(null);
 
   useEffect(() => {
     // Check for return_url parameter
@@ -55,6 +68,35 @@ const Index = () => {
   const handleDifficultySelect = (difficulty: string) => {
     setSelectedDifficulty(difficulty);
     setShowDifficultySelector(false);
+  };
+
+  const handleDifficultyChange = (newDifficulty: string) => {
+    if (newDifficulty === selectedDifficulty) return;
+    
+    if (gameState.jumps > 0) {
+      setPendingDifficulty(newDifficulty);
+      setShowLevelChangeConfirm(true);
+    } else {
+      switchDifficulty(newDifficulty);
+    }
+  };
+
+  const switchDifficulty = (newDifficulty: string) => {
+    setSelectedDifficulty(newDifficulty);
+    setGameState({
+      price: 0.001,
+      users: 100,
+      jumps: 0,
+      gameRunning: true
+    });
+  };
+
+  const confirmLevelChange = () => {
+    if (pendingDifficulty) {
+      switchDifficulty(pendingDifficulty);
+    }
+    setShowLevelChangeConfirm(false);
+    setPendingDifficulty(null);
   };
 
   return (
@@ -91,9 +133,18 @@ const Index = () => {
               {/* Game stats display */}
               <GameStats gameState={gameState} />
               
+              {/* Difficulty Level Tabs */}
+              <div className="flex justify-center mb-6">
+                <DifficultyTabs 
+                  currentDifficulty={selectedDifficulty}
+                  onSelect={handleDifficultyChange}
+                />
+              </div>
+              
               {/* Game canvas */}
               <div className="flex justify-center">
                 <GameCanvas 
+                  key={selectedDifficulty}
                   onStateChange={setGameState}
                   difficulty={selectedDifficulty}
                 />
@@ -140,6 +191,26 @@ const Index = () => {
           onOpenChange={setShowSkipDialog}
           playedGame={false}
         />
+        
+        {/* Level Change Confirmation Dialog */}
+        <AlertDialog open={showLevelChangeConfirm} onOpenChange={setShowLevelChangeConfirm}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('levelSwitch.title')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('levelSwitch.description', { jumps: gameState.jumps })}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setPendingDifficulty(null)}>
+                {t('levelSwitch.cancel')}
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={confirmLevelChange}>
+                {t('levelSwitch.confirm')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

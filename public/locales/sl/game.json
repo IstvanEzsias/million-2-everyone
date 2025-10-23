@@ -54,5 +54,12 @@
       "reward": "🏆 Zmaga prinese registracijo Lana8Wonder!",
       "subtext": "Pridružite se eliti, ki je premagala nemogoče"
     }
+  },
+  "levelSwitch": {
+    "title": "Spremeni težavnost?",
+    "description": "Vaš trenutni napredek ({{jumps}} skokov) bo ponastavljen. Ste prepričani?",
+    "cancel": "Prekliči",
+    "confirm": "Spremeni nivo",
+    "current": "Trenutno"
   }
 }
