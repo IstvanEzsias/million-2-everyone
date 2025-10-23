@@ -98,6 +98,50 @@ export type Database = {
         }
         Relationships: []
       }
+      legendary_winners: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          draw_eligible: boolean | null
+          id: string
+          nostrhex: string | null
+          player_id: string
+          prize_awarded: boolean | null
+          prize_details: Json | null
+          walletid: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          draw_eligible?: boolean | null
+          id?: string
+          nostrhex?: string | null
+          player_id: string
+          prize_awarded?: boolean | null
+          prize_details?: Json | null
+          walletid: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          draw_eligible?: boolean | null
+          id?: string
+          nostrhex?: string | null
+          player_id?: string
+          prize_awarded?: boolean | null
+          prize_details?: Json | null
+          walletid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legendary_winners_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: true
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nostr_relays: {
         Row: {
           created_at: string

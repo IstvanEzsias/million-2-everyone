@@ -173,14 +173,17 @@ const GameEndDialog = ({
   };
 
   const getRewardText = () => {
-    if (!difficultySettings) return '1 Registered Lana';
-    
-    if (difficultySettings.name === 'impossible' || difficultySettings.reward_type === 'draw_entry') {
-      return `🏆 8 LANA + ${t('common:drawEntry')} + ${t('common:surprisePrizes')}`;
-    } else if (difficultySettings.reward_type === 'lana8wonder') {
-      return '🏆 Lana8Wonder Registration';
+    return '🪙 1 Registered Lana';
+  };
+
+  const getRewardSubtitle = () => {
+    if (!difficultySettings) return null;
+    if (difficultySettings.name === 'impossible') {
+      return i18n.language === 'sl' 
+        ? '🏆 Samo legende preživijo! Mogoče te čaka presenečenje 😉'
+        : '🏆 Only legends survive! You might get a surprise 😉';
     }
-    return `🪙 ${difficultySettings.reward_amount} Registered Lana`;
+    return null;
   };
 
   const handleReset = () => {
@@ -207,6 +210,11 @@ const GameEndDialog = ({
                   <p className="text-xl font-bold text-primary">
                     Reward: {getRewardText()}
                   </p>
+                  {getRewardSubtitle() && (
+                    <p className="text-base font-semibold text-primary mt-1">
+                      {getRewardSubtitle()}
+                    </p>
+                  )}
                   <p className="text-sm">
                     Create your wallet to claim your reward.
                   </p>

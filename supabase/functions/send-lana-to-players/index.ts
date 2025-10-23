@@ -722,11 +722,11 @@ serve(async (req) => {
       throw new Error(`Failed to fetch players: ${playersError.message}`);
     }
     
-    // Fetch difficulty levels to get reward amounts
+    // Fetch difficulty levels to get reward amounts (all difficulties now get 1 LANA)
     const { data: difficultyLevels, error: difficultyError } = await supabase
       .from('difficulty_levels')
       .select('name, reward_amount, reward_type')
-      .in('name', ['easy', 'intermediate']);
+      .in('name', ['easy', 'intermediate', 'impossible']);
 
     if (difficultyError || !difficultyLevels) {
       console.error('❌ Error fetching difficulty levels:', difficultyError);
@@ -741,12 +741,8 @@ serve(async (req) => {
 
     console.log('💰 Reward amounts (satoshis):', rewardMap);
 
-    // Filter eligible players: must have wallet and NOT be impossible difficulty
-    // (impossible difficulty players get draw entries, not direct LANA via this function)
-    const eligiblePlayers = players.filter(p => 
-      p.difficulty_level !== 'impossible' &&
-      (p.difficulty_level === 'easy' || p.difficulty_level === 'intermediate')
-    );
+    // All players now get 1 LANA regardless of difficulty
+    const eligiblePlayers = players;
 
     if (!eligiblePlayers || eligiblePlayers.length === 0) {
       console.log('✅ No players need LANA distribution at this time');

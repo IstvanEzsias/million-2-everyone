@@ -347,6 +347,25 @@ serve(async (req) => {
 
     console.log('Player record created:', playerData.id)
 
+    // If this is a Legendary completion, record in legendary_winners table
+    if (walletData.difficulty === 'impossible') {
+      console.log('✨ Recording legendary winner...')
+      const { error: legendaryError } = await supabase
+        .from('legendary_winners')
+        .insert({
+          player_id: playerData.id,
+          walletid: walletData.walletId,
+          nostrhex: walletData.nostrHex
+        })
+      
+      if (legendaryError) {
+        console.error('Failed to record legendary winner:', legendaryError)
+        // Don't fail the whole request - just log it
+      } else {
+        console.log('✨ Legendary winner recorded successfully!')
+      }
+    }
+
     // Register wallet with Lana Registry
     console.log('Registering wallet with Lana Registry...')
     const walletRegistration = await registerWalletWithLanaRegistry(
