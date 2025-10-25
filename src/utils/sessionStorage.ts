@@ -17,32 +17,20 @@ export interface ReturnUrlData {
 const WALLET_SESSION_KEY = 'wallet_session_data';
 const RETURN_URL_SESSION_KEY = 'return_url_data';
 
-// Whitelist of allowed return domains for security
-const ALLOWED_RETURN_DOMAINS = [
-  'localhost',
-  '127.0.0.1',
-  'lovable.app',
-  'lovable.dev',
-  // Add more trusted domains here
-];
-
 // Validate return URL for security
 const isValidReturnUrl = (url: string): boolean => {
   try {
     const urlObj = new URL(url);
     
-    // Only allow HTTPS (except for localhost in development)
+    // Allow HTTP for localhost/127.0.0.1 (development)
+    // Require HTTPS for all other domains (production security)
     if (urlObj.protocol !== 'https:' && 
         !['localhost', '127.0.0.1'].includes(urlObj.hostname)) {
       return false;
     }
     
-    // Check if domain is in whitelist
-    const isAllowed = ALLOWED_RETURN_DOMAINS.some(domain => 
-      urlObj.hostname === domain || urlObj.hostname.endsWith(`.${domain}`)
-    );
-    
-    return isAllowed;
+    // Any valid HTTPS URL is allowed
+    return true;
   } catch {
     return false;
   }
