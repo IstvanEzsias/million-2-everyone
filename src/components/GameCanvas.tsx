@@ -229,22 +229,14 @@ const GameCanvas = ({
   // Fetch available prizes
   const fetchAvailablePrizes = async () => {
     try {
-      const response = await fetch(
-        'https://wrhcgufugnyquufydvwl.supabase.co/functions/v1/get-available-prizes',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const { data, error } = await supabase.functions.invoke('get-available-prizes', {
+        body: {},
+      });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch available prizes');
-      }
+      if (error) throw error;
 
-      const data = await response.json();
-      setAvailablePrizes(data.available_prizes);
+      const available = (data as any)?.availablePrizes ?? 0;
+      setAvailablePrizes(available);
     } catch (error) {
       console.error('Error fetching available prizes:', error);
       setAvailablePrizes(0);
