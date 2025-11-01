@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.send-lana-to-players]
 verify_jwt = false
+
+[functions.get-available-prizes]
+verify_jwt = false
