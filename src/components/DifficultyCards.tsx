@@ -9,8 +9,10 @@ interface DifficultyLevel {
   name: string;
   display_name_en: string;
   display_name_sl: string;
+  display_name_hu: string;
   description_en: string;
   description_sl: string;
+  description_hu: string;
   reward_amount: number;
   reward_type: string;
   sort_order: number;
@@ -88,17 +90,25 @@ export const DifficultyCards = ({ currentDifficulty, onSelect }: DifficultyCards
     <div className="w-full">
       <div className="text-center mb-6">
         <h2 className="text-3xl font-bold mb-2">
-          {t('difficulty.title', 'Choose Your Challenge')}
+          {t('difficulty.title')}
         </h2>
         <p className="text-lg text-muted-foreground">
-          Complete 37 successful jumps to earn your reward!
+          {t('difficulty.subtitle')}
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {difficulties.map((difficulty) => {
-          const displayName = i18n.language === 'sl' ? difficulty.display_name_sl : difficulty.display_name_en;
-          const description = i18n.language === 'sl' ? difficulty.description_sl : difficulty.description_en;
+          const displayName = i18n.language === 'hu'
+            ? difficulty.display_name_hu
+            : i18n.language === 'sl' 
+            ? difficulty.display_name_sl 
+            : difficulty.display_name_en;
+          const description = i18n.language === 'hu'
+            ? difficulty.description_hu
+            : i18n.language === 'sl'
+            ? difficulty.description_sl
+            : difficulty.description_en;
           const isActive = difficulty.name === currentDifficulty;
           
           return (
@@ -128,15 +138,15 @@ export const DifficultyCards = ({ currentDifficulty, onSelect }: DifficultyCards
                     <div className="space-y-2">
                       <div className="flex items-center justify-center gap-2 text-lg font-bold text-red-500">
                         <Trophy className="w-5 h-5" />
-                        Lana8Wonder Registration
+                        {t('difficulty.rewards.lana8wonder')}
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Join the elite few!
+                        {t('difficulty.rewards.eliteFew')}
                       </p>
                     </div>
                   ) : (
                     <div className="text-lg font-bold">
-                      🪙 {difficulty.reward_amount} Registered Lana
+                      🪙 {difficulty.reward_amount} {t('difficulty.rewards.registeredLana')}
                     </div>
                   )}
                 </div>
@@ -146,8 +156,8 @@ export const DifficultyCards = ({ currentDifficulty, onSelect }: DifficultyCards
                   variant={isActive ? 'default' : difficulty.name === 'impossible' ? 'destructive' : 'outline'}
                 >
                   {isActive 
-                    ? t('difficulty.current', 'Current Level')
-                    : t('difficulty.select', 'Play This Level')
+                    ? t('difficulty.current')
+                    : t('difficulty.select')
                   }
                 </Button>
               </div>

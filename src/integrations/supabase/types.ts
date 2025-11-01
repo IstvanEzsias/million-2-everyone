@@ -49,8 +49,10 @@ export type Database = {
           base_speed: number
           created_at: string | null
           description_en: string
+          description_hu: string | null
           description_sl: string
           display_name_en: string
+          display_name_hu: string | null
           display_name_sl: string
           id: string
           name: string
@@ -66,8 +68,10 @@ export type Database = {
           base_speed: number
           created_at?: string | null
           description_en: string
+          description_hu?: string | null
           description_sl: string
           display_name_en: string
+          display_name_hu?: string | null
           display_name_sl: string
           id?: string
           name: string
@@ -83,8 +87,10 @@ export type Database = {
           base_speed?: number
           created_at?: string | null
           description_en?: string
+          description_hu?: string | null
           description_sl?: string
           display_name_en?: string
+          display_name_hu?: string | null
           display_name_sl?: string
           id?: string
           name?: string

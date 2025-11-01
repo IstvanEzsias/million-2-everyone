@@ -22,18 +22,27 @@
   "footer": {
     "postGameNote": "A játék után létrehozhatod a Lana Tárcád és NOSTR Profilt 🔥",
     "dataOwnership": "Minden adat a tiéd és a készülékedre van mentve!",
-    "referralNote": "Ajánlói integráció? Nézd meg a"
+    "referralNote": "Ajánlói integráció? Nézd meg a",
+    "whatsNext": "Mi következik?",
+    "description": "A játék befejezése után létrehozod a Lana Tárcádat és aláírod a profilodat a decentralizált Nostr protokollon keresztül. Ettől kezdve minden adat a tiéd marad—a privát kulcsod nálad van és hozzáférést biztosít több mint 20+ alkalmazáshoz a Lana Világban.",
+    "ownership": "A Lana mindenki tulajdonában van, aki részt vesz ebben az öko-rendszerben. Együtt alkossuk meg az új valóságot",
+    "referralDocs": "Ajánlói Rendszer Dokumentáció"
   },
   "notifications": {
     "globalCapReached": "Elértük a globális limitet! Nincs több regisztrált Lana, de a LanaCoin-ok még mindig rendelkezésedre állnak. 💰"
   },
   "skip": {
     "skipGame": "Hagyj ki mindent és hozd létre a tárcát",
-    "skipDescription": "Hozd létre közvetlenül a tárcád anélkül, hogy megszereznéd a LanaCoin nyereményt"
+    "skipDescription": "Hozd létre közvetlenül a tárcád anélkül, hogy megszereznéd a LanaCoin nyereményt",
+    "button": "Játék Kihagyása & Tárca Létrehozása"
   },
   "difficulty": {
     "selectLevel": "Válassz nehézségi szintet",
     "selectDescription": "Minél nagyobb a kihívás, annál nagyobb a jutalom! 🎯",
+    "title": "Válaszd Ki a Kihívásodat",
+    "subtitle": "Teljesíts 37 sikeres ugrást, hogy megszerezd a jutalmadat!",
+    "current": "Jelenlegi Szint",
+    "select": "Játssz Ezen a Szinten",
     "beginner": {
       "title": "Kezdő 🌱",
       "description": "Tökéletes tanuláshoz!",
@@ -51,6 +60,11 @@
       "description": "Csak a legendák csinálják meg!",
       "obstacles": "Szuper gyors akadályok",
       "reward": "Tripla jutalom: 3 Regisztrált Lana"
+    },
+    "rewards": {
+      "registeredLana": "Regisztrált Lana",
+      "lana8wonder": "Lana8Wonder Regisztráció",
+      "eliteFew": "Csatlakozz a kiválasztottakhoz!"
     }
   },
   "levelSwitch": {
@@ -58,5 +72,6 @@
     "confirmMessage": "Biztos, hogy szeretnéd megváltoztatni a nehézségi szintet {{level}} közben? A haladásod el fog veszni.",
     "stay": "Maradok",
     "switchLevel": "Váltok"
-  }
+  },
+  "returnNotice": "Visszatérsz ide: {{siteName}} a játék után"
 }
