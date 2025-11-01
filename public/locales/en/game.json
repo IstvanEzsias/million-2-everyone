@@ -36,8 +36,15 @@
   },
   "difficulty": {
     "title": "Choose Your Challenge",
+    "subtitle": "Complete 37 successful jumps to earn your reward!",
     "select": "Play This Level",
+    "current": "Current",
     "completed": "✅ Completed",
+    "rewards": {
+      "registeredLana": "Registered Lana",
+      "lana8wonder": "Lana8Wonder Registration",
+      "eliteFew": "Join the elite few!"
+    },
     "easy": {
       "name": "Beginner",
       "description": "Perfect for learning! Slower speed, wider gaps.",
