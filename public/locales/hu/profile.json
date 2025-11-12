@@ -76,6 +76,12 @@
     }
   },
   "commaNote": "(vesszővel elválasztva)",
+  "selfResponsibility": {
+    "rule": "A Lana Világnak csak egy szabálya van: Mindenki feltétel nélkül önfelelős.",
+    "explanation": "Ez egyszerűen azt jelenti, hogy ha bármilyen okból nem vállalod ezt a felelősséget, minden tárcád törlésre kerül.",
+    "power": "Minden hatalom mindig a te kezedben van.",
+    "acceptButton": "Elfogadom az önfelelősséget"
+  },
   "dialogs": {
     "gameEnd": {
       "congratulations": "🎉 Gratulálok! 🎉",

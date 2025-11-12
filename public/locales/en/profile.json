@@ -76,6 +76,12 @@
     }
   },
   "commaNote": "(comma-separated)",
+  "selfResponsibility": {
+    "rule": "Lana World has only one rule: Everyone is unconditionally self-responsible.",
+    "explanation": "That simply means that if, for any reason, you fail to accept this responsibility, all your wallets will be unregistered.",
+    "power": "All the power is always in your hands.",
+    "acceptButton": "Accept Self-Responsibility"
+  },
   "dialogs": {
     "gameEnd": {
       "congratulations": "🎉 Congratulations! 🎉",

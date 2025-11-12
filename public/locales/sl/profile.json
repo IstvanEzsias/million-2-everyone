@@ -121,5 +121,11 @@
       "AI": "UI"
     }
   },
-  "commaNote": "(ločeno z vejicami)"
+  "commaNote": "(ločeno z vejicami)",
+  "selfResponsibility": {
+    "rule": "Lana World ima samo eno pravilo: Vsakdo je brezpogojno samoodgovoren.",
+    "explanation": "To preprosto pomeni, da če iz kakršnega koli razloga ne sprejmete te odgovornosti, bodo vse vaše denarnice odjavljene.",
+    "power": "Vsa moč je vedno v vaših rokah.",
+    "acceptButton": "Sprejmi samoodgovornost"
+  }
 }

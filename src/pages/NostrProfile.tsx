@@ -476,10 +476,27 @@ const NostrProfile = () => {
                   {t('buttons.cancel', { ns: 'common' })}
                 </Button>
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? t('buttons.creating', { ns: 'common' }) : t('buttons.createProfile', { ns: 'common' })}
+                  {isSubmitting ? t('buttons.creating', { ns: 'common' }) : t('selfResponsibility.acceptButton')}
                 </Button>
               </div>
             </form>
+          </CardContent>
+        </Card>
+
+        {/* Self-Responsibility Notice */}
+        <Card className="mt-6 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+          <CardContent className="pt-6">
+            <div className="space-y-3 text-center">
+              <p className="text-lg font-semibold text-foreground">
+                {t('selfResponsibility.rule')}
+              </p>
+              <p className="text-muted-foreground">
+                {t('selfResponsibility.explanation')}
+              </p>
+              <p className="text-sm font-medium text-primary">
+                {t('selfResponsibility.power')}
+              </p>
+            </div>
           </CardContent>
         </Card>
 
