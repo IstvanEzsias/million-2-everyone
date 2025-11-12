@@ -466,6 +466,21 @@ const NostrProfile = () => {
                 </div>
               </div>
 
+              {/* Self-Responsibility Notice */}
+              <div className="mt-6 p-6 rounded-lg border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                <div className="space-y-3 text-center">
+                  <p className="text-lg font-semibold text-foreground">
+                    {t('selfResponsibility.rule')}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {t('selfResponsibility.explanation')}
+                  </p>
+                  <p className="text-sm font-medium text-primary">
+                    {t('selfResponsibility.power')}
+                  </p>
+                </div>
+              </div>
+
               {/* Action Buttons */}
               <div className="flex justify-between pt-6">
                 <Button 
@@ -480,23 +495,6 @@ const NostrProfile = () => {
                 </Button>
               </div>
             </form>
-          </CardContent>
-        </Card>
-
-        {/* Self-Responsibility Notice */}
-        <Card className="mt-6 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-          <CardContent className="pt-6">
-            <div className="space-y-3 text-center">
-              <p className="text-lg font-semibold text-foreground">
-                {t('selfResponsibility.rule')}
-              </p>
-              <p className="text-muted-foreground">
-                {t('selfResponsibility.explanation')}
-              </p>
-              <p className="text-sm font-medium text-primary">
-                {t('selfResponsibility.power')}
-              </p>
-            </div>
           </CardContent>
         </Card>
 
