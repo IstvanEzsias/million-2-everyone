@@ -26,6 +26,7 @@ interface NostrProfileData {
   orgasmic_profile: string;
   tags_t: string; // Things interested in
   tags_o: string; // Intimacy interests
+  statement_of_responsibility: string; // Self-responsibility acceptance statement
   
   // Optional fields
   picture: string;
@@ -55,6 +56,7 @@ const NostrProfile = () => {
     orgasmic_profile: "",
     tags_t: "",
     tags_o: "",
+    statement_of_responsibility: "",
     picture: "",
     website: "",
     nip05: "",
@@ -110,6 +112,11 @@ const NostrProfile = () => {
     if (!formData.orgasmic_profile.trim()) newErrors.orgasmic_profile = t('validation.orgasmicProfileRequired');
     if (!formData.tags_t.trim()) newErrors.tags_t = t('validation.interestTagsRequired');
     if (!formData.tags_o.trim()) newErrors.tags_o = t('validation.intimacyTagsRequired');
+    if (!formData.statement_of_responsibility.trim()) {
+      newErrors.statement_of_responsibility = t('validation.statementRequired');
+    } else if (formData.statement_of_responsibility.trim().length < 10) {
+      newErrors.statement_of_responsibility = t('validation.statementTooShort');
+    }
 
 
     // URL validation if provided
@@ -466,8 +473,8 @@ const NostrProfile = () => {
                 </div>
               </div>
 
-              {/* Self-Responsibility Notice */}
-              <div className="mt-6 p-6 rounded-lg border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+              {/* Self-Responsibility Statement Field */}
+              <div className="mt-6 p-6 rounded-lg border-primary/20 bg-gradient-to-br from-primary/5 to-transparent space-y-4">
                 <div className="space-y-3 text-center">
                   <p className="text-lg font-semibold text-foreground">
                     {t('selfResponsibility.rule')}
@@ -478,6 +485,27 @@ const NostrProfile = () => {
                   <p className="text-sm font-medium text-primary">
                     {t('selfResponsibility.power')}
                   </p>
+                </div>
+
+                {/* Statement of Responsibility Field */}
+                <div>
+                  <Label htmlFor="statement_of_responsibility" className="text-base font-semibold">
+                    {t('fields.statementOfResponsibility')} *
+                  </Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {t('help.statementOfResponsibility')}
+                  </p>
+                  <Textarea
+                    id="statement_of_responsibility"
+                    value={formData.statement_of_responsibility}
+                    onChange={(e) => handleInputChange("statement_of_responsibility", e.target.value)}
+                    placeholder={t('placeholders.statementOfResponsibility')}
+                    className={`min-h-[100px] ${errors.statement_of_responsibility ? "border-destructive" : ""}`}
+                    rows={4}
+                  />
+                  {errors.statement_of_responsibility && (
+                    <p className="text-sm text-destructive mt-1">{errors.statement_of_responsibility}</p>
+                  )}
                 </div>
               </div>
 
