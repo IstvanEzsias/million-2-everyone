@@ -64,6 +64,7 @@
     "orgasmicProfile": "Orgazmičen profil",
     "interestTags": "Oznake interesov",
     "intimacyTags": "Oznake intimnih interesov",
+    "statementOfResponsibility": "Izjava o samoodgovornosti",
     "picture": "Profilna slika",
     "website": "Spletna stran",
     "paymentLink": "Plačilna povezava",
@@ -81,6 +82,7 @@
     "orgasmicProfile": "Informacije in preference orgazmičnega profila...",
     "interestTags": "bitcoin, nostr, decentralizacija, zasebnost",
     "intimacyTags": "globoka_povezava, pomembna_intimnost, čustvena_vez",
+    "statementOfResponsibility": "Napišite s svojimi besedami, da sprejemate brezpogojno samoodgovornost v Lana svetu...",
     "website": "https://vasadomena.com",
     "paymentLink": "Lightning naslov ali plačilni URL",
     "bankName": "Primer banke",
@@ -91,7 +93,8 @@
   "help": {
     "lanoshi2lash": "1 Lana je enak 100.000.000 Lanoshi. Lash je kot dajanje žetona zahvale. Priporočamo nastavitev 1 Lash = 100 Lanoshi na začetku.",
     "banking": "Če se odločite prodati nekaj svojih Lanov ali Lanoshijev, prosimo podajte svoje plačilne podatke, da drugi vedo, kam poslati denar.",
-    "privateKey": "Hej človek, samo opomnik — vaš zasebni ključ ni nikjer shranjen. Če ga izgubite, izgubite svojo identiteto in Lano za vedno."
+    "privateKey": "Hej človek, samo opomnik — vaš zasebni ključ ni nikjer shranjen. Če ga izgubite, izgubite svojo identiteto in Lano za vedno.",
+    "statementOfResponsibility": "Napišite s svojimi besedami, da sprejemate brezpogojno samoodgovornost v Lana svetu."
   },
   "validation": {
     "nameRequired": "Ime je obvezno",
@@ -103,7 +106,9 @@
     "whoAreYouRequired": "Prosimo, navedite, ali ste človek ali AI",
     "orgasmicProfileRequired": "Orgazmičen profil je obvezen",
     "interestTagsRequired": "Oznake interesov so obvezne",
-    "intimacyTagsRequired": "Oznake intimnih interesov so obvezne"
+    "intimacyTagsRequired": "Oznake intimnih interesov so obvezne",
+    "statementRequired": "Izjava o samoodgovornosti je obvezna",
+    "statementTooShort": "Izjava mora biti dolga vsaj 10 znakov"
   },
   "loadingStates": {
     "walletData": "Nalaganje podatkov denarnice...",
