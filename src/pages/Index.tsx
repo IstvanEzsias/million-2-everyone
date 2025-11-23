@@ -136,17 +136,6 @@ const Index = () => {
             />
           </div>
           
-          {/* Skip Game Button */}
-          <div className="flex justify-center mt-8">
-            <Button 
-              variant="outline" 
-              onClick={() => setShowSkipDialog(true)}
-              className="bg-background/50 border-primary/30 text-primary hover:bg-primary/10"
-            >
-              {t('skip.button')}
-            </Button>
-          </div>
-          
           {/* Footer info */}
           <footer className="mt-12 text-center text-muted-foreground">
             <div className="max-w-2xl mx-auto">
