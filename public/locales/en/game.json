@@ -17,7 +17,7 @@
   },
   "controls": {
     "jump": "Jump (Space / Tap)",
-    "restart": "Restart Game"
+    "restart": "Start Game"
   },
   "footer": {
     "whatsNext": "What's next",
