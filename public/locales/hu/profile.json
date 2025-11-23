@@ -18,6 +18,7 @@
     "orgasmicProfile": "Orgazmikus profil",
     "interestTags": "Érdeklődési címkék",
     "intimacyTags": "Intimitás címkék",
+    "statementOfResponsibility": "Önfelelősségi nyilatkozat",
     "picture": "Profilkép",
     "website": "Weboldal",
     "paymentLink": "Fizetési link",
@@ -35,6 +36,7 @@
     "orgasmicProfile": "Orgazmikus profil információk és preferenciák...",
     "interestTags": "bitcoin, nostr, decentralizáció, privacy",
     "intimacyTags": "mély_kapcsolat, értelmes_intimitás, érzelmi_kötelék",
+    "statementOfResponsibility": "Írd le saját szavaiddal, hogy elfogadod a feltétel nélküli önfelelősséget a Lana Világban...",
     "website": "https://aweboldalad.hu",
     "paymentLink": "Lightning cím vagy fizetési URL",
     "bankName": "Példa Bank",
@@ -45,7 +47,8 @@
   "help": {
     "lanoshi2lash": "1 Lana egyenlő 100,000,000 Lanoshi-val. A Lash olyan, mint egy megbecsülés jele. Javasoljuk, hogy kezdetben állítsd be: 1 Lash = 100 Lanoshi.",
     "banking": "Ha úgy döntesz, hogy eladod a Lanád vagy Lanoshi-jaid egy részét, add meg a fizetési adataid, hogy mások tudják, hová küldjék a pénzt.",
-    "privateKey": "Hé Haver, ne feledd — a titkos kulcsod sehol sincs tárolva. Ha elveszíted, mindent elveszítesz: az identitásod és a Lanád is örökre elveszik."
+    "privateKey": "Hé Haver, ne feledd — a titkos kulcsod sehol sincs tárolva. Ha elveszíted, mindent elveszítesz: az identitásod és a Lanád is örökre elveszik.",
+    "statementOfResponsibility": "Írd le saját szavaiddal, hogy elfogadod a feltétel nélküli önfelelősséget a Lana Világban."
   },
   "validation": {
     "nameRequired": "A név kötelező",
@@ -57,7 +60,9 @@
     "whoAreYouRequired": "Add meg, hogy ember vagy mesterséges intelligencia vagy",
     "orgasmicProfileRequired": "Az orgazmikus profil kötelező",
     "interestTagsRequired": "Az érdeklődési címkék kötelezőek",
-    "intimacyTagsRequired": "Az intimitás címkék kötelezőek"
+    "intimacyTagsRequired": "Az intimitás címkék kötelezőek",
+    "statementRequired": "Az önfelelősségi nyilatkozat kötelező",
+    "statementTooShort": "A nyilatkozatnak legalább 10 karakterből kell állnia"
   },
   "loadingStates": {
     "walletData": "Tárca adatok betöltése...",
