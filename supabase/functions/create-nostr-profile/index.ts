@@ -45,6 +45,7 @@ interface ProfileData {
   orgasmic_profile: string
   tags_t: string // Things interested in
   tags_o: string // Intimacy interests
+  statement_of_responsibility: string // Self-responsibility acceptance statement
   
   // Optional fields
   picture: string
@@ -275,6 +276,7 @@ serve(async (req) => {
       lanaWalletID: profileData.lanaWalletID,
       whoAreYou: profileData.whoAreYou,
       orgasmic_profile: profileData.orgasmic_profile,
+      statement_of_responsibility: profileData.statement_of_responsibility,
       
       // Banking information fields
       bankName: profileData.bankName,

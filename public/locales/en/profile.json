@@ -18,6 +18,7 @@
     "orgasmicProfile": "Orgasmic Profile",
     "interestTags": "Interest Tags",
     "intimacyTags": "Intimacy Interest Tags",
+    "statementOfResponsibility": "Statement of Self-Responsibility",
     "picture": "Profile Picture",
     "website": "Website",
     "paymentLink": "Payment Link",
@@ -35,6 +36,7 @@
     "orgasmicProfile": "Orgasmic profile information and preferences...",
     "interestTags": "bitcoin, nostr, decentralization, privacy",
     "intimacyTags": "deep_connection, meaningful_intimacy, emotional_bond",
+    "statementOfResponsibility": "Write in your own words that you accept unconditional self-responsibility inside the Lana World...",
     "website": "https://yourdomain.com",
     "paymentLink": "Lightning address or payment URL",
     "bankName": "Example Bank",
@@ -45,7 +47,8 @@
   "help": {
     "lanoshi2lash": "1 Lana equals 100,000,000 Lanoshi. A Lash is like giving someone a token of appreciation. We recommend setting 1 Lash = 100 Lanoshi at the beginning.",
     "banking": "If you decide to sell some of your Lanas or Lanoshis, please provide your payment details so others know where to send the money.",
-    "privateKey": "Hey Man, just a reminder — your Private Key is never stored anywhere. If you lose it, you lose both your identity and your Lana forever."
+    "privateKey": "Hey Man, just a reminder — your Private Key is never stored anywhere. If you lose it, you lose both your identity and your Lana forever.",
+    "statementOfResponsibility": "Write in your own words that you accept unconditional self-responsibility inside the Lana World."
   },
   "validation": {
     "nameRequired": "Name is required",
@@ -57,7 +60,9 @@
     "whoAreYouRequired": "Please specify if you are Human or AI",
     "orgasmicProfileRequired": "Orgasmic profile is required",
     "interestTagsRequired": "Interest tags are required",
-    "intimacyTagsRequired": "Intimacy interest tags are required"
+    "intimacyTagsRequired": "Intimacy interest tags are required",
+    "statementRequired": "Statement of self-responsibility is required",
+    "statementTooShort": "Statement must be at least 10 characters"
   },
   "loadingStates": {
     "walletData": "Loading wallet data...",
