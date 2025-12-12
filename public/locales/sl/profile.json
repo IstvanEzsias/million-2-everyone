@@ -128,9 +128,18 @@
   },
   "commaNote": "(ločeno z vejicami)",
   "selfResponsibility": {
-    "rule": "Lana World ima samo eno pravilo: Vsakdo je brezpogojno samoodgovoren.",
-    "explanation": "To preprosto pomeni, da če iz kakršnega koli razloga ne sprejmete te odgovornosti, bodo vse vaše denarnice odjavljene.",
-    "power": "Vsa moč je vedno v vaših rokah.",
-    "acceptButton": "Sprejmi samoodgovornost"
+    "title": "🔐 Lana World ima samo eno pravilo:",
+    "mainRule": "Vsakdo je brezpogojno samoodgovoren.",
+    "thatMeans": "To pomeni:",
+    "bullet1": "Vi ste edini odgovorni za svoje odločitve, dejanja in rezultate v Lana Worldu.",
+    "bullet2": "Ni vratarjev, ni oblasti za kriviti, in nihče ne upravlja vaših zadev namesto vas.",
+    "bullet3": "Če prenehate zavestno sodelovati — bodo vaše denarnice samodejno odjavljene.",
+    "notPunishment": "To ni kazen — to je odsev sveta, ki temelji na zaupanju, avtonomiji in resnični lastnini.",
+    "power": "Vsa moč je vedno v vaših rokah. In s tem prihaja polna odgovornost.",
+    "statementTitle": "✍️ Izjava o samoodgovornosti",
+    "statementDescription": "S svojimi besedami napišite kratek stavek, ki pokaže, da razumete in sprejemate svojo vlogo v Lana Worldu. Ni pravilnih ali napačnih besed — samo resnica.",
+    "example": "Primer:",
+    "exampleText": "\"Sprejemam polno samoodgovornost v Lana Worldu, vedoč da sem edini odgovoren za svoja dejanja in svoje bogastvo.\"",
+    "acceptButton": "✔️ Sprejmi samoodgovornost"
   }
 }

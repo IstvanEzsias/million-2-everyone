@@ -82,10 +82,19 @@
   },
   "commaNote": "(vesszővel elválasztva)",
   "selfResponsibility": {
-    "rule": "A Lana Világnak csak egy szabálya van: Mindenki feltétel nélkül önfelelős.",
-    "explanation": "Ez egyszerűen azt jelenti, hogy ha bármilyen okból nem vállalod ezt a felelősséget, minden tárcád törlésre kerül.",
-    "power": "Minden hatalom mindig a te kezedben van.",
-    "acceptButton": "Elfogadom az önfelelősséget"
+    "title": "🔐 A Lana Világnak csak egy szabálya van:",
+    "mainRule": "Mindenki feltétel nélkül önfelelős.",
+    "thatMeans": "Ez azt jelenti:",
+    "bullet1": "Te vagy az egyetlen, aki felelős a döntéseidért, tetteidért és eredményeidért a Lana Világban.",
+    "bullet2": "Nincsenek kapuőrök, nincsenek hatóságok, akiket hibáztathatsz, és senki nem intézi helyetted az ügyeidet.",
+    "bullet3": "Ha abbahagyod a tudatos részvételt — a tárcáid automatikusan törlésre kerülnek.",
+    "notPunishment": "Ez nem büntetés — ez egy olyan világ tükröződése, amely bizalomra, autonómiára és valódi tulajdonlásra épül.",
+    "power": "Minden hatalom mindig a te kezedben van. És ezzel együtt jár a teljes felelősség.",
+    "statementTitle": "✍️ Önfelelősségi nyilatkozat",
+    "statementDescription": "Saját szavaiddal írj egy rövid mondatot, amely megmutatja, hogy érted és elfogadod a szerepedet a Lana Világban. Nincsenek helyes vagy helytelen szavak — csak az igazság.",
+    "example": "Példa:",
+    "exampleText": "\"Elfogadom a teljes önfelelősséget a Lana Világban, tudván, hogy egyedül én vagyok felelős a tetteimért és a vagyonomért.\"",
+    "acceptButton": "✔️ Elfogadom az önfelelősséget"
   },
   "dialogs": {
     "gameEnd": {
