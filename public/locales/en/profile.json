@@ -82,10 +82,19 @@
   },
   "commaNote": "(comma-separated)",
   "selfResponsibility": {
-    "rule": "Lana World has only one rule: Everyone is unconditionally self-responsible.",
-    "explanation": "That simply means that if, for any reason, you fail to accept this responsibility, all your wallets will be unregistered.",
-    "power": "All the power is always in your hands.",
-    "acceptButton": "Accept Self-Responsibility"
+    "title": "🔐 Lana World Has Only One Rule:",
+    "mainRule": "Everyone is Unconditionally Self-Responsible.",
+    "thatMeans": "That means:",
+    "bullet1": "You are the only one responsible for your choices, actions, and outcomes in Lana World.",
+    "bullet2": "There are no gatekeepers, no authorities to blame, and no one to manage your affairs for you.",
+    "bullet3": "If you stop participating consciously — your wallets will automatically be unregistered.",
+    "notPunishment": "This is not a punishment — it's a reflection of a world based on trust, autonomy, and true ownership.",
+    "power": "All the power is always in your hands. And with that comes full responsibility.",
+    "statementTitle": "✍️ Statement of Self-Responsibility",
+    "statementDescription": "In your own words, write a short sentence that shows you understand and accept your role in Lana World. There are no right or wrong words — just truth.",
+    "example": "Example:",
+    "exampleText": "\"I accept full self-responsibility inside Lana World, knowing I am the only one accountable for my actions and my wealth.\"",
+    "acceptButton": "✔️ Accept Self-Responsibility"
   },
   "dialogs": {
     "gameEnd": {

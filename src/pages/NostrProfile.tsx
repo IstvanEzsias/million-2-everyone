@@ -473,34 +473,75 @@ const NostrProfile = () => {
                 </div>
               </div>
 
-              {/* Self-Responsibility Statement Field */}
-              <div className="mt-6 p-6 rounded-lg border-primary/20 bg-gradient-to-br from-primary/5 to-transparent space-y-4">
-                <div className="space-y-3 text-center">
-                  <p className="text-lg font-semibold text-foreground">
-                    {t('selfResponsibility.rule')}
+              {/* Self-Responsibility Statement Section */}
+              <div className="mt-8 p-6 rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent space-y-6">
+                {/* Main Rule Header */}
+                <div className="text-center space-y-2">
+                  <h3 className="text-xl font-bold text-primary">
+                    {t('selfResponsibility.title')}
+                  </h3>
+                  <p className="text-2xl font-bold text-foreground">
+                    {t('selfResponsibility.mainRule')}
                   </p>
-                  <p className="text-muted-foreground">
-                    {t('selfResponsibility.explanation')}
+                </div>
+
+                {/* Explanation */}
+                <div className="space-y-4">
+                  <p className="font-semibold text-foreground">
+                    {t('selfResponsibility.thatMeans')}
                   </p>
-                  <p className="text-sm font-medium text-primary">
+                  <ul className="space-y-3 ml-4">
+                    <li className="flex items-start gap-3">
+                      <span className="text-primary font-bold mt-0.5">•</span>
+                      <span className="text-muted-foreground">{t('selfResponsibility.bullet1')}</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-primary font-bold mt-0.5">•</span>
+                      <span className="text-muted-foreground">{t('selfResponsibility.bullet2')}</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-primary font-bold mt-0.5">•</span>
+                      <span className="text-muted-foreground">{t('selfResponsibility.bullet3')}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Philosophy paragraph */}
+                <div className="text-center space-y-2 py-4 border-t border-b border-primary/20">
+                  <p className="text-muted-foreground italic">
+                    {t('selfResponsibility.notPunishment')}
+                  </p>
+                  <p className="font-semibold text-foreground">
                     {t('selfResponsibility.power')}
                   </p>
                 </div>
 
-                {/* Statement of Responsibility Field */}
-                <div>
-                  <Label htmlFor="statement_of_responsibility" className="text-base font-semibold">
-                    {t('fields.statementOfResponsibility')} *
-                  </Label>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {t('help.statementOfResponsibility')}
+                {/* Statement Input Section */}
+                <div className="space-y-4">
+                  <h4 className="text-lg font-bold text-primary">
+                    {t('selfResponsibility.statementTitle')}
+                  </h4>
+                  <p className="text-muted-foreground">
+                    {t('selfResponsibility.statementDescription')}
                   </p>
+                  
+                  {/* Example */}
+                  <div className="bg-muted/30 p-4 rounded-lg border border-muted">
+                    <p className="text-sm text-muted-foreground">
+                      <span className="font-medium">{t('selfResponsibility.example')}</span>
+                    </p>
+                    <p className="text-sm text-muted-foreground italic mt-1">
+                      {t('selfResponsibility.exampleText')}
+                    </p>
+                  </div>
+
+                  {/* Textarea */}
                   <Textarea
                     id="statement_of_responsibility"
                     value={formData.statement_of_responsibility}
                     onChange={(e) => handleInputChange("statement_of_responsibility", e.target.value)}
                     placeholder={t('placeholders.statementOfResponsibility')}
-                    className={`min-h-[100px] ${errors.statement_of_responsibility ? "border-destructive" : ""}`}
+                    className={`min-h-[120px] ${errors.statement_of_responsibility ? "border-destructive" : ""}`}
                     rows={4}
                   />
                   {errors.statement_of_responsibility && (
