@@ -1,9 +1,12 @@
 {
   "header": {
     "title": "Játssz és keress LanaCoin-t!",
-    "instruction": "Ugorj át az akadályokon, hogy növeld Lana értékét! 🚀",
-    "howToPlay": "Így játszhatsz",
-    "instructions": "Ugorj át az akadályokon, hogy növeld Lana értékét! Teljesíts 37 sikeres ugrást, hogy megszerezd az 1 Regisztrált Lanádat. Minden ugrás megduplázza az árat és a felhasználók számát!"
+    "howToPlay": "Így játszhatsz:",
+    "gameDescription": "Egy egyszerű és gyors játék, amely egyetlen érme útját mutatja be a jelenlegi értékétől egészen 100 millió £-ig.",
+    "experienceTitle": "Egy 5 perces interaktív élmény:",
+    "bullet1": "Ugorj 37-szer, hogy megszerezd az 1 Regisztrált Lanát",
+    "bullet2": "Figyeld, ahogy az érték a jelenlegi értékről 100 millió £-ra növekszik minden ugrással",
+    "bullet3": "Hozd létre a Lana Tárcádat, amikor befejezed"
   },
   "stats": {
     "lanaPrice": "Lana Ár",
