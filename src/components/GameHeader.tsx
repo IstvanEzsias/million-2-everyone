@@ -22,10 +22,33 @@ const GameHeader = () => {
         
         {/* Game instructions */}
         <div className="mt-8 p-6 bg-card rounded-xl shadow-card-custom border-3 border-primary max-w-2xl mx-auto">
-          <h2 className="text-xl font-bold text-primary mb-2">{t('header.howToPlay')}</h2>
-          <p className="text-black">
-            {t('header.instructions')}
+          <h2 className="text-xl font-bold text-primary mb-3">{t('header.howToPlay')}</h2>
+          
+          {/* Game description */}
+          <p className="text-foreground mb-4">
+            {t('header.gameDescription')}
           </p>
+          
+          {/* Experience subtitle */}
+          <h3 className="text-lg font-semibold text-primary mb-2">
+            {t('header.experienceTitle')}
+          </h3>
+          
+          {/* Bullet points */}
+          <ul className="text-foreground text-left space-y-2">
+            <li className="flex items-start gap-2">
+              <span className="text-primary font-bold">•</span>
+              <span>{t('header.bullet1')}</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary font-bold">•</span>
+              <span>{t('header.bullet2')}</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary font-bold">•</span>
+              <span>{t('header.bullet3')}</span>
+            </li>
+          </ul>
         </div>
       </div>
     </header>

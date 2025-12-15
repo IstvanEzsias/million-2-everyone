@@ -2,7 +2,11 @@
   "header": {
     "title": "Igraj in zasluži svoje LanaCoin",
     "howToPlay": "Kako igrati:",
-    "instructions": "Skačite čez ovire, da povečate Lanino vrednost! Opravite 37 uspešnih skokov, da zaslužite svoj 1 Registriran Lana. Vsak skok podvoji ceno in bazo uporabnikov!"
+    "gameDescription": "Preprosta in hitra igra predstavlja pot enega kovanca od njegove trenutne vrednosti do 100 milijonov £.",
+    "experienceTitle": "5-minutna interaktivna izkušnja:",
+    "bullet1": "Skočite 37-krat, da zaslužite 1 Registriran Lana",
+    "bullet2": "Opazujte, kako vrednost raste od trenutne vrednosti do 100 milijonov £ z vsakim skokom",
+    "bullet3": "Ustvarite svojo Lana denarnico, ko dokončate"
   },
   "stats": {
     "price": "💰 Cena Lana",

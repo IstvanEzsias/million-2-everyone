@@ -2,7 +2,11 @@
   "header": {
     "title": "Play and earn Your LanaCoin",
     "howToPlay": "How to Play:",
-    "instructions": "Jump over obstacles to increase Lana's value! Complete 37 successful jumps to earn your 1 Registered Lana. Each jump doubles the price and user base!"
+    "gameDescription": "A simple and quick game represents the journey of a single coin from its current value to £100 million.",
+    "experienceTitle": "A 5-minute interactive experience:",
+    "bullet1": "Jump 37 times to earn 1 Registered Lana",
+    "bullet2": "Watch value grow from its current value to £100 million with each jump",
+    "bullet3": "Create your Lana Wallet when you complete it"
   },
   "stats": {
     "price": "💰 Lana Price",
