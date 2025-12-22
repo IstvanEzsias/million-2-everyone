@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, XCircle, Clock, Wifi, Database, Wallet, ArrowLeft, RotateCcw } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Wifi, Database, Wallet, ArrowLeft, RotateCcw, LogIn } from 'lucide-react';
 import { clearWalletSessionData, getReturnUrlData, clearReturnUrlData } from '@/utils/sessionStorage';
 import { useTranslation } from 'react-i18next';
 
@@ -43,7 +43,16 @@ const ProfileCreationResults = () => {
   const location = useLocation();
   const [result, setResult] = useState<ProfileCreationResult | null>(null);
   const [returnUrlData, setReturnUrlData] = useState<{url: string, siteName?: string} | null>(null);
+  const [countdown, setCountdown] = useState(5);
+  const [autoRedirect, setAutoRedirect] = useState(true);
   const { t } = useTranslation('results');
+
+  const handleReturnToSite = useCallback(() => {
+    if (returnUrlData) {
+      clearReturnUrlData();
+      window.location.href = returnUrlData.url;
+    }
+  }, [returnUrlData]);
 
   useEffect(() => {
     // Get the result from navigation state
@@ -62,6 +71,16 @@ const ProfileCreationResults = () => {
     }
   }, [location.state, navigate]);
 
+  // Auto-redirect countdown effect
+  useEffect(() => {
+    if (result?.success && returnUrlData && autoRedirect && countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    } else if (result?.success && returnUrlData && autoRedirect && countdown === 0) {
+      handleReturnToSite();
+    }
+  }, [countdown, result, returnUrlData, autoRedirect, handleReturnToSite]);
+
   const handleBackToHome = () => {
     navigate('/');
   };
@@ -72,11 +91,8 @@ const ProfileCreationResults = () => {
     navigate('/');
   };
 
-  const handleReturnToSite = () => {
-    if (returnUrlData) {
-      clearReturnUrlData();
-      window.location.href = returnUrlData.url;
-    }
+  const handleCancelRedirect = () => {
+    setAutoRedirect(false);
   };
 
   if (!result) {
@@ -279,24 +295,55 @@ const ProfileCreationResults = () => {
             )}
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap gap-4 justify-center pt-4">
-              {returnUrlData ? (
+            <div className="flex flex-col items-center gap-4 pt-4">
+              {result.success && returnUrlData ? (
                 <>
-                  <Button onClick={handleReturnToSite} className="bg-primary hover:bg-primary/90 flex items-center gap-2">
-                    <ArrowLeft className="h-4 w-4" />
-                    {t('buttons.returnToSite', { siteName: returnUrlData.siteName || 'Referring Site' })}
+                  {/* Prominent Login Button */}
+                  <Button 
+                    onClick={handleReturnToSite} 
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 text-lg px-8 py-6 flex items-center gap-3"
+                  >
+                    <LogIn className="h-5 w-5" />
+                    {t('loginNow')}
                   </Button>
-                  <Button onClick={handleBackToHome} variant="outline" className="flex items-center gap-2">
-                    <ArrowLeft className="h-4 w-4" />
-                    {t('buttons.stayAndExplore')}
-                  </Button>
-                  <Button onClick={handleCreateAnother} variant="outline" className="flex items-center gap-2">
-                    <RotateCcw className="h-4 w-4" />
-                    {t('buttons.createAnotherProfile')}
-                  </Button>
+                  
+                  {/* Countdown message */}
+                  {autoRedirect && (
+                    <p className="text-muted-foreground text-center">
+                      {t('redirecting', { 
+                        siteName: returnUrlData.siteName || 'your realm', 
+                        countdown 
+                      })}
+                    </p>
+                  )}
+                  
+                  {/* Cancel redirect link */}
+                  {autoRedirect && (
+                    <button 
+                      onClick={handleCancelRedirect}
+                      className="text-sm text-muted-foreground hover:text-foreground underline transition-colors"
+                    >
+                      {t('cancelRedirect')}
+                    </button>
+                  )}
+                  
+                  {/* Show additional options only if auto-redirect is cancelled */}
+                  {!autoRedirect && (
+                    <div className="flex flex-wrap gap-4 justify-center mt-4">
+                      <Button onClick={handleBackToHome} variant="outline" className="flex items-center gap-2">
+                        <ArrowLeft className="h-4 w-4" />
+                        {t('buttons.stayAndExplore')}
+                      </Button>
+                      <Button onClick={handleCreateAnother} variant="outline" className="flex items-center gap-2">
+                        <RotateCcw className="h-4 w-4" />
+                        {t('buttons.createAnotherProfile')}
+                      </Button>
+                    </div>
+                  )}
                 </>
               ) : (
-                <>
+                <div className="flex flex-wrap gap-4 justify-center">
                   <Button onClick={handleBackToHome} variant="outline" className="flex items-center gap-2">
                     <ArrowLeft className="h-4 w-4" />
                     {t('buttons.backToHome')}
@@ -305,7 +352,7 @@ const ProfileCreationResults = () => {
                     <RotateCcw className="h-4 w-4" />
                     {t('buttons.createAnotherProfile')}
                   </Button>
-                </>
+                </div>
               )}
             </div>
           </CardContent>
