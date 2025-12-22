@@ -21,6 +21,9 @@
   "walletId": "Tárca ID:",
   "status": "Státusz:",
   "errorDetails": "Hiba részletei",
+  "redirecting": "Átirányítás a(z) {{siteName}} oldalra {{countdown}} másodperc múlva...",
+  "loginNow": "🔑 Belépés a birodalomba",
+  "cancelRedirect": "Maradok itt",
   "buttons": {
     "returnToSite": "Vissza a(z) {{siteName}} oldalra",
     "stayAndExplore": "Maradj és fedezd fel",

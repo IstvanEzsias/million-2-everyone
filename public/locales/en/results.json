@@ -21,6 +21,9 @@
   "walletId": "Wallet ID:",
   "status": "Status:",
   "errorDetails": "Error Details",
+  "redirecting": "Redirecting to {{siteName}} in {{countdown}} seconds...",
+  "loginNow": "🔑 Login To Your Realm",
+  "cancelRedirect": "Stay here instead",
   "buttons": {
     "returnToSite": "Return to {{siteName}}",
     "stayAndExplore": "Stay and Explore",
