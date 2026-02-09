@@ -98,11 +98,7 @@ async function registerWalletWithLanaRegistry(
   walletId: string, 
   nostrHex: string
 ): Promise<WalletRegistrationResult> {
-  const apiKey = Deno.env.get('LANA_REGISTRY_API_KEY')
-  
-  if (!apiKey) {
-    throw new Error('LANA_REGISTRY_API_KEY not configured')
-  }
+  const apiKey = 'ak_ev1gahir2shcxjlio7im97'
 
   try {
     console.log(`Registering wallet ${walletId} with NOSTR ID ${nostrHex}`)
