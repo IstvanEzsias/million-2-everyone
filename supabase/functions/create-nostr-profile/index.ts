@@ -94,45 +94,83 @@ function createEvent(
 }
 
 // Function to register wallet with Lana Registry
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function callLanaRegisterAPI(
+  walletId: string,
+  nostrHex: string,
+  apiKey: string
+): Promise<any> {
+  const response = await fetch('https://laluxmwarlejdwyboudz.supabase.co/functions/v1/register-virgin-wallets', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      method: 'register_virgin_wallets_for_existing_user',
+      api_key: apiKey,
+      data: {
+        nostr_id_hex: nostrHex,
+        wallets: [{ wallet_id: walletId, wallet_type: 'Main Wallet' }]
+      }
+    })
+  })
+  return await response.json()
+}
+
 async function registerWalletWithLanaRegistry(
   walletId: string, 
   nostrHex: string
 ): Promise<WalletRegistrationResult> {
   const apiKey = 'ak_ev1gahir2shcxjlio7im97'
+  const maxRetries = 3
+  const retryDelays = [5000, 8000, 12000] // 5s, 8s, 12s
 
   try {
     console.log(`Registering wallet ${walletId} with NOSTR ID ${nostrHex}`)
     
-    const response = await fetch('https://laluxmwarlejdwyboudz.supabase.co/functions/v1/register-virgin-wallets', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        method: 'register_virgin_wallets_for_existing_user',
-        api_key: apiKey,
-        data: {
-          nostr_id_hex: nostrHex,
-          wallets: [
-            {
-              wallet_id: walletId,
-              wallet_type: 'Main Wallet'
-            }
-          ]
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      // Wait before each attempt to give relays time to propagate
+      const waitTime = retryDelays[attempt]
+      console.log(`Attempt ${attempt + 1}/${maxRetries}: waiting ${waitTime}ms before calling Lana Register...`)
+      await delay(waitTime)
+      
+      const result = await callLanaRegisterAPI(walletId, nostrHex, apiKey)
+      console.log(`Attempt ${attempt + 1} - Lana Registry response:`, result)
+      
+      if (result.success) {
+        return {
+          success: true,
+          wallet_id: walletId,
+          status: result.status || 'ok',
+          message: result.message || 'Wallet registered successfully',
+          data: result.data
         }
-      })
-    })
-
-    const result = await response.json()
-    console.log('Lana Registry response:', result)
+      }
+      
+      // If not_found, retry (profile may not be indexed yet)
+      if (result.status === 'not_found' && attempt < maxRetries - 1) {
+        console.log(`Profile not yet indexed, will retry...`)
+        continue
+      }
+      
+      // For other errors, return immediately
+      return {
+        success: false,
+        wallet_id: walletId,
+        status: result.status || 'unknown',
+        message: result.message || result.error || 'Registration failed',
+        data: result.data,
+        error: result.error
+      }
+    }
     
     return {
-      success: result.success || false,
+      success: false,
       wallet_id: walletId,
-      status: result.status || 'unknown',
-      message: result.message || 'Unknown response from registry',
-      data: result.data,
-      error: result.error
+      status: 'not_found',
+      message: 'Profile not found after multiple retries. The wallet registration will need to be done manually.',
+      error: 'Profile indexing timeout'
     }
   } catch (error) {
     console.error('Lana Registry API error:', error)
