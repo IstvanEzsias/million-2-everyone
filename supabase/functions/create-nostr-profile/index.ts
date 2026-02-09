@@ -107,11 +107,11 @@ async function registerWalletWithLanaRegistry(
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        method: 'register_virgin_wallets_for_existing_user',
+        method: 'check_wallet',
         api_key: apiKey,
         data: {
-          nostr_id_hex: nostrHex,
-          wallets: [{ wallet_id: walletId, wallet_type: 'Main Wallet' }]
+          wallet_id: walletId,
+          nostr_id_hex: nostrHex
         }
       })
     })
