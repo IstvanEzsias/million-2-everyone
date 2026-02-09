@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.get-available-prizes]
 verify_jwt = false
+
+[functions.retry-failed-transactions]
+verify_jwt = false
