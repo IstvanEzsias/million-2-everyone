@@ -107,17 +107,22 @@ async function registerWalletWithLanaRegistry(
   try {
     console.log(`Registering wallet ${walletId} with NOSTR ID ${nostrHex}`)
     
-    const response = await fetch('https://pnhrbebgneacgcatuxdq.supabase.co/functions/v1/external-api', {
+    const response = await fetch('https://laluxmwarlejdwyboudz.supabase.co/functions/v1/register-virgin-wallets', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        method: 'check_wallet',
+        method: 'register_virgin_wallets_for_existing_user',
         api_key: apiKey,
         data: {
-          wallet_id: walletId,
-          nostr_id_hex: nostrHex
+          nostr_id_hex: nostrHex,
+          wallets: [
+            {
+              wallet_id: walletId,
+              wallet_type: 'Main Wallet'
+            }
+          ]
         }
       })
     })
