@@ -888,6 +888,52 @@ serve(async (req) => {
     console.error('❌ LANA distribution error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown distribution error';
     
+    // Record failed transactions for all eligible players
+    try {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+      const supabase = createClient(supabaseUrl, supabaseServiceKey);
+      
+      // Get eligible players again for recording failures
+      const { data: failedPlayers } = await supabase
+        .from('players')
+        .select('id, walletid, difficulty_level')
+        .eq('received_lana', false)
+        .eq('played_the_game', true)
+        .not('walletid', 'is', null);
+      
+      if (failedPlayers && failedPlayers.length > 0) {
+        // Get reward amounts
+        const { data: diffLevels } = await supabase
+          .from('difficulty_levels')
+          .select('name, reward_amount');
+        
+        const rewards: { [key: string]: number } = {};
+        diffLevels?.forEach(l => { rewards[l.name] = l.reward_amount; });
+        
+        const failedRecords = failedPlayers.map(p => ({
+          walletid: p.walletid,
+          amount: rewards[p.difficulty_level] || rewards['easy'] || 1,
+          status: 'failed',
+          error_message: errorMessage,
+          difficulty_level: p.difficulty_level,
+          player_id: p.id
+        }));
+        
+        const { error: insertError } = await supabase
+          .from('failed_transactions')
+          .insert(failedRecords);
+        
+        if (insertError) {
+          console.error('❌ Failed to record failed transactions:', insertError);
+        } else {
+          console.log(`📝 Recorded ${failedRecords.length} failed transactions for later retry`);
+        }
+      }
+    } catch (recordError) {
+      console.error('❌ Error recording failed transactions:', recordError);
+    }
+    
     return new Response(JSON.stringify({
       success: false,
       error: errorMessage,

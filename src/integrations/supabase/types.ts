@@ -104,6 +104,47 @@ export type Database = {
         }
         Relationships: []
       }
+      failed_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          difficulty_level: string | null
+          error_message: string | null
+          id: string
+          player_id: string | null
+          status: string
+          walletid: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          difficulty_level?: string | null
+          error_message?: string | null
+          id?: string
+          player_id?: string | null
+          status?: string
+          walletid: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          difficulty_level?: string | null
+          error_message?: string | null
+          id?: string
+          player_id?: string | null
+          status?: string
+          walletid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "failed_transactions_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       legendary_winners: {
         Row: {
           completed_at: string | null
