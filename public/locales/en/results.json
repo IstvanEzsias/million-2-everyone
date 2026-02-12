@@ -24,6 +24,13 @@
   "redirecting": "Redirecting to {{siteName}} in {{countdown}} seconds...",
   "loginNow": "🔑 Login To Your Realm",
   "cancelRedirect": "Stay here instead",
+  "walletRetry": {
+    "title": "Wallet Registration Failed",
+    "description": "Your profile was created successfully, but the wallet could not be registered with the Lana Registry. Please try again.",
+    "retryButton": "Retry Wallet Registration",
+    "retrying": "Retrying...",
+    "successAfterRetry": "Wallet registered successfully after retry!"
+  },
   "buttons": {
     "returnToSite": "Return to {{siteName}}",
     "stayAndExplore": "Stay and Explore",

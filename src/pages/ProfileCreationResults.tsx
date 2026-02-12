@@ -3,9 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, XCircle, Clock, Wifi, Database, Wallet, ArrowLeft, RotateCcw, LogIn } from 'lucide-react';
-import { clearWalletSessionData, getReturnUrlData, clearReturnUrlData } from '@/utils/sessionStorage';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { CheckCircle, XCircle, Clock, Wifi, Database, Wallet, ArrowLeft, RotateCcw, LogIn, AlertTriangle, Loader2 } from 'lucide-react';
+import { clearWalletSessionData, getReturnUrlData, clearReturnUrlData, getWalletSessionData } from '@/utils/sessionStorage';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '@/integrations/supabase/client';
 
 interface RelayResult {
   url: string;
@@ -45,7 +47,40 @@ const ProfileCreationResults = () => {
   const [returnUrlData, setReturnUrlData] = useState<{url: string, siteName?: string} | null>(null);
   const [countdown, setCountdown] = useState(5);
   const [autoRedirect, setAutoRedirect] = useState(true);
+  const [retryingWallet, setRetryingWallet] = useState(false);
   const { t } = useTranslation('results');
+
+  const handleRetryWalletRegistration = async () => {
+    if (!result?.walletRegistration) return;
+    setRetryingWallet(true);
+    try {
+      const walletSession = getWalletSessionData();
+      const { data, error } = await supabase.functions.invoke('retry-wallet-registration', {
+        body: {
+          wallet_id: result.walletRegistration.wallet_id,
+          nostr_id_hex: walletSession?.nostrHex || '',
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.success) {
+        setResult(prev => prev ? {
+          ...prev,
+          walletRegistration: {
+            ...prev.walletRegistration!,
+            success: true,
+            status: 'ok',
+            message: data.message || 'Wallet registered successfully'
+          }
+        } : prev);
+      }
+    } catch (err) {
+      console.error('Wallet retry failed:', err);
+    } finally {
+      setRetryingWallet(false);
+    }
+  };
 
   const handleReturnToSite = useCallback(() => {
     if (returnUrlData) {
@@ -279,6 +314,33 @@ const ProfileCreationResults = () => {
                         </Badge>
                       </div>
                     </div>
+
+                    {/* Retry warning for failed wallet registration */}
+                    {!result.walletRegistration.success && (
+                      <Alert className="mt-4 border-orange-300 bg-orange-50 dark:bg-orange-950">
+                        <AlertTriangle className="h-4 w-4 text-orange-600" />
+                        <AlertTitle className="text-orange-800 dark:text-orange-200">
+                          {t('walletRetry.title')}
+                        </AlertTitle>
+                        <AlertDescription className="text-orange-700 dark:text-orange-300">
+                          {t('walletRetry.description')}
+                          <Button
+                            onClick={handleRetryWalletRegistration}
+                            disabled={retryingWallet}
+                            variant="outline"
+                            size="sm"
+                            className="mt-3 flex items-center gap-2 border-orange-400 text-orange-700 hover:bg-orange-100"
+                          >
+                            {retryingWallet ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <RotateCcw className="h-4 w-4" />
+                            )}
+                            {retryingWallet ? t('walletRetry.retrying') : t('walletRetry.retryButton')}
+                          </Button>
+                        </AlertDescription>
+                      </Alert>
+                    )}
                   </div>
                 )}
 

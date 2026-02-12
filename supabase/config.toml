@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.retry-failed-transactions]
 verify_jwt = false
+
+[functions.retry-wallet-registration]
+verify_jwt = false
