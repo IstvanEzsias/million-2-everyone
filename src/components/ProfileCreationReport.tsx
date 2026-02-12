@@ -221,6 +221,15 @@ export const ProfileCreationReport = ({ open, onOpenChange, result }: ProfileCre
                       </Badge>
                     </div>
                   </div>
+
+                  {/* Warning for failed registration */}
+                  {!result.walletRegistration.success && (
+                    <div className="mt-4 p-3 rounded border border-orange-300 bg-orange-50 dark:bg-orange-950">
+                      <p className="text-sm text-orange-700 dark:text-orange-300 font-medium">
+                        ⚠️ Wallet registration failed. The profile was created but the wallet is not registered with Lana Registry.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 

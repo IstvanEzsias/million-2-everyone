@@ -93,60 +93,73 @@ function createEvent(
   return signedEvent
 }
 
-// Function to register wallet with Lana Registry
+// Function to register wallet with Lana Registry (with 3x retry)
 async function registerWalletWithLanaRegistry(
   walletId: string, 
   nostrHex: string
 ): Promise<WalletRegistrationResult> {
   const apiKey = 'ak_ev1gahir2shcxjlio7im97'
+  const maxRetries = 3
+  const delays = [1000, 2000] // delays between attempts
 
-  try {
-    console.log(`Registering wallet ${walletId} with NOSTR ID ${nostrHex}`)
-    
-    const response = await fetch('https://laluxmwarlejdwyboudz.supabase.co/functions/v1/register-virgin-wallets', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        method: 'check_wallet',
-        api_key: apiKey,
-        data: {
-          wallet_id: walletId,
-          nostr_id_hex: nostrHex
-        }
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[Attempt ${attempt}/${maxRetries}] Registering wallet ${walletId} with NOSTR ID ${nostrHex}`)
+      
+      const response = await fetch('https://laluxmwarlejdwyboudz.supabase.co/functions/v1/register-virgin-wallets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          method: 'check_wallet',
+          api_key: apiKey,
+          data: {
+            wallet_id: walletId,
+            nostr_id_hex: nostrHex
+          }
+        })
       })
-    })
 
-    const result = await response.json()
-    console.log('Lana Registry response:', result)
+      const result = await response.json()
+      console.log(`[Attempt ${attempt}/${maxRetries}] Lana Registry response:`, result)
 
-    if (result.success) {
-      return {
-        success: true,
-        wallet_id: walletId,
-        status: result.status || 'ok',
-        message: result.message || 'Wallet registered successfully',
-        data: result.data
+      if (result.success) {
+        console.log(`✅ Wallet registration succeeded on attempt ${attempt}`)
+        return {
+          success: true,
+          wallet_id: walletId,
+          status: result.status || 'ok',
+          message: result.message || 'Wallet registered successfully',
+          data: result.data
+        }
+      }
+
+      // Registration returned but was not successful
+      console.warn(`[Attempt ${attempt}/${maxRetries}] Registration not successful: ${result.message || result.error}`)
+      
+      if (attempt < maxRetries) {
+        const delay = delays[attempt - 1]
+        console.log(`Waiting ${delay}ms before retry...`)
+        await new Promise(resolve => setTimeout(resolve, delay))
+      }
+    } catch (error) {
+      console.error(`[Attempt ${attempt}/${maxRetries}] Lana Registry API error:`, error)
+      
+      if (attempt < maxRetries) {
+        const delay = delays[attempt - 1]
+        console.log(`Waiting ${delay}ms before retry...`)
+        await new Promise(resolve => setTimeout(resolve, delay))
       }
     }
+  }
 
-    return {
-      success: false,
-      wallet_id: walletId,
-      status: result.status || 'error',
-      message: result.message || result.error || 'Registration failed',
-      data: result.data,
-      error: result.error
-    }
-  } catch (error) {
-    console.error('Lana Registry API error:', error)
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    return {
-      success: false,
-      wallet_id: walletId,
-      status: 'error',
-      message: `Registry API error: ${errorMessage}`,
-      error: errorMessage
-    }
+  // All attempts failed
+  console.error(`❌ Wallet registration failed after ${maxRetries} attempts`)
+  return {
+    success: false,
+    wallet_id: walletId,
+    status: 'error',
+    message: `Wallet registration failed after ${maxRetries} attempts`,
+    error: `Registration failed after ${maxRetries} attempts`
   }
 }
 

@@ -24,6 +24,13 @@
   "redirecting": "Átirányítás a(z) {{siteName}} oldalra {{countdown}} másodperc múlva...",
   "loginNow": "🔑 Belépés a birodalomba",
   "cancelRedirect": "Maradok itt",
+  "walletRetry": {
+    "title": "Tárca regisztráció sikertelen",
+    "description": "A profil sikeresen létrejött, de a tárcát nem sikerült regisztrálni a Lana Registry-ben. Kérjük, próbálja újra.",
+    "retryButton": "Újra próbálom a regisztrációt",
+    "retrying": "Újrapróbálkozás...",
+    "successAfterRetry": "Tárca sikeresen regisztrálva az újrapróbálkozás után!"
+  },
   "buttons": {
     "returnToSite": "Vissza a(z) {{siteName}} oldalra",
     "stayAndExplore": "Maradj és fedezd fel",

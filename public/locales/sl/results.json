@@ -24,6 +24,13 @@
   "redirecting": "Preusmeritev na {{siteName}} čez {{countdown}} sekund...",
   "loginNow": "🔑 Vstopi v svoje kraljestvo",
   "cancelRedirect": "Ostani tukaj",
+  "walletRetry": {
+    "title": "Registracija denarnice ni uspela",
+    "description": "Vaš profil je bil uspešno ustvarjen, vendar denarnice ni bilo mogoče registrirati pri Lana Registry. Prosimo, poskusite znova.",
+    "retryButton": "Poskusi znova registrirati",
+    "retrying": "Ponovni poskus...",
+    "successAfterRetry": "Denarnica uspešno registrirana po ponovnem poskusu!"
+  },
   "buttons": {
     "returnToSite": "Vrnitev na {{siteName}}",
     "stayAndExplore": "Ostani in raziskuj",
