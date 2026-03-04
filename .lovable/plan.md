@@ -1,79 +1,37 @@
 
 
-# Zanesljiva registracija denarnice z retry mehanizmom
+# PDF z QR kodami ob ustvarjanju denarnice
 
-## Problem
+## Kaj se bo zgodilo
 
-Trenutno sistem vrne `success: true` tudi ko registracija denarnice pri Lana Registry **ne uspe**. Uporabnik dobi zeleno sporocilo "profil uspesno ustvarjen", nato se mu poslje LANA - ampak denarnica ni registrirana, kar pomeni da ne more dostopati do sredstev.
+Ko uporabnik klikne "Create Wallet" v `GameEndDialog`, se bo poleg prikaza podatkov na zaslonu **avtomatsko generiral in downloadal PDF** z dvema QR kodama:
+1. **LanaCoin naslov** (javni) + QR koda
+2. **Private Key WIF** + QR koda
 
-Glavni vzroki:
-1. Edge funkcija `create-nostr-profile` naredi **en sam poskus** registracije in ne glede na rezultat vrne `success: true`
-2. Frontend ne preverja `walletRegistration.success` - uporabnika takoj preusmeri na rezultatno stran
-3. Ni mehanizma za ponovni poskus (retry)
+PDF se downloada takoj po generaciji denarnice, brez da bi uporabnik moral karkoli klikniti.
 
-## Resitev
+## Tehnični pristop
 
-### 1. Edge funkcija: 3x retry z zamikom (create-nostr-profile)
+### Nova knjižnica
+- `qrcode` - za generiranje QR kod kot data URL (canvas)
+- `jspdf` - za generiranje PDF dokumenta na klientu
 
-Funkcija `registerWalletWithLanaRegistry()` bo poskusila registracijo **3-krat** s kratkimi zamiki (1s, 2s) med poskusi. Ce vsi 3 poskusi ne uspejo, bo funkcija vrnila `walletRegistration.success = false` z jasnim sporocilom.
+### Nova utility datoteka: `src/utils/walletPdfGenerator.ts`
 
-### 2. Edge funkcija: Blokiranje uspeha ob neuspeli registraciji
+Funkcija `generateAndDownloadWalletPdf(walletData: WalletData)`:
+1. Generira QR kodo za `lanaAddress`
+2. Generira QR kodo za `privateKeyWIF`
+3. Sestavi PDF z:
+   - Naslov: "LanaCoin Wallet Backup"
+   - Sekcija 1: LanaCoin Address + QR + tekst naslova
+   - Sekcija 2: Private Key (WIF) + QR + tekst ključa + opozorilo "KEEP THIS SAFE!"
+4. Sproži avtomatski download kot `lanacoin-wallet-backup.pdf`
 
-Trenutno vrne `success: true` ne glede na registracijo. Spremenimo tako, da:
-- Ce registracija uspe -> `success: true` (kot zdaj)
-- Ce registracija ne uspe po 3 poskusih -> se vedno `success: true` za profil, AMPAK v odgovoru jasno oznacimo `walletRegistration.success = false`
+### Sprememba: `src/components/GameEndDialog.tsx`
 
-### 3. Frontend: Prikaz napake in moznost ponovnega poskusa
+V `handleCreateWallet` in `handleRegenerateWallet` — po uspešni generaciji denarnice pokliče `generateAndDownloadWalletPdf(wallet)`.
 
-Na rezultatni strani (`ProfileCreationResults.tsx`):
-- Ce `walletRegistration.success === false`, prikazi **opozorilo** z gumbom "Poskusi znova registrirati denarnico"
-- Gumb poklice nov edge function endpoint ali ponovi klic registracije
-- Uporabnik jasno vidi, da profil je ustvarjen, ampak denarnica ni registrirana
+### Sprememba: Prevodi
 
----
-
-## Tehnicni nacrt
-
-### Sprememba 1: `supabase/functions/create-nostr-profile/index.ts`
-
-Dodaj retry logiko v `registerWalletWithLanaRegistry()`:
-
-```text
-registerWalletWithLanaRegistry(walletId, nostrHex)
-  |
-  +-- Poskus 1 -> uspeh? -> return success
-  |
-  +-- Cakaj 1s
-  |
-  +-- Poskus 2 -> uspeh? -> return success  
-  |
-  +-- Cakaj 2s
-  |
-  +-- Poskus 3 -> uspeh? -> return success
-  |
-  +-- return { success: false, message: "Registracija ni uspela po 3 poskusih" }
-```
-
-Koda bo:
-- Obdrzala obstojeco strukturo `registerWalletWithLanaRegistry`
-- Dodala zanko z `maxRetries = 3` in `delays = [1000, 2000]`
-- Logirala vsak poskus v konzolo
-
-### Sprememba 2: `src/pages/ProfileCreationResults.tsx`
-
-Dodaj sekcijo za neuspelo registracijo:
-- Ce `walletRegistration.success === false`, prikazi oranzen opozorilni blok
-- Dodaj gumb "Poskusi znova registrirati denarnico" ki poklice edge funkcijo za registracijo
-- Po uspesni ponovni registraciji posodobi prikaz na zelen uspeh
-
-### Sprememba 3: `src/components/ProfileCreationReport.tsx`
-
-Enaka sprememba kot pri `ProfileCreationResults.tsx` - dodaj retry gumb za neuspelo registracijo.
-
-### Sprememba 4: Prevodi
-
-Dodaj prevode za nova sporocila v `public/locales/en/results.json`, `hu/results.json`, `sl/results.json`:
-- "Registracija denarnice ni uspela"
-- "Poskusi znova"
-- "Registracija uspesna po ponovnem poskusu"
+Ni potrebnih sprememb prevodov — PDF bo v angleščini (univerzalni backup dokument).
 
