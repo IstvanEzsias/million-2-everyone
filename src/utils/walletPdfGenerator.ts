@@ -42,27 +42,33 @@ export async function generateAndDownloadWalletPdf(wallet: WalletData): Promise<
 
     // --- Section 2: Private Key WIF ---
     y += 55;
+    const boxLeft = 15;
+    const boxRight = pageWidth - 15;
+    const boxInnerLeft = boxLeft + 5;
+    const boxInnerRight = boxRight - 5;
+    const textMaxWidth = boxInnerRight - 72;
+
     doc.setDrawColor(220, 50, 50);
     doc.setLineWidth(0.5);
-    doc.rect(15, y - 5, pageWidth - 30, 70);
+    doc.rect(boxLeft, y - 5, boxRight - boxLeft, 70);
 
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(200, 0, 0);
-    doc.text('Private Key (WIF) — KEEP THIS SAFE!', 20, y + 2);
+    doc.text('Private Key (WIF) — KEEP THIS SAFE!', boxInnerLeft, y + 2);
     doc.setTextColor(0);
 
     y += 8;
-    doc.addImage(wifQr, 'PNG', 20, y, 45, 45);
+    doc.addImage(wifQr, 'PNG', boxInnerLeft, y, 45, 45);
 
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text(wallet.privateKeyWIF, 72, y + 20, { maxWidth: pageWidth - 92 });
+    doc.text(wallet.privateKeyWIF, 72, y + 20, { maxWidth: textMaxWidth });
 
     doc.setFontSize(8);
     doc.setTextColor(200, 0, 0);
-    doc.text('⚠ NEVER share this key. Anyone with this key controls your wallet.', 72, y + 30);
-    doc.text('Store this document in a safe place and delete digital copies.', 72, y + 36);
+    doc.text('NEVER share this key. Anyone with this key controls your wallet.', 72, y + 32, { maxWidth: textMaxWidth });
+    doc.text('Store this document in a safe place and delete digital copies.', 72, y + 40, { maxWidth: textMaxWidth });
     doc.setTextColor(0);
 
     // Footer
