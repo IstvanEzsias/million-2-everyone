@@ -7,6 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import { Copy, RefreshCw, Key, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { setWalletSessionData } from "@/utils/sessionStorage";
+import { generateAndDownloadWalletPdf } from "@/utils/walletPdfGenerator";
 import hundredMillionLogo from "@/assets/100-million-logo.png";
 import { useTranslation } from 'react-i18next';
 
@@ -82,6 +83,7 @@ const GameEndDialog = ({
         privateKeyWIF: wallet.privateKeyWIF.trim()
       };
       setWalletData(normalizedWallet);
+      generateAndDownloadWalletPdf(normalizedWallet);
       toast({
         title: t('notifications.walletCreated'),
         description: t('notifications.walletCreatedDesc'),
@@ -111,6 +113,7 @@ const GameEndDialog = ({
         privateKeyWIF: wallet.privateKeyWIF.trim()
       };
       setWalletData(normalizedWallet);
+      generateAndDownloadWalletPdf(normalizedWallet);
       toast({
         title: t('notifications.walletRegenerated'),
         description: t('notifications.walletRegeneratedDesc'),
