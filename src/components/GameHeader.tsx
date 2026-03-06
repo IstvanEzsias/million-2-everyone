@@ -48,6 +48,10 @@ const GameHeader = () => {
               <span className="text-primary font-bold">•</span>
               <span>{t('header.bullet3')}</span>
             </li>
+            <li className="flex items-start gap-2">
+              <span className="text-primary font-bold">•</span>
+              <span>{t('header.bullet4')}</span>
+            </li>
           </ul>
         </div>
       </div>

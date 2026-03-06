@@ -1,25 +1,37 @@
 
 
-# Make Game Optional — Skip to Wallet Creation
+# PDF z QR kodami ob ustvarjanju denarnice
 
-## Summary
+## Kaj se bo zgodilo
 
-Add a visible "Skip Game & Create Wallet" button on the main page so users can go directly to wallet creation without playing. No coin reward is given in this scenario. The existing `GameEndDialog` already supports `playedGame={false}`.
+Ko uporabnik klikne "Create Wallet" v `GameEndDialog`, se bo poleg prikaza podatkov na zaslonu **avtomatsko generiral in downloadal PDF** z dvema QR kodama:
+1. **LanaCoin naslov** (javni) + QR koda
+2. **Private Key WIF** + QR koda
 
-## Changes
+PDF se downloada takoj po generaciji denarnice, brez da bi uporabnik moral karkoli klikniti.
 
-### 1. `src/pages/Index.tsx`
-- Add a styled "Skip Game & Create Wallet" button below the difficulty cards (or above the game canvas)
-- On click, set `showSkipDialog = true` (already wired to `GameEndDialog` with `playedGame={false}`)
-- Include a small note: "Skip the game and create your wallet directly (no prize earned)"
+## Tehnični pristop
 
-### 2. `src/components/GameHeader.tsx`
-- Update bullet points to clarify the game is optional (e.g., "Play the game to earn 1 Registered Lana, or skip directly to wallet creation")
+### Nova knjižnica
+- `qrcode` - za generiranje QR kod kot data URL (canvas)
+- `jspdf` - za generiranje PDF dokumenta na klientu
 
-### 3. Translation files (`public/locales/*/game.json`)
-- Translation keys `game.skip.button` and `game.skip.description` already exist in English
-- Add/verify matching keys in `sl` and `hu` locale files
+### Nova utility datoteka: `src/utils/walletPdfGenerator.ts`
 
-### No backend changes needed
-- `GameEndDialog` already passes `playedGame={false}` which sends `played_the_game: false` to the edge function — no reward is granted.
+Funkcija `generateAndDownloadWalletPdf(walletData: WalletData)`:
+1. Generira QR kodo za `lanaAddress`
+2. Generira QR kodo za `privateKeyWIF`
+3. Sestavi PDF z:
+   - Naslov: "LanaCoin Wallet Backup"
+   - Sekcija 1: LanaCoin Address + QR + tekst naslova
+   - Sekcija 2: Private Key (WIF) + QR + tekst ključa + opozorilo "KEEP THIS SAFE!"
+4. Sproži avtomatski download kot `lanacoin-wallet-backup.pdf`
+
+### Sprememba: `src/components/GameEndDialog.tsx`
+
+V `handleCreateWallet` in `handleRegenerateWallet` — po uspešni generaciji denarnice pokliče `generateAndDownloadWalletPdf(wallet)`.
+
+### Sprememba: Prevodi
+
+Ni potrebnih sprememb prevodov — PDF bo v angleščini (univerzalni backup dokument).
 

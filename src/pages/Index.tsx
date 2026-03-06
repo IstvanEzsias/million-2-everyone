@@ -119,6 +119,19 @@ const Index = () => {
           {/* Game stats display */}
           <GameStats gameState={gameState} />
           
+          {/* Skip Game Option */}
+          <div className="flex flex-col items-center gap-2 mb-8">
+            <Button 
+              variant="outline" 
+              size="lg"
+              onClick={() => setShowSkipDialog(true)}
+              className="text-muted-foreground border-muted-foreground/30 hover:border-primary hover:text-primary"
+            >
+              {t('skip.button')}
+            </Button>
+            <p className="text-sm text-muted-foreground">{t('skip.description')}</p>
+          </div>
+
           {/* Difficulty Selection Cards - Always visible */}
           <div className="mb-8">
             <DifficultyCards 
