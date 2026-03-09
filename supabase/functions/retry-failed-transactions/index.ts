@@ -493,42 +493,62 @@ serve(async (req) => {
 
     console.log(`📋 Found ${failedTxs.length} failed transactions to retry`);
 
-    // 2. Get app settings (wallet key, electrum server)
-    const { data: settings, error: settingsError } = await supabase
-      .from('app_settings')
-      .select('lana_private_key, lana_wallet_id, electrum_server, electrum_server_port')
-      .single();
+    // 1b. Deduplicate: check which players already received LANA
+    const playerIds = [...new Set(failedTxs.map(t => t.player_id).filter(Boolean))];
+    const { data: players } = await supabase
+      .from('players')
+      .select('id, received_lana')
+      .in('id', playerIds);
 
-    if (settingsError || !settings || !settings.lana_private_key || !settings.lana_wallet_id) {
-      throw new Error('App settings not configured');
+    const alreadyPaidIds = new Set(
+      (players || []).filter(p => p.received_lana).map(p => p.id)
+    );
+
+    // Mark records for already-paid players as completed (no send needed)
+    const alreadyPaidTxs = failedTxs.filter(t => t.player_id && alreadyPaidIds.has(t.player_id));
+    const pendingTxs = failedTxs.filter(t => !t.player_id || !alreadyPaidIds.has(t.player_id));
+
+    if (alreadyPaidTxs.length > 0) {
+      const skipIds = alreadyPaidTxs.map(t => t.id);
+      await supabase
+        .from('failed_transactions')
+        .update({ status: 'completed', error_message: 'Skipped: player already received LANA' })
+        .in('id', skipIds);
+      console.log(`📝 Skipped ${alreadyPaidTxs.length} records (players already received LANA)`);
     }
 
-    const servers = [
-      { host: settings.electrum_server || 'electrum1.lanacoin.com', port: settings.electrum_server_port || 5097 },
-      { host: 'electrum1.lanacoin.com', port: 5097 },
-      { host: 'electrum2.lanacoin.com', port: 5097 },
-      { host: 'electrum3.lanacoin.com', port: 5097 }
-    ];
-
-    // 3. Validate sender address from private key
-    const normalizedKey = normalizeWif(settings.lana_private_key);
-    const pkBytes = base58CheckDecode(normalizedKey);
-    const pkHex = uint8ArrayToHex(pkBytes.slice(1));
-    const pubKey = privateKeyToPublicKey(pkHex);
-    const senderAddress = await publicKeyToAddress(pubKey);
-
-    if (senderAddress !== settings.lana_wallet_id) {
-      console.log(`⚠️ Derived address ${senderAddress} vs configured ${settings.lana_wallet_id}`);
+    // 1c. Deduplicate by walletid — keep only one record per wallet
+    const walletMap = new Map<string, typeof pendingTxs[0]>();
+    const duplicateIds: string[] = [];
+    for (const tx of pendingTxs) {
+      if (walletMap.has(tx.walletid)) {
+        duplicateIds.push(tx.id); // mark duplicate for cleanup
+      } else {
+        walletMap.set(tx.walletid, tx);
+      }
     }
 
-    // 4. Get UTXOs
-    const utxos = await electrumCall('blockchain.address.listunspent', [settings.lana_wallet_id], servers);
-    if (!utxos || utxos.length === 0) throw new Error('No UTXOs available in LANA wallet');
+    if (duplicateIds.length > 0) {
+      await supabase
+        .from('failed_transactions')
+        .update({ status: 'completed', error_message: 'Skipped: duplicate wallet entry' })
+        .in('id', duplicateIds);
+      console.log(`📝 Skipped ${duplicateIds.length} duplicate wallet records`);
+    }
 
-    console.log(`📦 Found ${utxos.length} UTXOs`);
+    const dedupedTxs = Array.from(walletMap.values());
+
+    if (dedupedTxs.length === 0) {
+      console.log('✅ All failed transactions were duplicates or already paid');
+      return new Response(JSON.stringify({ success: true, message: 'All duplicates resolved', processed: 0 }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    console.log(`📋 Processing ${dedupedTxs.length} unique failed transactions after dedup`);
 
     // 5. Build recipients (amount is stored in LANA, convert to satoshis)
-    const recipients = failedTxs.map(tx => ({
+    const recipients = dedupedTxs.map(tx => ({
       address: tx.walletid,
       amount: Math.round(tx.amount * 100_000_000) // LANA -> satoshis
     }));
@@ -587,38 +607,38 @@ serve(async (req) => {
     console.log('✅ Retry transaction broadcast successful:', txid);
 
     // 8. Update failed_transactions to 'completed'
-    const failedIds = failedTxs.map(t => t.id);
+    const processedIds = dedupedTxs.map(t => t.id);
     const { error: updateError } = await supabase
       .from('failed_transactions')
       .update({ status: 'completed' })
-      .in('id', failedIds);
+      .in('id', processedIds);
 
     if (updateError) {
       console.error('❌ Failed to update failed_transactions:', updateError);
     } else {
-      console.log(`📝 Updated ${failedIds.length} failed_transactions to 'completed'`);
+      console.log(`📝 Updated ${processedIds.length} failed_transactions to 'completed'`);
     }
 
     // 9. Also update the players table for these players
-    const playerIds = failedTxs.map(t => t.player_id).filter(Boolean);
-    if (playerIds.length > 0) {
+    const retryPlayerIds = dedupedTxs.map(t => t.player_id).filter(Boolean);
+    if (retryPlayerIds.length > 0) {
       const { error: playerUpdateError } = await supabase
         .from('players')
         .update({ received_lana: true, transactionid: txid })
-        .in('id', playerIds);
+        .in('id', retryPlayerIds);
 
       if (playerUpdateError) {
         console.error('❌ Failed to update players:', playerUpdateError);
       } else {
-        console.log(`📝 Updated ${playerIds.length} players as received_lana=true`);
+        console.log(`📝 Updated ${retryPlayerIds.length} players as received_lana=true`);
       }
     }
 
     return new Response(JSON.stringify({
       success: true,
-      message: `Retried ${failedTxs.length} failed transactions`,
+      message: `Retried ${dedupedTxs.length} unique failed transactions (${alreadyPaidTxs.length} skipped as already paid, ${duplicateIds.length} duplicates resolved)`,
       txid,
-      processed: failedTxs.length,
+      processed: dedupedTxs.length,
       totalAmount: totalAmountSatoshis
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
