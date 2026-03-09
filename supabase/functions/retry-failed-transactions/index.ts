@@ -607,38 +607,38 @@ serve(async (req) => {
     console.log('✅ Retry transaction broadcast successful:', txid);
 
     // 8. Update failed_transactions to 'completed'
-    const failedIds = failedTxs.map(t => t.id);
+    const processedIds = dedupedTxs.map(t => t.id);
     const { error: updateError } = await supabase
       .from('failed_transactions')
       .update({ status: 'completed' })
-      .in('id', failedIds);
+      .in('id', processedIds);
 
     if (updateError) {
       console.error('❌ Failed to update failed_transactions:', updateError);
     } else {
-      console.log(`📝 Updated ${failedIds.length} failed_transactions to 'completed'`);
+      console.log(`📝 Updated ${processedIds.length} failed_transactions to 'completed'`);
     }
 
     // 9. Also update the players table for these players
-    const playerIds = failedTxs.map(t => t.player_id).filter(Boolean);
-    if (playerIds.length > 0) {
+    const retryPlayerIds = dedupedTxs.map(t => t.player_id).filter(Boolean);
+    if (retryPlayerIds.length > 0) {
       const { error: playerUpdateError } = await supabase
         .from('players')
         .update({ received_lana: true, transactionid: txid })
-        .in('id', playerIds);
+        .in('id', retryPlayerIds);
 
       if (playerUpdateError) {
         console.error('❌ Failed to update players:', playerUpdateError);
       } else {
-        console.log(`📝 Updated ${playerIds.length} players as received_lana=true`);
+        console.log(`📝 Updated ${retryPlayerIds.length} players as received_lana=true`);
       }
     }
 
     return new Response(JSON.stringify({
       success: true,
-      message: `Retried ${failedTxs.length} failed transactions`,
+      message: `Retried ${dedupedTxs.length} unique failed transactions (${alreadyPaidTxs.length} skipped as already paid, ${duplicateIds.length} duplicates resolved)`,
       txid,
-      processed: failedTxs.length,
+      processed: dedupedTxs.length,
       totalAmount: totalAmountSatoshis
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
