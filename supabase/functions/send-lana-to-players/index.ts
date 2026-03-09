@@ -903,26 +903,40 @@ serve(async (req) => {
         .not('walletid', 'is', null);
       
       if (failedPlayers && failedPlayers.length > 0) {
-        // Get reward amounts
-        const { data: diffLevels } = await supabase
-          .from('difficulty_levels')
-          .select('name, reward_amount');
-        
-        const rewards: { [key: string]: number } = {};
-        diffLevels?.forEach(l => { rewards[l.name] = l.reward_amount; });
-        
-        const failedRecords = failedPlayers.map(p => ({
-          walletid: p.walletid,
-          amount: rewards[p.difficulty_level] || rewards['easy'] || 1,
-          status: 'failed',
-          error_message: errorMessage,
-          difficulty_level: p.difficulty_level,
-          player_id: p.id
-        }));
-        
-        const { error: insertError } = await supabase
+        // Check which players already have a pending failed_transaction record
+        const playerIds = failedPlayers.map(p => p.id);
+        const { data: existingFailed } = await supabase
           .from('failed_transactions')
-          .insert(failedRecords);
+          .select('player_id')
+          .in('player_id', playerIds)
+          .eq('status', 'failed');
+        
+        const alreadyRecordedIds = new Set((existingFailed || []).map(r => r.player_id));
+        const newFailedPlayers = failedPlayers.filter(p => !alreadyRecordedIds.has(p.id));
+        
+        if (newFailedPlayers.length === 0) {
+          console.log('📝 All failed players already have pending failed_transaction records, skipping');
+        } else {
+          // Get reward amounts
+          const { data: diffLevels } = await supabase
+            .from('difficulty_levels')
+            .select('name, reward_amount');
+          
+          const rewards: { [key: string]: number } = {};
+          diffLevels?.forEach(l => { rewards[l.name] = l.reward_amount; });
+          
+          const failedRecords = newFailedPlayers.map(p => ({
+            walletid: p.walletid,
+            amount: rewards[p.difficulty_level] || rewards['easy'] || 1,
+            status: 'failed',
+            error_message: errorMessage,
+            difficulty_level: p.difficulty_level,
+            player_id: p.id
+          }));
+          
+          const { error: insertError } = await supabase
+            .from('failed_transactions')
+            .insert(failedRecords);
         
         if (insertError) {
           console.error('❌ Failed to record failed transactions:', insertError);
