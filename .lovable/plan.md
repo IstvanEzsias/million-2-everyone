@@ -1,37 +1,47 @@
 
 
-# PDF z QR kodami ob ustvarjanju denarnice
+# Duplicate LANA Sends — Root Cause Analysis and Fix
 
-## Kaj se bo zgodilo
+## The Problem
 
-Ko uporabnik klikne "Create Wallet" v `GameEndDialog`, se bo poleg prikaza podatkov na zaslonu **avtomatsko generiral in downloadal PDF** z dvema QR kodama:
-1. **LanaCoin naslov** (javni) + QR koda
-2. **Private Key WIF** + QR koda
+There are **two bugs** causing duplicate sends to the same wallet:
 
-PDF se downloada takoj po generaciji denarnice, brez da bi uporabnik moral karkoli klikniti.
+### Bug 1: `send-lana-to-players` creates duplicate failed_transaction records
 
-## Tehnični pristop
+In the `catch` block (lines 892-921), when a transaction fails, it re-queries ALL eligible players (`received_lana=false, played_the_game=true`) and inserts a new `failed_transactions` record **every time the cron runs**. Since the cron runs every ~3 minutes, the same player gets a new failed record each run. Example: `LgagWR8RfrWRpLd8ogkM6HmyDM9jNEqNhP` has 4 failed records, one every 3 minutes.
 
-### Nova knjižnica
-- `qrcode` - za generiranje QR kod kot data URL (canvas)
-- `jspdf` - za generiranje PDF dokumenta na klientu
+### Bug 2: `retry-failed-transactions` doesn't deduplicate
 
-### Nova utility datoteka: `src/utils/walletPdfGenerator.ts`
+It selects ALL records with `status='failed'` and builds one recipient per record. So if a wallet has 4 failed records, it sends 4x the amount. It also doesn't check if the player already received LANA via the main flow (where `received_lana` was set to `true`).
 
-Funkcija `generateAndDownloadWalletPdf(walletData: WalletData)`:
-1. Generira QR kodo za `lanaAddress`
-2. Generira QR kodo za `privateKeyWIF`
-3. Sestavi PDF z:
-   - Naslov: "LanaCoin Wallet Backup"
-   - Sekcija 1: LanaCoin Address + QR + tekst naslova
-   - Sekcija 2: Private Key (WIF) + QR + tekst ključa + opozorilo "KEEP THIS SAFE!"
-4. Sproži avtomatski download kot `lanacoin-wallet-backup.pdf`
+## Data Impact
 
-### Sprememba: `src/components/GameEndDialog.tsx`
+Looking at the data:
+- `LUAJvFeBYUR5N8QfVwpZco6ZiH3TS6Rg6b`: 4 failed records all marked `completed` — likely received 4 LANA instead of 1
+- `LYSdbk8j1MhAbj9BT4RQqyJHvjHBM6ibUx`: same pattern, 4 completed records
+- `LgagWR8RfrWRpLd8ogkM6HmyDM9jNEqNhP`: 4 failed records still pending — would send 4 LANA if retried
 
-V `handleCreateWallet` in `handleRegenerateWallet` — po uspešni generaciji denarnice pokliče `generateAndDownloadWalletPdf(wallet)`.
+## Fixes
 
-### Sprememba: Prevodi
+### 1. `send-lana-to-players/index.ts` — catch block (lines ~898-921)
 
-Ni potrebnih sprememb prevodov — PDF bo v angleščini (univerzalni backup dokument).
+Before inserting failed records, check if one already exists for that player with `status='failed'`. Only insert if no existing failed record:
+
+```
+-- For each player, only insert if no pending failed_transaction exists
+WHERE NOT EXISTS (SELECT 1 FROM failed_transactions WHERE player_id = p.id AND status = 'failed')
+```
+
+Practically: query existing failed records first, filter out players that already have a `status='failed'` entry.
+
+### 2. `retry-failed-transactions/index.ts` — deduplicate recipients
+
+Before building the transaction:
+1. **Deduplicate by walletid** — group failed records by wallet, use only 1 entry per wallet
+2. **Check players table** — skip any player where `received_lana = true` (already paid via main flow)
+3. Mark skipped duplicates as `completed` without sending
+
+### 3. Clean up existing data
+
+Mark the current duplicate failed records appropriately — the ones for wallets that already received LANA (`LgagWR8RfrWRpLd8ogkM6HmyDM9jNEqNhP` player already has `received_lana=true` and a txid) should be marked `completed`.
 
