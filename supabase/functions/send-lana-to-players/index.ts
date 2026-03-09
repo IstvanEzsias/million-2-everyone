@@ -938,10 +938,11 @@ serve(async (req) => {
             .from('failed_transactions')
             .insert(failedRecords);
         
-        if (insertError) {
-          console.error('❌ Failed to record failed transactions:', insertError);
-        } else {
-          console.log(`📝 Recorded ${failedRecords.length} failed transactions for later retry`);
+          if (insertError) {
+            console.error('❌ Failed to record failed transactions:', insertError);
+          } else {
+            console.log(`📝 Recorded ${failedRecords.length} failed transactions for later retry (skipped ${alreadyRecordedIds.size} existing)`);
+          }
         }
       }
     } catch (recordError) {
