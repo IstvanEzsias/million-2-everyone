@@ -126,6 +126,9 @@ const NostrProfile = () => {
     if (formData.picture && !/^https?:\/\/.+/.test(formData.picture)) {
       newErrors.picture = t('validation.invalidUrl', { ns: 'common' });
     }
+    if (formData.payment_link && !/^https?:\/\/.+/.test(formData.payment_link)) {
+      newErrors.payment_link = t('validation.invalidUrl', { ns: 'common' });
+    }
 
     setErrors(newErrors);
     
