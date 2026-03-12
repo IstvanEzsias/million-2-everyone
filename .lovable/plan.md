@@ -1,37 +1,22 @@
 
 
-# PDF z QR kodami ob ustvarjanju denarnice
+# Add URL Validation to Payment Link Field
 
-## Kaj se bo zgodilo
+## Problem
+The `payment_link` field in `NostrProfile.tsx` has no URL validation, unlike the `website` field which checks for `http://` or `https://` prefix.
 
-Ko uporabnik klikne "Create Wallet" v `GameEndDialog`, se bo poleg prikaza podatkov na zaslonu **avtomatsko generiral in downloadal PDF** z dvema QR kodama:
-1. **LanaCoin naslov** (javni) + QR koda
-2. **Private Key WIF** + QR koda
+## Fix — `src/pages/NostrProfile.tsx`
 
-PDF se downloada takoj po generaciji denarnice, brez da bi uporabnik moral karkoli klikniti.
+1. **Add validation** (near line 123, alongside the website check):
+```typescript
+if (formData.payment_link && !/^https?:\/\/.+/.test(formData.payment_link)) {
+  newErrors.payment_link = t('validation.invalidUrl', { ns: 'common' });
+}
+```
 
-## Tehnični pristop
+2. **Add error display** to the Payment Link input (line ~428-433):
+- Add `className={errors.payment_link ? "border-destructive" : ""}` to the Input
+- Add error message `<p>` below the Input, same pattern as the website field
 
-### Nova knjižnica
-- `qrcode` - za generiranje QR kod kot data URL (canvas)
-- `jspdf` - za generiranje PDF dokumenta na klientu
-
-### Nova utility datoteka: `src/utils/walletPdfGenerator.ts`
-
-Funkcija `generateAndDownloadWalletPdf(walletData: WalletData)`:
-1. Generira QR kodo za `lanaAddress`
-2. Generira QR kodo za `privateKeyWIF`
-3. Sestavi PDF z:
-   - Naslov: "LanaCoin Wallet Backup"
-   - Sekcija 1: LanaCoin Address + QR + tekst naslova
-   - Sekcija 2: Private Key (WIF) + QR + tekst ključa + opozorilo "KEEP THIS SAFE!"
-4. Sproži avtomatski download kot `lanacoin-wallet-backup.pdf`
-
-### Sprememba: `src/components/GameEndDialog.tsx`
-
-V `handleCreateWallet` in `handleRegenerateWallet` — po uspešni generaciji denarnice pokliče `generateAndDownloadWalletPdf(wallet)`.
-
-### Sprememba: Prevodi
-
-Ni potrebnih sprememb prevodov — PDF bo v angleščini (univerzalni backup dokument).
+No translation changes needed — reuses existing `common:validation.invalidUrl`.
 
