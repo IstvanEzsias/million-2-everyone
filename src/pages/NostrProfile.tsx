@@ -128,6 +128,17 @@ const NostrProfile = () => {
     }
 
     setErrors(newErrors);
+    
+    // Auto-scroll to first error field
+    const firstErrorField = Object.keys(newErrors)[0];
+    if (firstErrorField) {
+      const element = document.getElementById(firstErrorField);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.focus();
+      }
+    }
+    
     return Object.keys(newErrors).length === 0;
   };
 
