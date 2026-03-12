@@ -126,6 +126,9 @@ const NostrProfile = () => {
     if (formData.picture && !/^https?:\/\/.+/.test(formData.picture)) {
       newErrors.picture = t('validation.invalidUrl', { ns: 'common' });
     }
+    if (formData.payment_link && !/^https?:\/\/.+/.test(formData.payment_link)) {
+      newErrors.payment_link = t('validation.invalidUrl', { ns: 'common' });
+    }
 
     setErrors(newErrors);
     
@@ -430,7 +433,9 @@ const NostrProfile = () => {
                       value={formData.payment_link}
                       onChange={(e) => handleInputChange("payment_link", e.target.value)}
                       placeholder={t('placeholders.paymentLink')}
+                      className={errors.payment_link ? "border-destructive" : ""}
                     />
+                    {errors.payment_link && <p className="text-sm text-destructive mt-1">{errors.payment_link}</p>}
                   </div>
                 </div>
 
